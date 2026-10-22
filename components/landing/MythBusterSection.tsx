@@ -1,19 +1,7 @@
-const MYTHS = [
-  {
-    claim: "Wearing glasses makes your eyes weaker over time.",
-    answer: "Glasses correct focus. They don't change the eye's structure or make it lazier.",
-  },
-  {
-    claim: "Darker sunglasses block more UV.",
-    answer: "UV protection comes from a UV400 rating, not how dark the lens looks.",
-  },
-  {
-    claim: "Sitting too close to the TV damages your eyes.",
-    answer: "No lasting damage. Kids who are already nearsighted sit closer so they can see.",
-  },
-];
+import type { HomeContent } from "@/convex/contentTypes";
 
-export function MythBusterSection() {
+export function MythBusterSection({ myths }: { myths: HomeContent["myths"] }) {
+  const sourceSpecialty = myths.find((m) => m.episodeSpecialty)?.episodeSpecialty;
   return (
     <section style={{ background: "#1b3a5f", color: "#ffffff" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "88px 24px", display: "flex", flexWrap: "wrap", gap: 56 }}>
@@ -27,9 +15,9 @@ export function MythBusterSection() {
         </div>
 
         <div style={{ flex: "2 1 520px", minWidth: 0, display: "flex", flexDirection: "column" }}>
-          {MYTHS.map((myth, i) => (
+          {myths.map((myth, i) => (
             <div
-              key={myth.claim}
+              key={myth.key}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -37,7 +25,7 @@ export function MythBusterSection() {
                 gap: 24,
                 padding: "24px 0",
                 borderTop: "1px solid #4a7099",
-                borderBottom: i === MYTHS.length - 1 ? "1px solid #4a7099" : undefined,
+                borderBottom: i === myths.length - 1 ? "1px solid #4a7099" : undefined,
               }}
             >
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -61,9 +49,11 @@ export function MythBusterSection() {
               </div>
             </div>
           ))}
-          <a href="#episodes" style={{ color: "#ffffff", fontWeight: 600, fontSize: 15, paddingTop: 20 }}>
-            Hear why in the ophthalmology episode →
-          </a>
+          {sourceSpecialty && (
+            <a href="#episodes" style={{ color: "#ffffff", fontWeight: 600, fontSize: 15, paddingTop: 20 }}>
+              Hear why in the {sourceSpecialty.toLowerCase()} episode →
+            </a>
+          )}
         </div>
       </div>
     </section>

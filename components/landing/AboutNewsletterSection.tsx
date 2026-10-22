@@ -1,15 +1,7 @@
-const HOSTS = [
-  {
-    name: "Titi",
-    role: "Co-founder & host · MD candidate, Year 1, Thammasat (CICM)",
-  },
-  {
-    name: "Pup",
-    role: "Co-founder & host · MD candidate, Year 1, Thammasat (CICM)",
-  },
-];
+import type { HomeContent } from "@/convex/contentTypes";
+import { NewsletterForm } from "./NewsletterForm";
 
-export function AboutNewsletterSection() {
+export function AboutNewsletterSection({ hosts }: { hosts: HomeContent["hosts"] }) {
   return (
     <section id="about" style={{ maxWidth: 1280, margin: "0 auto", padding: "96px 24px", display: "flex", flexWrap: "wrap", gap: 64 }}>
       <div style={{ flex: "1 1 520px", minWidth: 0, display: "flex", flexDirection: "column", gap: 28 }}>
@@ -23,8 +15,12 @@ export function AboutNewsletterSection() {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
-          {HOSTS.map((host) => (
-            <div key={host.name} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {hosts.map((host) => (
+            <div key={host.key} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {host.photoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={host.photoUrl} alt={host.name} style={{ aspectRatio: "4 / 5", width: "100%", objectFit: "cover" }} />
+              ) : (
               <div
                 style={{
                   aspectRatio: "4 / 5",
@@ -40,6 +36,7 @@ export function AboutNewsletterSection() {
               >
                 [PHOTO — {host.name.toUpperCase()}]
               </div>
+              )}
               <div style={{ fontSize: 22, lineHeight: "28px", fontWeight: 600 }}>{host.name}</div>
               <div style={{ fontSize: 15, lineHeight: "22px", color: "#5d666f" }}>{host.role}</div>
             </div>
@@ -72,41 +69,7 @@ export function AboutNewsletterSection() {
           <li>What we learned in med school this fortnight</li>
           <li>A vote on which specialty we interview next</li>
         </ul>
-        <form style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <label htmlFor="email" style={{ fontSize: 14, fontWeight: 600 }}>
-            Email address
-          </label>
-          <input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            style={{
-              height: 52,
-              padding: "0 16px",
-              border: "1px solid #5d666f",
-              background: "#f7f8fa",
-              font: "inherit",
-              fontSize: 16,
-              color: "#0a0f14",
-              borderRadius: 0,
-            }}
-          />
-          <button
-            type="submit"
-            style={{
-              height: 52,
-              border: 0,
-              background: "#1b3a5f",
-              color: "#ffffff",
-              font: "inherit",
-              fontSize: 16,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Subscribe
-          </button>
-        </form>
+        <NewsletterForm />
       </div>
     </section>
   );

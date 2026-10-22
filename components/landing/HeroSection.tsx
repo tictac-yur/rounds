@@ -1,3 +1,4 @@
+import type { HomeContent } from "@/convex/contentTypes";
 import { LogoMark, Wordmark } from "./Logo";
 import { DecorCircles, PlayIcon } from "./DecorCircles";
 
@@ -120,13 +121,7 @@ function Nav() {
   );
 }
 
-const STATS = [
-  { value: "[XX]K", label: "Followers, all platforms" },
-  { value: "[XX]K", label: "Monthly views" },
-  { value: "TH / EN", label: "Bilingual, every episode" },
-];
-
-function StatsStrip() {
+function StatsStrip({ stats }: { stats: HomeContent["settings"]["stats"] }) {
   return (
     <div style={{ position: "relative", borderTop: "1px solid #26313d" }}>
       <div
@@ -138,7 +133,7 @@ function StatsStrip() {
           gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
         }}
       >
-        {STATS.map((stat, i) => (
+        {stats.map((stat, i) => (
           <div
             key={stat.label}
             style={{
@@ -186,7 +181,7 @@ function StatsStrip() {
   );
 }
 
-export function HeroSection() {
+export function HeroSection({ settings }: { settings: HomeContent["settings"] }) {
   return (
     <section id="top" style={{ position: "relative", overflow: "hidden", background: "#0a0f14", color: "#ffffff" }}>
       <DecorCircles corner="top-right" />
@@ -220,7 +215,7 @@ export function HeroSection() {
             }}
           >
             <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#ffffff" }} />
-            New episode every other week
+            {settings.heroKicker}
           </div>
 
           <h1
@@ -230,16 +225,14 @@ export function HeroSection() {
               lineHeight: 0.95,
               fontWeight: 600,
               letterSpacing: "-0.03em",
+              whiteSpace: "pre-line",
             }}
           >
-            Medical school,
-            <br />
-            as it happens.
+            {settings.heroHeadline}
           </h1>
 
           <p style={{ margin: 0, fontSize: 20, lineHeight: "31px", color: "#e6ebf0", maxWidth: 560 }}>
-            Titi and Pup are first-year medical students at Thammasat. They document med
-            school in real time, and sit down with the specialists who teach it.
+            {settings.heroIntro}
           </p>
 
           <p
@@ -253,8 +246,7 @@ export function HeroSection() {
               maxWidth: 560,
             }}
           >
-            ติติและปั๊บเป็นนักศึกษาแพทย์ปีที่ 1 ที่ธรรมศาสตร์ พวกเขาบันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์
-            และพูดคุยกับอาจารย์แพทย์เฉพาะทางที่สอนพวกเขา
+            {settings.heroIntroTh}
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, paddingTop: 4 }}>
@@ -300,6 +292,14 @@ export function HeroSection() {
             aria-hidden="true"
             style={{ position: "absolute", top: 20, left: 20, right: -20, bottom: -20, background: "#2b5c91" }}
           />
+          {settings.heroImageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={settings.heroImageUrl}
+              alt={settings.heroImageCaption}
+              style={{ position: "relative", display: "block", width: "100%", aspectRatio: "1 / 1", objectFit: "cover" }}
+            />
+          ) : (
           <div
             style={{
               position: "relative",
@@ -319,6 +319,7 @@ export function HeroSection() {
           >
             [PHOTO — TITI &amp; PUP ON SET]
           </div>
+          )}
           <figcaption
             style={{
               position: "absolute",
@@ -345,12 +346,12 @@ export function HeroSection() {
             >
               On set · The Consult
             </span>
-            <span style={{ fontSize: 17, fontWeight: 600 }}>Titi &amp; Pup, with a guest</span>
+            <span style={{ fontSize: 17, fontWeight: 600 }}>{settings.heroImageCaption}</span>
           </figcaption>
         </figure>
       </div>
 
-      <StatsStrip />
+      <StatsStrip stats={settings.stats} />
     </section>
   );
 }

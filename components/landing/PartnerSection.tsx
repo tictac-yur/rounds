@@ -1,31 +1,15 @@
+import type { HomeContent } from "@/convex/contentTypes";
 import { DecorCircles } from "./DecorCircles";
 
-const GUESTS = [
-  { name: "[Emergency Medicine physician — name pending]", field: "Emergency Medicine", thai: false },
-  { name: "Dr. Pakornkit Phrueksaudomchai", field: "Cornea & refractive surgery", thai: false },
-  { name: "Asst. Prof. Dr. Dhave Setabutr", field: "Pediatric ENT", thai: false },
-  { name: "อ.พญ.นิพัทธา", field: "Obstetrics & Gynecology", thai: true },
-];
-
-const PACKAGES = [
-  {
-    letter: "A",
-    title: "Episode sponsor",
-    desc: "A host-read spot in The Consult, with a link in every platform's description.",
-  },
-  {
-    letter: "B",
-    title: "Short-form package",
-    desc: "A credit on the clips we cut from each episode for TikTok, Reels and Shorts.",
-  },
-  {
-    letter: "C",
-    title: "Newsletter placement",
-    desc: "One slot per issue, sent with every new episode.",
-  },
-];
-
-export function PartnerSection() {
+export function PartnerSection({
+  settings,
+  guests,
+  packages,
+}: {
+  settings: HomeContent["settings"];
+  guests: HomeContent["guests"];
+  packages: HomeContent["sponsorPackages"];
+}) {
   return (
     <section id="partner" style={{ position: "relative", overflow: "hidden", background: "#0a0f14", color: "#ffffff" }}>
       <DecorCircles corner="bottom-left" />
@@ -45,13 +29,13 @@ export function PartnerSection() {
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, paddingTop: 8 }}>
             <a
-              href="mailto:[EMAIL]"
+              href={`mailto:${settings.contactEmail}`}
               style={{ display: "inline-flex", alignItems: "center", height: 56, padding: "0 28px", background: "#ffffff", color: "#0a0f14", textDecoration: "none", fontWeight: 600, fontSize: 16 }}
             >
               Get in touch
             </a>
             <a
-              href="[MEDIA KIT LINK]"
+              href={settings.mediaKitUrl}
               style={{ display: "inline-flex", alignItems: "center", height: 56, padding: "0 28px", border: "1px solid #ffffff", color: "#ffffff", textDecoration: "none", fontWeight: 600, fontSize: 16 }}
             >
               Media kit
@@ -63,9 +47,9 @@ export function PartnerSection() {
               This season&apos;s guests
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px 24px" }}>
-              {GUESTS.map((g) => (
-                <div key={g.field} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <span lang={g.thai ? "th" : undefined} style={{ fontFamily: g.thai ? "var(--font-thai)" : undefined, fontSize: 15, fontWeight: 500 }}>
+              {guests.map((g) => (
+                <div key={g.key} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span lang={g.nameLang === "th" ? "th" : undefined} style={{ fontFamily: g.nameLang === "th" ? "var(--font-thai)" : undefined, fontSize: 15, fontWeight: 500 }}>
                     {g.name}
                   </span>
                   <span style={{ fontSize: 13, color: "#a8bacd" }}>{g.field}</span>
@@ -76,21 +60,21 @@ export function PartnerSection() {
         </div>
 
         <div style={{ flex: "1 1 460px", minWidth: 0, display: "flex", flexDirection: "column" }}>
-          {PACKAGES.map((pkg, i) => (
+          {packages.map((pkg, i) => (
             <div
-              key={pkg.letter}
+              key={pkg.key}
               style={{
                 display: "flex",
                 gap: 24,
                 padding: "26px 0",
                 borderTop: "1px solid #26313d",
-                borderBottom: i === PACKAGES.length - 1 ? "1px solid #26313d" : undefined,
+                borderBottom: i === packages.length - 1 ? "1px solid #26313d" : undefined,
               }}
             >
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "#a8bacd", paddingTop: 3 }}>{pkg.letter}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <div style={{ fontSize: 20, lineHeight: "26px", fontWeight: 600 }}>{pkg.title}</div>
-                <div style={{ fontSize: 15, lineHeight: "23px", color: "#a8bacd" }}>{pkg.desc}</div>
+                <div style={{ fontSize: 15, lineHeight: "23px", color: "#a8bacd" }}>{pkg.description}</div>
               </div>
             </div>
           ))}
