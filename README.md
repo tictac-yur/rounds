@@ -6,7 +6,8 @@ for the admin portal.
 
 - Public site: `/`
 - Admin portal: `/admin` (content management for every section of the site)
-- Site structure & roadmap: [`docs/SITE_PLAN.md`](docs/SITE_PLAN.md)
+- Site structure: [`docs/SITE_PLAN.md`](docs/SITE_PLAN.md)
+- Plan to finish and polish the site: [`docs/LAUNCH_PLAN.md`](docs/LAUNCH_PLAN.md)
 
 ## Getting started
 
