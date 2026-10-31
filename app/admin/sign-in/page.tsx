@@ -4,7 +4,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { ConvexError } from "convex/values";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { LogoMark, Wordmark } from "@/components/landing/Logo";
+import { Lockup } from "@/components/landing/Logo";
 
 export default function SignInPage() {
   const { signIn } = useAuthActions();
@@ -39,8 +39,7 @@ export default function SignInPage() {
     <main className="admin-centered admin-dark">
       <form className="admin-card admin-signin" onSubmit={onSubmit}>
         <div className="admin-brand">
-          <LogoMark />
-          <Wordmark color="#0a0f14" />
+          <Lockup height={22} reverse={false} />
         </div>
         <h1>{flow === "signIn" ? "Sign in to the admin portal" : "Create your admin account"}</h1>
         <p className="admin-muted">

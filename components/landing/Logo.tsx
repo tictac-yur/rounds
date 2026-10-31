@@ -1,24 +1,28 @@
-export function LogoMark({ width = 52, height = 22 }: { width?: number; height?: number }) {
+// Logo files come from the Rounds design system (public/brand). Use them
+// rather than rebuilding the mark or wordmark in live type.
+
+export function Lockup({ height = 24, reverse = true }: { height?: number; reverse?: boolean }) {
   return (
-    <svg width={width} height={height} viewBox="0 0 170 74" aria-hidden="true">
-      <circle cx={37} cy={37} r={37} fill="#5d6164" />
-      <circle cx={85} cy={37} r={37} fill="#9d9fa1" />
-      <circle cx={133} cy={37} r={37} fill="#ffffff" />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={reverse ? "/brand/rounds-lockup-reverse.svg" : "/brand/rounds-lockup.svg"}
+      alt="Rounds"
+      height={height}
+      width={Math.round((height * 388.7) / 74)}
+      style={{ display: "block" }}
+    />
   );
 }
 
-export function Wordmark({ size = 18, color = "#ffffff" }: { size?: number; color?: string }) {
+export function Mark({ height = 22, reverse = false }: { height?: number; reverse?: boolean }) {
   return (
-    <span
-      style={{
-        fontWeight: 600,
-        fontSize: size,
-        letterSpacing: "0.2em",
-        color,
-      }}
-    >
-      ROUNDS
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={reverse ? "/brand/rounds-mark-reverse.svg" : "/brand/rounds-mark.svg"}
+      alt=""
+      height={height}
+      width={Math.round((height * 170) / 74)}
+      style={{ display: "block" }}
+    />
   );
 }

@@ -8,6 +8,9 @@ for the admin portal.
 - Admin portal: `/admin` (content management for every section of the site)
 - Site structure: [`docs/SITE_PLAN.md`](docs/SITE_PLAN.md)
 - Plan to finish and polish the site: [`docs/LAUNCH_PLAN.md`](docs/LAUNCH_PLAN.md)
+- Design system: [Rounds design system](https://claude.ai/artifact/2ZTEdNhmkLWw4oTarazXXZ).
+  Its tokens live in `app/globals.css` (colours, spacing, type styles such as
+  `.ds-headline` and `.ds-label`) and its logo files in `public/brand/`.
 
 ## Getting started
 

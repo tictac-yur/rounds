@@ -36,25 +36,14 @@ export function EpisodeArt({
 }) {
   const circles = VARIANTS[Math.abs(variant) % VARIANTS.length];
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#0a0f14" }}>
+    <div style={{ position: "absolute", inset: 0, background: "var(--black)" }}>
       <svg viewBox="0 0 320 320" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} aria-hidden="true">
         {circles.map((c, i) => (
           <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill={c.fill} />
         ))}
       </svg>
       {kicker && (
-        <div
-          style={{
-            position: "absolute",
-            left: 16,
-            top: 14,
-            fontFamily: "var(--font-mono)",
-            fontSize: 10,
-            letterSpacing: "0.26em",
-            textTransform: "uppercase",
-            color: "#a8bacd",
-          }}
-        >
+        <div className="ds-label" style={{ position: "absolute", left: 16, top: 14, color: "var(--on-navy-muted)" }}>
           {kicker}
         </div>
       )}

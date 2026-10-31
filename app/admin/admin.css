@@ -64,10 +64,6 @@
   gap: 12px;
 }
 
-.admin-brand svg circle:last-child {
-  fill: var(--navy);
-}
-
 /* Buttons */
 .admin-button {
   display: inline-flex;

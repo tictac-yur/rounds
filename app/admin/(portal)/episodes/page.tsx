@@ -68,7 +68,7 @@ export default function EpisodesPage() {
           label: "Polaroid caption",
           type: "text",
           optional: true,
-          help: "Handwritten line under the photo. Defaults to “ติติ · ปั๊บ · {guest name}”.",
+          help: "Short line under the photo, e.g. วันถ่ายที่ห้อง ER. Leave blank for a plain polaroid.",
         },
         {
           name: "thumbLabel",

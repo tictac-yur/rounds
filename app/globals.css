@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+/*
+ * Tokens from the Rounds design system (https://claude.ai/artifact/2ZTEdNhmkLWw4oTarazXXZ).
+ * One palette: navy, black, grey, white. No accent colour, no gradients,
+ * no shadows, square corners; the discs are the only round thing.
+ */
 :root {
   --surface: #f7f8fa;
   --surface-raised: #ffffff;
   --line: #b6bec6;
+  --line-dark: #26313d;
   --ink: #0a0f14;
   --ink-muted: #5d666f;
   --navy: #1b3a5f;
@@ -11,20 +17,34 @@
   --navy-light: #2b5c91;
   --steel: #4a7099;
   --grey: #9ba6b2;
+  --black: #0a0f14;
+  --white: #ffffff;
   --on-navy: #ffffff;
   --on-navy-muted: #a8bacd;
   --link: #2b5c91;
   --focus: #2b5c91;
 
-  --font-sans: var(--font-space-grotesk), var(--font-noto-sans-thai),
-    system-ui, sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), ui-monospace, Menlo, monospace;
-  --font-thai: var(--font-noto-sans-thai), var(--font-space-grotesk),
-    system-ui, sans-serif;
-  --font-hand: var(--font-mali), var(--font-noto-sans-thai), cursive;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --section-y: 96px;
+  --gutter: 24px;
 
-  --flag-red: #c4352b;
-  --flag-green: #1f7a4d;
+  --font-sans: var(--font-space-grotesk), var(--font-noto-sans-thai), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, Menlo, monospace;
+  --font-thai: var(--font-noto-sans-thai), var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --section-y: 64px;
+    --gutter: 16px;
+  }
 }
 
 body {
@@ -33,6 +53,10 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 a {
@@ -44,39 +68,369 @@ a:hover {
 
 a:focus-visible,
 button:focus-visible,
+summary:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--on-navy-muted);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
+.on-dark a:focus-visible,
+.on-dark button:focus-visible,
+.on-dark summary:focus-visible {
+  outline-color: var(--on-navy-muted);
+}
+
+/* Layout */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+  box-sizing: border-box;
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.on-dark {
+  background: var(--black);
+  color: var(--on-navy);
+}
+
+.on-navy {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+.muted {
+  color: var(--ink-muted);
+}
+.on-dark .muted,
+.on-navy .muted {
+  color: var(--on-navy-muted);
+}
+
+/* Type styles (design system names) */
+.ds-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.ds-caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+/* Thai needs taller leading than the Latin specs for stacked tone marks. */
+.ds-display {
+  margin: 0;
+  font-size: clamp(36px, 5.6vw, 72px);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.ds-display > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.ds-headline {
+  margin: 0;
+  font-size: 32px;
+  line-height: 44px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ds-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+}
+
+.ds-body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.ds-body-lg {
+  margin: 0;
+  font-size: 18px;
+  line-height: 30px;
+}
+
+.ds-small {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+/* Section header: mono number + Thai headline */
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+}
+.section-head > div {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+.section-head .ds-label {
+  color: var(--ink-muted);
+}
+.on-dark .section-head .ds-label,
+.on-navy .section-head .ds-label {
+  color: var(--on-navy-muted);
+}
+
+/* Buttons: square, flat */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: 0 var(--space-6);
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.btn-light {
+  background: var(--white);
+  color: var(--ink);
+  border-color: var(--white);
+}
+.btn-light:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+.btn-outline-light {
+  background: transparent;
+  color: var(--on-navy);
+  border-color: var(--on-navy);
+}
+.btn-outline-light:hover {
+  background: var(--white);
+  color: var(--ink);
+}
+.btn-ghost-light {
+  background: transparent;
+  color: var(--on-navy);
+  border-color: var(--ink-muted);
+}
+.btn-ghost-light:hover {
+  border-color: var(--on-navy);
+  color: var(--on-navy);
+}
+
+/* Text links sized for touch */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.on-dark .text-link,
+.on-navy .text-link {
+  color: var(--on-navy);
+}
+
+/* Filter chips */
+.chip {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.chip[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+/* Header / navigation */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  height: 80px;
+}
+.site-nav a {
+  color: var(--on-navy);
+  text-decoration: none;
+}
+.site-nav a.btn-light {
+  color: var(--ink);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 15px;
+  font-weight: 500;
+}
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+}
+.nav-links a:hover {
+  color: var(--on-navy-muted);
+}
+
+.nav-menu {
+  display: none;
+  position: relative;
+}
+.nav-menu summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--on-navy);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.nav-menu summary::-webkit-details-marker {
+  display: none;
+}
+.nav-menu[open] summary {
+  background: var(--white);
+  color: var(--ink);
+}
+.nav-menu-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  z-index: 20;
+  width: min(320px, calc(100vw - 2 * var(--gutter)));
+  background: var(--white);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) 0;
+}
+.site-nav .nav-menu-panel a {
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  font-size: 16px;
+  font-weight: 500;
+}
+.site-nav .nav-menu-panel a:hover {
+  background: var(--surface);
+}
+.site-nav .nav-menu-panel a.nav-menu-cta {
+  margin: var(--space-2) var(--space-4) var(--space-2);
+  justify-content: center;
+  background: var(--navy);
+  color: var(--on-navy);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .nav-links,
+  .nav-cta {
+    display: none !important;
+  }
+  .nav-menu {
+    display: block;
+  }
+}
+
+/* Decorative discs: keep them clear of text on phones */
+.decor {
+  position: absolute;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .decor-top-right {
+    top: -260px !important;
+    right: -420px !important;
+  }
+}
+
+/* Stat strip: columns with dividers, stacked rows on phones */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.stat-strip > * {
+  padding: var(--space-6);
+  border-left: 1px solid var(--line-dark);
+}
+.stat-strip > :first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+@media (max-width: 640px) {
+  .stat-strip {
+    grid-template-columns: 1fr;
+  }
+  .stat-strip > * {
+    padding: var(--space-4) 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .stat-strip > :first-child {
+    border-top: 0;
+  }
+}
+.stat-strip-light > * {
+  border-color: var(--line);
+}
+
+/* Polaroid: a flat white frame. No shadow (design system); a hairline
+   keeps it visible on light grounds. */
 .polaroid {
   margin: 0;
-  background: #ffffff;
-  padding: 12px 12px 0;
-  box-shadow: 0 12px 28px rgba(10, 15, 20, 0.22), 0 2px 4px rgba(10, 15, 20, 0.12);
+  background: var(--white);
+  padding: var(--space-3) var(--space-3) 0;
+  border: 1px solid var(--line);
   transform: rotate(var(--tilt, -2deg));
   transition: transform 200ms ease;
 }
-
+.on-dark .polaroid {
+  border-color: var(--white);
+}
 a:hover .polaroid,
 a:focus-visible .polaroid {
-  transform: rotate(0deg) scale(1.02);
+  transform: rotate(0deg);
 }
-
 @media (prefers-reduced-motion: reduce) {
   .polaroid {
     transition: none;
-  }
-}
-
-@media (max-width: 820px) {
-  .nav-links {
-    display: none !important;
-  }
-}
-
-@media (max-width: 520px) {
-  .nav-cta {
-    display: none !important;
   }
 }

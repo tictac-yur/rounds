@@ -1,12 +1,8 @@
 import { CSSProperties, ReactNode } from "react";
-import type { EpisodeView } from "@/convex/contentTypes";
 
-export function episodeCaption(ep: EpisodeView) {
-  return ep.photoCaption ?? (ep.guestName ? `ติติ · ปั๊บ · ${ep.guestName}` : ep.title);
-}
-
-// A photo in a white instant-camera frame with a handwritten caption.
-// `fallback` fills the photo area when no image has been uploaded yet.
+// A photo in a white instant-camera frame. Flat, per the design system: no
+// shadow, square corners. `fallback` fills the photo area until a photo is
+// uploaded; the caption strip stays blank unless a caption is set.
 export function Polaroid({
   imageUrl,
   alt,
@@ -26,7 +22,7 @@ export function Polaroid({
 }) {
   return (
     <figure className="polaroid" style={{ "--tilt": `${tilt}deg`, ...style } as CSSProperties}>
-      <div style={{ position: "relative", aspectRatio: "1 / 1", overflow: "hidden", background: "#16283d" }}>
+      <div style={{ position: "relative", aspectRatio: "1 / 1", overflow: "hidden", background: "var(--navy-deep)" }}>
         {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={imageUrl} alt={alt} style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }} />
@@ -36,16 +32,8 @@ export function Polaroid({
         {children}
       </div>
       <figcaption
-        lang="th"
-        style={{
-          fontFamily: "var(--font-hand)",
-          fontSize: 19,
-          lineHeight: "26px",
-          color: "#0a0f14",
-          textAlign: "center",
-          minHeight: 26,
-          padding: "12px 6px 16px",
-        }}
+        className="ds-body"
+        style={{ color: "var(--ink)", textAlign: "center", minHeight: 26, padding: "var(--space-3) var(--space-2) var(--space-4)" }}
       >
         {caption}
       </figcaption>

@@ -1,38 +1,55 @@
 import type { HomeContent } from "@/convex/contentTypes";
+import { Mark } from "./Logo";
 
 export function HostsSection({ hosts }: { hosts: HomeContent["hosts"] }) {
   return (
-    <section id="about" style={{ maxWidth: 1280, margin: "0 auto", padding: "96px 24px", display: "flex", flexDirection: "column", gap: 28 }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
-          06
-        </span>
-        <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600 }}>พิธีกร</h2>
+    <section id="about" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+      <div className="section-head">
+        <div>
+          <span className="ds-label">05</span>
+          <h2 className="ds-headline">พิธีกร</h2>
+        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 300px))", gap: 32 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-6)" }}>
         {hosts.map((host) => (
-          <div key={host.key} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div
+            key={host.key}
+            style={{
+              display: "flex",
+              gap: "var(--space-6)",
+              alignItems: "center",
+              background: "var(--surface-raised)",
+              border: "1px solid var(--line)",
+              padding: "var(--space-4)",
+            }}
+          >
             {host.photoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={host.photoUrl} alt={host.name} style={{ aspectRatio: "4 / 5", width: "100%", objectFit: "cover" }} />
+              <img src={host.photoUrl} alt={host.name} style={{ width: "40%", maxWidth: 200, aspectRatio: "4 / 5", objectFit: "cover", flexShrink: 0 }} />
             ) : (
               <div
+                aria-hidden="true"
                 style={{
+                  width: "40%",
+                  maxWidth: 200,
                   aspectRatio: "4 / 5",
-                  background: "#e9ecef",
+                  flexShrink: 0,
+                  background: "var(--navy)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 13,
-                  color: "#5d666f",
                 }}
               >
-                [รูป {host.name}]
+                <Mark height={20} reverse />
               </div>
             )}
-            <div style={{ fontSize: 22, lineHeight: 1.4, fontWeight: 600 }}>{host.name}</div>
-            <div style={{ fontSize: 15, lineHeight: 1.6, color: "#5d666f" }}>{host.role}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", minWidth: 0 }}>
+              <h3 className="ds-headline" style={{ fontSize: 26, lineHeight: "36px" }}>
+                {host.name}
+              </h3>
+              <p className="ds-body muted">{host.role}</p>
+            </div>
           </div>
         ))}
       </div>

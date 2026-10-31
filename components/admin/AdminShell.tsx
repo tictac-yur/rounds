@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { api } from "@/convex/_generated/api";
-import { LogoMark, Wordmark } from "@/components/landing/Logo";
+import { Lockup } from "@/components/landing/Logo";
 
 const NAV = [
   { href: "/admin", label: "Dashboard" },
@@ -52,8 +52,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <div className="admin-shell">
       <aside className="admin-sidebar">
         <Link href="/admin" className="admin-sidebar-brand">
-          <LogoMark />
-          <Wordmark size={16} />
+          <Lockup height={18} />
         </Link>
         <nav aria-label="Admin">
           {NAV.map((item) => (

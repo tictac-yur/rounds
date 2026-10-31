@@ -2,34 +2,23 @@ import type { HomeContent } from "@/convex/contentTypes";
 
 export function SeriesSection({ series }: { series: HomeContent["series"] }) {
   return (
-    <section style={{ background: "#ffffff", borderTop: "1px solid #b6bec6", borderBottom: "1px solid #b6bec6" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "88px 24px", display: "flex", flexDirection: "column", gap: 32 }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
-            04
-          </span>
-          <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600 }}>
-            หนึ่งช่อง สามซีรีส์
-          </h2>
+    <section style={{ background: "var(--surface-raised)", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
+      <div className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+        <div className="section-head">
+          <div>
+            <span className="ds-label">04</span>
+            <h2 className="ds-headline">หนึ่งช่อง สามซีรีส์</h2>
+          </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "var(--space-8) var(--space-6)" }}>
           {series.map((s) => (
-            <div
-              key={s.key}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 14,
-                paddingTop: 20,
-                borderTop: `2px solid ${s.accentColor}`,
-              }}
-            >
-              <div style={{ fontSize: 14, fontWeight: 500, color: "#5d666f" }}>
-                {s.kicker}
-              </div>
-              <h3 style={{ margin: 0, fontSize: 26, lineHeight: 1.3, fontWeight: 600 }}>{s.name}</h3>
-              <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7 }}>{s.description}</p>
+            <div key={s.key} style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", paddingTop: "var(--space-6)", borderTop: `2px solid ${s.accentColor}` }}>
+              <div className="ds-small muted">{s.kicker}</div>
+              <h3 className="ds-headline" style={{ fontSize: 26, lineHeight: "36px" }}>
+                {s.name}
+              </h3>
+              <p className="ds-body">{s.description}</p>
             </div>
           ))}
         </div>

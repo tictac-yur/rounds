@@ -18,10 +18,11 @@ export default async function Home() {
       {content.latest && <LatestEpisodeSection episode={content.latest} />}
       <EpisodesSection episodes={content.episodes} />
       {content.myths.length > 0 && <MythBusterSection myths={content.myths} />}
-      <AudienceSection settings={settings} segments={content.audienceSegments} />
       <SeriesSection series={content.series} />
-      <PartnerSection settings={settings} guests={content.guests} packages={content.sponsorPackages} />
       <HostsSection hosts={content.hosts} />
+      {/* For sponsors: kept together at the end. */}
+      <AudienceSection settings={settings} segments={content.audienceSegments} />
+      <PartnerSection settings={settings} guests={content.guests} packages={content.sponsorPackages} />
       <Footer settings={settings} />
     </div>
   );

@@ -1,4 +1,5 @@
 import type { HomeContent } from "@/convex/contentTypes";
+import { isPlaceholder } from "@/lib/placeholders";
 
 export function AudienceSection({
   settings,
@@ -8,57 +9,36 @@ export function AudienceSection({
   segments: HomeContent["audienceSegments"];
 }) {
   return (
-    <section id="audience" style={{ maxWidth: 1280, margin: "0 auto", padding: "96px 24px", display: "flex", flexDirection: "column", gap: 40 }}>
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end", gap: 24 }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 640 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
-              03
-            </span>
-            <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600 }}>
-              ใครดูเราอยู่
-            </h2>
+    <section id="audience" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+      <div className="section-head" style={{ alignItems: "flex-end" }}>
+        <div style={{ flexDirection: "column", alignItems: "flex-start", gap: "var(--space-3)", maxWidth: 640 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-4)" }}>
+            <span className="ds-label">06</span>
+            <h2 className="ds-headline">ใครดูเราอยู่</h2>
           </div>
-          <p style={{ margin: 0, fontSize: 18, lineHeight: 1.7 }}>
-            {settings.audienceIntro}
-          </p>
+          <p className="ds-body-lg">{settings.audienceIntro}</p>
         </div>
-        <a href={settings.mediaKitUrl} style={{ fontSize: 15, fontWeight: 600 }}>
-          ดาวน์โหลด Media Kit →
-        </a>
+        {!isPlaceholder(settings.mediaKitUrl) && (
+          <a href={settings.mediaKitUrl} className="text-link">
+            ดาวน์โหลด Media Kit →
+          </a>
+        )}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 0, borderTop: "2px solid #0a0f14" }}>
-        {segments.map((seg, i) => (
-          <div
-            key={seg.key}
-            style={{
-              padding: i === 0 ? "28px 28px 28px 0" : "28px",
-              borderLeft: i === 0 ? undefined : "1px solid #b6bec6",
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-            }}
-          >
-            <div style={{ fontSize: 56, lineHeight: "56px", fontWeight: 600, letterSpacing: "-0.03em" }}>{seg.stat}</div>
-            <div style={{ fontSize: 20, lineHeight: 1.4, fontWeight: 600 }}>{seg.title}</div>
-            <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: "#5d666f" }}>{seg.description}</p>
+      <div className="stat-strip stat-strip-light" style={{ borderTop: "2px solid var(--ink)" }}>
+        {segments.map((seg) => (
+          <div key={seg.key} style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
+            {/* Percentages show once real numbers are entered in the admin. */}
+            {!isPlaceholder(seg.stat) && (
+              <div style={{ fontSize: 56, lineHeight: "64px", fontWeight: 600, letterSpacing: "-0.03em" }}>{seg.stat}</div>
+            )}
+            <h3 className="ds-title">{seg.title}</h3>
+            <p className="ds-small muted">{seg.description}</p>
           </div>
         ))}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 32,
-          fontFamily: "var(--font-mono)",
-          fontSize: 12,
-          letterSpacing: "0.14em",
-          textTransform: "uppercase",
-          color: "#5d666f",
-        }}
-      >
+      <div className="ds-caption muted" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2) var(--space-8)" }}>
         {settings.platformHandles.map((handle) => (
           <span key={handle}>{handle}</span>
         ))}

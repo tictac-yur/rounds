@@ -1,38 +1,39 @@
 import type { EpisodeView } from "@/convex/contentTypes";
 import { PlayIcon } from "./DecorCircles";
 import { EpisodeArt } from "./EpisodeArt";
-import { episodeCaption, Polaroid } from "./Polaroid";
+import { Polaroid } from "./Polaroid";
 
 export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
   const playUrl = episode.youtubeUrl ?? episode.spotifyUrl ?? episode.appleUrl;
-  const caption = episodeCaption(episode);
+  const links = [
+    { label: "ดูบน YouTube", href: episode.youtubeUrl },
+    { label: "ฟังบน Spotify", href: episode.spotifyUrl },
+    { label: "Apple Podcasts", href: episode.appleUrl },
+  ].filter((link) => link.href);
+
   return (
-    <section id="latest" style={{ maxWidth: 1280, margin: "0 auto", padding: "96px 24px 72px", display: "flex", flexDirection: "column", gap: 32 }}>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
-            01
-          </span>
-          <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600, letterSpacing: "-0.01em" }}>
-            ตอนล่าสุด
-          </h2>
+    <section id="latest" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+      <div className="section-head">
+        <div>
+          <span className="ds-label">01</span>
+          <h2 className="ds-headline">ตอนล่าสุด</h2>
         </div>
-        <a href="#episodes" style={{ fontSize: 15, fontWeight: 600 }}>
+        <a href="#episodes" className="text-link">
           ดูทุกตอน →
         </a>
       </div>
 
-      <article style={{ background: "#0a0f14", color: "#ffffff", display: "flex", flexWrap: "wrap" }}>
+      <article className="on-dark" style={{ display: "flex", flexWrap: "wrap" }}>
         <div
           style={{
-            flex: "1 1 520px",
+            flex: "1 1 480px",
             minWidth: 0,
             position: "relative",
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "56px 32px",
+            padding: "var(--space-12) var(--space-8)",
           }}
         >
           <svg
@@ -47,8 +48,8 @@ export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
           </svg>
           <Polaroid
             imageUrl={episode.thumbnailUrl}
-            alt={caption}
-            caption={caption}
+            alt={episode.photoCaption ?? `ติติ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
+            caption={episode.photoCaption}
             tilt={-3}
             style={{ position: "relative", width: "min(360px, 100%)" }}
             fallback={<EpisodeArt variant={episode.thumbVariant} label={episode.thumbLabel} kicker={episode.seriesName} />}
@@ -59,64 +60,58 @@ export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
                 aria-label={`ดูตอน ${episode.title}`}
                 style={{
                   position: "absolute",
-                  right: 16,
-                  bottom: 16,
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  background: "#ffffff",
-                  color: "#0a0f14",
+                  right: "var(--space-4)",
+                  bottom: "var(--space-4)",
+                  width: 56,
+                  height: 56,
+                  background: "var(--white)",
+                  color: "var(--ink)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  boxShadow: "0 4px 12px rgba(10, 15, 20, 0.3)",
                 }}
               >
-                <PlayIcon size={20} />
+                <PlayIcon size={18} />
               </a>
             )}
           </Polaroid>
         </div>
 
-        <div style={{ flex: "1 1 380px", minWidth: 0, padding: 40, display: "flex", flexDirection: "column", gap: 18, justifyContent: "center" }}>
-          <div style={{ fontSize: 14, fontWeight: 500, color: "#a8bacd" }}>
-            {[episode.seriesName, episode.specialty, episode.meta].filter(Boolean).join(" · ")}
-          </div>
-          <h3 style={{ margin: 0, fontSize: 32, lineHeight: 1.35, fontWeight: 600 }}>{episode.title}</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <div
+          style={{
+            flex: "1 1 380px",
+            minWidth: 0,
+            padding: "var(--space-12) var(--space-8)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--space-4)",
+            justifyContent: "center",
+          }}
+        >
+          <div className="ds-small muted">{[episode.seriesName, episode.specialty, episode.meta].filter(Boolean).join(" · ")}</div>
+          <h3 className="ds-headline">{episode.title}</h3>
+          <div style={{ display: "flex", flexDirection: "column" }}>
             {episode.guestName && (
-              <div lang={episode.guestLang === "th" ? "th" : "en"} style={{ fontSize: 17, lineHeight: "26px", fontWeight: 500 }}>
+              <div lang={episode.guestLang} style={{ fontSize: 17, lineHeight: "28px", fontWeight: 500 }}>
                 {episode.guestName}
               </div>
             )}
-            {episode.guestAffiliation && (
-              <div style={{ fontSize: 15, lineHeight: "22px", color: "#a8bacd" }}>{episode.guestAffiliation}</div>
-            )}
+            {episode.guestAffiliation && <div className="ds-small muted">{episode.guestAffiliation}</div>}
           </div>
           {episode.summary && (
-            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.75, color: "#e6ebf0" }}>{episode.summary}</p>
+            <p className="ds-body" style={{ color: "#e6ebf0", lineHeight: "28px" }}>
+              {episode.summary}
+            </p>
           )}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, paddingTop: 4 }}>
-            {[
-              { label: "ดูบน YouTube", href: episode.youtubeUrl },
-              { label: "ฟังบน Spotify", href: episode.spotifyUrl },
-              { label: "Apple Podcasts", href: episode.appleUrl },
-            ]
-              .filter((link) => link.href)
-              .map((link, i) => (
-                <a
-                  key={link.label}
-                  href={link.href ?? undefined}
-                  style={
-                    i === 0
-                      ? { display: "inline-flex", alignItems: "center", height: 46, padding: "0 20px", background: "#ffffff", color: "#0a0f14", textDecoration: "none", fontWeight: 600, fontSize: 15 }
-                      : { display: "inline-flex", alignItems: "center", height: 46, padding: "0 20px", border: "1px solid #5d666f", color: "#ffffff", textDecoration: "none", fontWeight: 600, fontSize: 15 }
-                  }
-                >
+          {links.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)", paddingTop: "var(--space-2)" }}>
+              {links.map((link, i) => (
+                <a key={link.label} href={link.href ?? undefined} className={i === 0 ? "btn btn-light" : "btn btn-ghost-light"} style={{ fontSize: 15 }}>
                   {link.label}
                 </a>
               ))}
-          </div>
+            </div>
+          )}
         </div>
       </article>
     </section>
