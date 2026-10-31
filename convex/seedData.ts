@@ -4,12 +4,13 @@
 
 export const seedSettings = {
   heroKicker: "ตอนใหม่ทุกสองสัปดาห์",
-  heroHeadline: "ชีวิตนักศึกษาแพทย์\nแบบเรียลไทม์",
+  heroHeadline: "Medical school,\nas it happens.",
+  heroHeadlineTh: "ชีวิตนักศึกษาแพทย์แบบเรียลไทม์",
   heroIntro:
     "Titi and Pup are first-year medical students at Thammasat. They document med school in real time, and sit down with the specialists who teach it.",
   heroIntroTh:
-    "ติติและปั๊บเป็นนักศึกษาแพทย์ปีที่ 1 ที่ธรรมศาสตร์ พวกเขาบันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และพูดคุยกับอาจารย์แพทย์เฉพาะทางที่สอนพวกเขา",
-  heroImageCaption: "ติติและปั๊บ กับแขกรับเชิญ",
+    "ตีตี้และปั๊บเป็นนักศึกษาแพทย์ปีที่ 1 ที่ธรรมศาสตร์ พวกเขาบันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และพูดคุยกับอาจารย์แพทย์เฉพาะทางที่สอนพวกเขา",
+  heroImageCaption: "ตีตี้และปั๊บ กับแขกรับเชิญ",
   stats: [
     { value: "[XX]K", label: "ผู้ติดตามทุกแพลตฟอร์ม" },
     { value: "[XX]K", label: "ยอดวิวต่อเดือน" },
@@ -45,7 +46,7 @@ export const seedSeries = [
     name: "[ชื่อซีรีส์]",
     kicker: "วล็อก",
     description:
-      "ชีวิตประจำวัน การเรียน และช่วงเวลาสำคัญ ตามติดติติและปั๊บตลอดเส้นทางนักศึกษาแพทย์",
+      "ชีวิตประจำวัน การเรียน และช่วงเวลาสำคัญ ตามติดตีตี้และปั๊บตลอดเส้นทางนักศึกษาแพทย์",
     accentColor: "#1b3a5f",
   },
   {
@@ -204,7 +205,7 @@ export const seedSponsorPackages = [
 
 export const seedHosts = [
   {
-    name: "ติติ",
+    name: "ตีตี้",
     role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
   },
   {

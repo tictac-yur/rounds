@@ -18,6 +18,7 @@ export const home = query({
     const settings = {
       heroKicker: settingsFields.heroKicker,
       heroHeadline: settingsFields.heroHeadline,
+      heroHeadlineTh: settingsFields.heroHeadlineTh ?? null,
       heroIntro: settingsFields.heroIntro,
       heroIntroTh: settingsFields.heroIntroTh,
       heroImageUrl: await fileUrl(ctx, heroImageId),

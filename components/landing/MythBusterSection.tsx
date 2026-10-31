@@ -36,13 +36,11 @@ export function MythBusterSection({ myths }: { myths: HomeContent["myths"] }) {
     <section id="flags" className="on-navy">
       <div className="container section" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-12)" }}>
         <div style={{ flex: "1 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-          <div className="section-head">
-            <div>
-              <span className="ds-label">03</span>
-              <span className="ds-label">Red flag / Green flag</span>
-            </div>
-          </div>
-          <h2 className="ds-headline">เชื่อแบบนี้ Red flag หรือ Green flag? คุณหมอตอบให้ท้ายทุกตอน</h2>
+          <span className="ds-label muted">03</span>
+          <h2 className="ds-headline" lang="en">
+            Red flag or Green flag?
+          </h2>
+          <p className="ds-body-lg muted">เชื่อแบบนี้ได้ไหม คุณหมอตอบให้ท้ายทุกตอน</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", paddingTop: "var(--space-2)" }}>
             <VerdictBadge verdict="red" />
             <VerdictBadge verdict="green" />

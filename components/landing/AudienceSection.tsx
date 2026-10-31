@@ -1,5 +1,6 @@
 import type { HomeContent } from "@/convex/contentTypes";
 import { isPlaceholder } from "@/lib/placeholders";
+import { SectionHeader } from "./SectionHeader";
 
 export function AudienceSection({
   settings,
@@ -10,20 +11,18 @@ export function AudienceSection({
 }) {
   return (
     <section id="audience" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-      <div className="section-head" style={{ alignItems: "flex-end" }}>
-        <div style={{ flexDirection: "column", alignItems: "flex-start", gap: "var(--space-3)", maxWidth: 640 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-4)" }}>
-            <span className="ds-label">06</span>
-            <h2 className="ds-headline">ใครดูเราอยู่</h2>
-          </div>
-          <p className="ds-body-lg">{settings.audienceIntro}</p>
-        </div>
-        {!isPlaceholder(settings.mediaKitUrl) && (
-          <a href={settings.mediaKitUrl} className="text-link">
-            ดาวน์โหลด Media Kit →
-          </a>
-        )}
-      </div>
+      <SectionHeader
+        number="06"
+        en="Who's watching"
+        th={settings.audienceIntro}
+        action={
+          !isPlaceholder(settings.mediaKitUrl) && (
+            <a href={settings.mediaKitUrl} className="text-link">
+              ดาวน์โหลด Media Kit →
+            </a>
+          )
+        }
+      />
 
       <div className="stat-strip stat-strip-light" style={{ borderTop: "2px solid var(--ink)" }}>
         {segments.map((seg) => (

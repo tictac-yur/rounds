@@ -7,6 +7,7 @@ import { episodeStatus, flagVerdict, textLang } from "./schema";
 export const settingsView = v.object({
   heroKicker: v.string(),
   heroHeadline: v.string(),
+  heroHeadlineTh: v.union(v.string(), v.null()),
   heroIntro: v.string(),
   heroIntroTh: v.string(),
   heroImageUrl: v.union(v.string(), v.null()),

@@ -1,15 +1,11 @@
 import type { HomeContent } from "@/convex/contentTypes";
 import { Mark } from "./Logo";
+import { SectionHeader } from "./SectionHeader";
 
 export function HostsSection({ hosts }: { hosts: HomeContent["hosts"] }) {
   return (
     <section id="about" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-      <div className="section-head">
-        <div>
-          <span className="ds-label">05</span>
-          <h2 className="ds-headline">พิธีกร</h2>
-        </div>
-      </div>
+      <SectionHeader number="05" en="The hosts" th="พิธีกร" />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-6)" }}>
         {hosts.map((host) => (

@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { EpisodeView } from "@/convex/contentTypes";
 import { EpisodeArt } from "./EpisodeArt";
 import { Polaroid } from "./Polaroid";
+import { SectionHeader } from "./SectionHeader";
 
 const ALL = "ทั้งหมด";
 const TILTS = [-2.5, 1.5, -1, 2.5];
@@ -13,7 +14,7 @@ function EpisodeCard({ ep, tilt }: { ep: EpisodeView; tilt: number }) {
     <>
       <Polaroid
         imageUrl={ep.thumbnailUrl}
-        alt={ep.photoCaption ?? `ติติ ปั๊บ และ${ep.guestName ?? "แขกรับเชิญ"}`}
+        alt={ep.photoCaption ?? `ตีตี้ ปั๊บ และ${ep.guestName ?? "แขกรับเชิญ"}`}
         caption={ep.photoCaption}
         tilt={tilt}
         fallback={<EpisodeArt variant={ep.thumbVariant} label={ep.thumbLabel} kicker={ep.seriesName} />}
@@ -64,12 +65,7 @@ export function EpisodesSection({ episodes }: { episodes: EpisodeView[] }) {
   const shown = filter === ALL ? episodes : episodes.filter((ep) => ep.specialty === filter);
   return (
     <section id="episodes" className="container" style={{ paddingTop: "var(--space-6)", paddingBottom: "var(--section-y)", display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-      <div className="section-head">
-        <div>
-          <span className="ds-label">02</span>
-          <h2 className="ds-headline">ทุกตอน</h2>
-        </div>
-      </div>
+      <SectionHeader number="02" en="The Consult" th="ทุกตอน คุยกับอาจารย์แพทย์เฉพาะทาง" />
 
       <div role="group" aria-label="กรองตามสาขา" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
         {filters.map((option) => (

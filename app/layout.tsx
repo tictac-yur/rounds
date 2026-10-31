@@ -23,7 +23,7 @@ const notoSansThai = Noto_Sans_Thai({
 export const metadata: Metadata = {
   title: "Rounds — ชีวิตนักศึกษาแพทย์แบบเรียลไทม์",
   description:
-    "ติติและปั๊บ นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ บันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และชวนอาจารย์แพทย์เฉพาะทางมาตอบ Red flag / Green flag เรื่องสุขภาพ",
+    "ตีตี้และปั๊บ นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ บันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และชวนอาจารย์แพทย์เฉพาะทางมาตอบ Red flag / Green flag เรื่องสุขภาพ",
   openGraph: { locale: "th_TH", siteName: "Rounds" },
 };
 

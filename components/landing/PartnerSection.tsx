@@ -17,15 +17,13 @@ export function PartnerSection({
 
       <div className="container section" style={{ position: "relative", display: "flex", flexWrap: "wrap", gap: "var(--space-12)" }}>
         <div style={{ flex: "1 1 400px", minWidth: 0, display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-          <div className="section-head">
-            <div>
-              <span className="ds-label">07</span>
-              <span className="ds-label">Partner with Rounds</span>
-            </div>
-          </div>
-          <h2 className="ds-display" style={{ fontSize: "clamp(32px, 4.2vw, 52px)", lineHeight: 1.25 }}>
-            เข้าถึงว่าที่แพทย์รุ่นใหม่ของไทย
+          <span className="ds-label muted">07 · Partner with Rounds</span>
+          <h2 className="ds-display" lang="en" style={{ fontSize: "clamp(32px, 4.2vw, 52px)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+            Reach the next generation of Thai doctors.
           </h2>
+          <p className="ds-body-lg" style={{ fontSize: 22, lineHeight: "34px", fontWeight: 500 }}>
+            เข้าถึงว่าที่แพทย์รุ่นใหม่ของไทย
+          </p>
           <p className="ds-body-lg" style={{ color: "#e6ebf0", maxWidth: 520 }}>
             สปอนเซอร์อยู่รอบๆ เนื้อหาของเรา แต่ไม่เคยอยู่ในเนื้อหาทางการแพทย์ การเลือกแขกรับเชิญและเนื้อหายังเป็นของเราเสมอ
           </p>

@@ -46,6 +46,20 @@ Then open `/admin/sign-in`, choose **Create an account** with an allowlisted
 email, and on the dashboard click **Load starter content** to copy the current
 site copy into the database.
 
+## Deploying to Vercel
+
+1. In the Convex dashboard, open the **production** deployment → Settings →
+   **Generate Production Deploy Key**.
+2. In Vercel → Project → Settings → Environment Variables, add
+   `CONVEX_DEPLOY_KEY` with that key, scoped to **Production** only.
+   For preview deployments (any branch other than `main`), generate a
+   **Preview Deploy Key** in Convex and add it scoped to **Preview**.
+3. Build command: `bunx convex deploy --cmd 'bun run build'`. It deploys the
+   Convex functions, sets `NEXT_PUBLIC_CONVEX_URL`, then builds the site.
+4. On the production Convex deployment, set `JWT_PRIVATE_KEY`, `JWKS`,
+   `ADMIN_EMAILS`, and `SITE_URL` (the Vercel URL, later
+   `https://roundsmed.com`), as in "One-time auth setup" above.
+
 ## Project layout
 
 ```

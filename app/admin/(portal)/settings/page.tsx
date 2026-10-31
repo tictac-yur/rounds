@@ -7,7 +7,8 @@ import { RecordForm } from "@/components/admin/RecordForm";
 
 const FIELDS: Field[] = [
   { name: "heroKicker", label: "Hero kicker", type: "text" },
-  { name: "heroHeadline", label: "Hero headline", type: "textarea", help: "Use a new line to break the headline." },
+  { name: "heroHeadline", label: "Hero headline (English)", type: "textarea", help: "Use a new line to break the headline." },
+  { name: "heroHeadlineTh", label: "Hero headline (Thai line under it)", type: "text", optional: true },
   { name: "heroIntroTh", label: "Hero intro (Thai, main)", type: "textarea" },
   { name: "heroIntro", label: "Hero intro (English, small line under it)", type: "textarea" },
   { name: "heroImageId", label: "Hero photo", type: "image", optional: true },

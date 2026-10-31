@@ -33,6 +33,8 @@ export default defineSchema({
   siteSettings: defineTable({
     heroKicker: v.string(),
     heroHeadline: v.string(),
+    // Thai line under the (English) hero headline.
+    heroHeadlineTh: v.optional(v.string()),
     heroIntro: v.string(),
     heroIntroTh: v.string(),
     heroImageId: v.optional(v.id("_storage")),

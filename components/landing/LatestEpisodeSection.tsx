@@ -2,6 +2,7 @@ import type { EpisodeView } from "@/convex/contentTypes";
 import { PlayIcon } from "./DecorCircles";
 import { EpisodeArt } from "./EpisodeArt";
 import { Polaroid } from "./Polaroid";
+import { SectionHeader } from "./SectionHeader";
 
 export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
   const playUrl = episode.youtubeUrl ?? episode.spotifyUrl ?? episode.appleUrl;
@@ -13,15 +14,16 @@ export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
 
   return (
     <section id="latest" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-      <div className="section-head">
-        <div>
-          <span className="ds-label">01</span>
-          <h2 className="ds-headline">ตอนล่าสุด</h2>
-        </div>
-        <a href="#episodes" className="text-link">
-          ดูทุกตอน →
-        </a>
-      </div>
+      <SectionHeader
+        number="01"
+        en="Latest episode"
+        th="ตอนล่าสุด"
+        action={
+          <a href="#episodes" className="text-link">
+            ดูทุกตอน →
+          </a>
+        }
+      />
 
       <article className="on-dark" style={{ display: "flex", flexWrap: "wrap" }}>
         <div
@@ -48,7 +50,7 @@ export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
           </svg>
           <Polaroid
             imageUrl={episode.thumbnailUrl}
-            alt={episode.photoCaption ?? `ติติ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
+            alt={episode.photoCaption ?? `ตีตี้ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
             caption={episode.photoCaption}
             tilt={-3}
             style={{ position: "relative", width: "min(360px, 100%)" }}

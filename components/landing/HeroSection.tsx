@@ -4,10 +4,10 @@ import { Lockup } from "./Logo";
 import { DecorCircles, PlayIcon } from "./DecorCircles";
 
 const NAV_LINKS = [
-  { href: "#episodes", label: "ทุกตอน" },
+  { href: "#episodes", label: "Episodes" },
   { href: "#flags", label: "Red / Green flag" },
-  { href: "#about", label: "พิธีกร" },
-  { href: "#partner", label: "ร่วมงานกับเรา" },
+  { href: "#about", label: "Hosts" },
+  { href: "#partner", label: "Partner" },
 ];
 
 function Nav() {
@@ -25,12 +25,12 @@ function Nav() {
           ))}
         </div>
         <a href="#partner" className="btn btn-light nav-cta" style={{ minHeight: 44, fontSize: 15 }}>
-          ติดต่อสปอนเซอร์
+          Partner with us
         </a>
         {/* Phones: a disclosure menu, no JavaScript needed. */}
         <details className="nav-menu">
           <summary>
-            เมนู <span aria-hidden="true">☰</span>
+            Menu <span aria-hidden="true">☰</span>
           </summary>
           <div className="nav-menu-panel">
             {NAV_LINKS.map((link) => (
@@ -39,7 +39,7 @@ function Nav() {
               </a>
             ))}
             <a href="#partner" className="nav-menu-cta">
-              ติดต่อสปอนเซอร์
+              Partner with us
             </a>
           </div>
         </details>
@@ -94,11 +94,18 @@ export function HeroSection({ settings }: { settings: HomeContent["settings"] })
             {settings.heroKicker}
           </div>
 
-          <h1 className="ds-display">
-            {settings.heroHeadline.split("\n").map((line) => (
-              <span key={line}>{line}</span>
-            ))}
-          </h1>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
+            <h1 className="ds-display" lang="en" style={{ lineHeight: 1.05, letterSpacing: "-0.03em" }}>
+              {settings.heroHeadline.split("\n").map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </h1>
+            {settings.heroHeadlineTh && (
+              <p style={{ margin: 0, fontSize: "clamp(22px, 2.6vw, 32px)", lineHeight: 1.4, fontWeight: 600 }}>
+                {settings.heroHeadlineTh}
+              </p>
+            )}
+          </div>
 
           <p className="ds-body-lg" style={{ fontSize: 20, lineHeight: "34px", color: "#e6ebf0", maxWidth: 580 }}>
             {settings.heroIntroTh}

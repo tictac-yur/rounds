@@ -1,15 +1,11 @@
 import type { HomeContent } from "@/convex/contentTypes";
+import { SectionHeader } from "./SectionHeader";
 
 export function SeriesSection({ series }: { series: HomeContent["series"] }) {
   return (
     <section style={{ background: "var(--surface-raised)", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
       <div className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-        <div className="section-head">
-          <div>
-            <span className="ds-label">04</span>
-            <h2 className="ds-headline">หนึ่งช่อง สามซีรีส์</h2>
-          </div>
-        </div>
+        <SectionHeader number="04" en="One channel, three series" th="หนึ่งช่อง สามซีรีส์" />
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "var(--space-8) var(--space-6)" }}>
           {series.map((s) => (
