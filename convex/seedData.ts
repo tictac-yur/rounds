@@ -1,22 +1,22 @@
-// Starter content for the site. It mirrors the original hard-coded landing
-// page, is loaded into the database from the admin dashboard, and is used as
-// a fallback by the public site when no Convex deployment is configured.
+// Starter content for the site (Thai first). It is loaded into the database
+// from the admin dashboard, and is used as a fallback by the public site when
+// no Convex deployment is configured.
 
 export const seedSettings = {
-  heroKicker: "New episode every other week",
-  heroHeadline: "Medical school,\nas it happens.",
+  heroKicker: "ตอนใหม่ทุกสองสัปดาห์",
+  heroHeadline: "ชีวิตนักศึกษาแพทย์\nแบบเรียลไทม์",
   heroIntro:
     "Titi and Pup are first-year medical students at Thammasat. They document med school in real time, and sit down with the specialists who teach it.",
   heroIntroTh:
     "ติติและปั๊บเป็นนักศึกษาแพทย์ปีที่ 1 ที่ธรรมศาสตร์ พวกเขาบันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และพูดคุยกับอาจารย์แพทย์เฉพาะทางที่สอนพวกเขา",
-  heroImageCaption: "Titi & Pup, with a guest",
+  heroImageCaption: "ติติและปั๊บ กับแขกรับเชิญ",
   stats: [
-    { value: "[XX]K", label: "Followers, all platforms" },
-    { value: "[XX]K", label: "Monthly views" },
-    { value: "TH / EN", label: "Bilingual, every episode" },
+    { value: "[XX]K", label: "ผู้ติดตามทุกแพลตฟอร์ม" },
+    { value: "[XX]K", label: "ยอดวิวต่อเดือน" },
+    { value: "TH / EN", label: "สองภาษา ทุกตอน" },
   ],
   audienceIntro:
-    "Thai pre-meds, medical students and people with real health questions, reached in both Thai and English.",
+    "น้องๆ ที่อยากเป็นหมอ นักศึกษาแพทย์ และคนทั่วไปที่มีคำถามเรื่องสุขภาพจริงๆ ทั้งภาษาไทยและภาษาอังกฤษ",
   platformHandles: [
     "YouTube @roundsmed",
     "TikTok @rounds.med",
@@ -36,167 +36,179 @@ export const seedSettings = {
 export const seedSeries = [
   {
     name: "The Consult",
-    kicker: "Interview · 30–50 min",
+    kicker: "สัมภาษณ์ · 30–50 นาที",
     description:
-      "Specialists on what they actually do, the hard truths, advice for students, and a myth-buster to close.",
+      "หมอเฉพาะทางเล่าว่างานจริงๆ ทำอะไร ความจริงที่ไม่ค่อยมีใครพูด คำแนะนำสำหรับนักศึกษาแพทย์ และปิดท้ายด้วย Red flag / Green flag",
     accentColor: "#0a0f14",
   },
   {
-    name: "[SERIES NAME]",
-    kicker: "Vlog",
+    name: "[ชื่อซีรีส์]",
+    kicker: "วล็อก",
     description:
-      "Daily life, training and milestones, following Titi and Pup through medical school as it happens.",
+      "ชีวิตประจำวัน การเรียน และช่วงเวลาสำคัญ ตามติดติติและปั๊บตลอดเส้นทางนักศึกษาแพทย์",
     accentColor: "#1b3a5f",
   },
   {
     name: "A Day With a Doctor",
-    kicker: "Shadow",
-    description:
-      "A full day beside a specialist, to see what the job looks like on an ordinary shift.",
+    kicker: "ตามติดหมอ",
+    description: "ใช้เวลาทั้งวันข้างหมอเฉพาะทาง เพื่อดูว่างานจริงในวันธรรมดาเป็นอย่างไร",
     accentColor: "#9ba6b2",
   },
 ];
 
 export const seedGuests = [
   {
-    name: "[Emergency Medicine physician — name pending]",
-    nameLang: "en" as const,
-    field: "Emergency Medicine",
-    affiliation: "Emergency Medicine, Thammasat University",
+    name: "[ชื่ออาจารย์แพทย์เวชศาสตร์ฉุกเฉิน]",
+    nameLang: "th" as const,
+    field: "เวชศาสตร์ฉุกเฉิน",
+    affiliation: "เวชศาสตร์ฉุกเฉิน มหาวิทยาลัยธรรมศาสตร์",
   },
   {
     name: "Dr. Pakornkit Phrueksaudomchai",
     nameLang: "en" as const,
-    field: "Cornea & refractive surgery",
+    field: "กระจกตาและการผ่าตัดแก้ไขสายตา",
   },
   {
     name: "Asst. Prof. Dr. Dhave Setabutr",
     nameLang: "en" as const,
-    field: "Pediatric ENT",
+    field: "หู คอ จมูกเด็ก",
   },
   {
     name: "อ.พญ.นิพัทธา",
     nameLang: "th" as const,
-    field: "Obstetrics & Gynecology",
+    field: "สูติศาสตร์และนรีเวชวิทยา",
   },
 ];
 
 export const seedEpisodes = [
   {
     slug: "emergency-medicine",
-    title: "The ER isn't first come, first served",
+    title: "ห้องฉุกเฉิน ไม่ใช่มาก่อนได้ก่อน",
     status: "published" as const,
     featured: true,
     seriesIndex: 0,
     guestIndex: 0,
-    specialty: "Emergency",
+    specialty: "เวชศาสตร์ฉุกเฉิน",
     summary:
-      "Who gets seen first when you walk into an ER, what really happens in the minutes after a heart stops, why motorbikes and alcohol fill the night shift, and where AI will change emergency care first.",
-    thumbLabel: "Emergency\nMedicine",
+      "ใครได้ตรวจก่อนเมื่อเดินเข้าห้องฉุกเฉิน นาทีหลังหัวใจหยุดเต้นเกิดอะไรขึ้นจริงๆ ทำไมเวรดึกถึงเต็มไปด้วยอุบัติเหตุมอเตอร์ไซค์และแอลกอฮอล์ และ AI จะเปลี่ยนการแพทย์ฉุกเฉินตรงไหนก่อน",
+    thumbLabel: "เวชศาสตร์\nฉุกเฉิน",
     thumbVariant: 0,
-    releaseDate: "[DATE]",
-    runtime: "[RUNTIME]",
+    releaseDate: "[วันที่]",
+    runtime: "[ความยาว]",
     youtubeUrl: "https://www.youtube.com/@roundsmed",
     spotifyUrl: "[SPOTIFY LINK]",
     appleUrl: "[APPLE PODCASTS LINK]",
   },
   {
     slug: "ophthalmology",
-    title: "Screens, exams and your eyes",
+    title: "จ้องจอ ตรวจตา และดวงตาของเรา",
     status: "published" as const,
     featured: false,
     seriesIndex: 0,
     guestIndex: 1,
-    specialty: "Ophthalmology",
+    specialty: "จักษุวิทยา",
     summary: "",
-    thumbLabel: "Ophthal-\nmology",
+    thumbLabel: "จักษุ\nวิทยา",
     thumbVariant: 1,
-    releaseDate: "[DATE]",
-    runtime: "[RUNTIME]",
+    releaseDate: "[วันที่]",
+    runtime: "[ความยาว]",
   },
   {
     slug: "ent",
-    title: "What an ENT doctor actually does",
+    title: "หมอหู คอ จมูก ทำอะไรบ้างจริงๆ",
     status: "coming_soon" as const,
     featured: false,
     seriesIndex: 0,
     guestIndex: 2,
-    specialty: "ENT",
+    specialty: "หู คอ จมูก",
     summary: "",
-    thumbLabel: "ENT",
+    thumbLabel: "หู คอ\nจมูก",
     thumbVariant: 2,
-    metaNote: "Two-part episode",
+    metaNote: "แบ่งเป็น 2 ตอน",
   },
   {
     slug: "ob-gyn",
-    title: "[EPISODE TITLE]",
+    title: "[ชื่อตอน]",
     status: "coming_soon" as const,
     featured: false,
     seriesIndex: 0,
     guestIndex: 3,
-    specialty: "OB-GYN",
+    specialty: "สูติ-นรีเวช",
     summary: "",
-    thumbLabel: "OB-GYN",
+    thumbLabel: "สูติ-\nนรีเวช",
     thumbVariant: 3,
-    metaNote: "With an IVF deep-dive",
+    metaNote: "พร้อมเจาะลึกเรื่อง IVF",
   },
 ];
 
+// The doctor's verdict on a common belief: "red" (don't believe it) or
+// "green" (true / a healthy habit).
 export const seedMyths = [
   {
-    claim: "Wearing glasses makes your eyes weaker over time.",
-    answer: "Glasses correct focus. They don't change the eye's structure or make it lazier.",
+    claim: "ใส่แว่นนานๆ แล้วสายตาจะแย่ลง",
+    answer: "แว่นแค่ช่วยปรับโฟกัส ไม่ได้เปลี่ยนโครงสร้างของตา หรือทำให้ตาขี้เกียจ",
+    verdict: "red" as const,
     episodeIndex: 1,
   },
   {
-    claim: "Darker sunglasses block more UV.",
-    answer: "UV protection comes from a UV400 rating, not how dark the lens looks.",
+    claim: "แว่นกันแดดยิ่งสีเข้ม ยิ่งกัน UV ได้มาก",
+    answer: "การกัน UV ขึ้นอยู่กับมาตรฐาน UV400 ไม่ใช่ความเข้มของเลนส์",
+    verdict: "red" as const,
     episodeIndex: 1,
   },
   {
-    claim: "Sitting too close to the TV damages your eyes.",
-    answer: "No lasting damage. Kids who are already nearsighted sit closer so they can see.",
+    claim: "นั่งดูทีวีใกล้ๆ ทำให้ตาเสีย",
+    answer: "ไม่ทำให้ตาเสียถาวร เด็กที่สายตาสั้นอยู่แล้วต่างหากที่ต้องนั่งใกล้เพื่อให้มองเห็นชัด",
+    verdict: "red" as const,
     episodeIndex: 1,
+  },
+  {
+    claim: "[ตัวอย่าง Green flag — ใส่คำถามจริงในหน้าแอดมิน]",
+    answer: "[คำตอบจากคุณหมอ]",
+    verdict: "green" as const,
+    // Not linked to an episode, so no doctor is credited with a placeholder.
+    episodeIndex: -1,
   },
 ];
 
 export const seedAudienceSegments = [
   {
     stat: "[XX]%",
-    title: "Pre-med & high school",
-    description: "Deciding whether medicine is for them, and which school.",
+    title: "นักเรียนที่อยากเป็นหมอ",
+    description: "กำลังตัดสินใจว่าจะเรียนแพทย์ไหม และเรียนที่ไหนดี",
   },
   {
     stat: "[XX]%",
-    title: "Medical students",
-    description: "Picking a specialty and getting through the years.",
+    title: "นักศึกษาแพทย์",
+    description: "กำลังเลือกสาขาเฉพาะทาง และพยายามผ่านแต่ละปีไปให้ได้",
   },
   {
     stat: "[XX]%",
-    title: "General public",
-    description: "Here for the myth-busters and everyday health questions.",
+    title: "คนทั่วไป",
+    description: "มาดู Red flag / Green flag และคำถามสุขภาพในชีวิตประจำวัน",
   },
 ];
 
 export const seedSponsorPackages = [
   {
     letter: "A",
-    title: "Episode sponsor",
-    description: "A host-read spot in The Consult, with a link in every platform's description.",
+    title: "สปอนเซอร์ประจำตอน",
+    description: "พิธีกรพูดถึงแบรนด์ใน The Consult พร้อมลิงก์ในคำอธิบายทุกแพลตฟอร์ม",
   },
   {
     letter: "B",
-    title: "Short-form package",
-    description: "A credit on the clips we cut from each episode for TikTok, Reels and Shorts.",
-  },
-  {
-    letter: "C",
-    title: "Newsletter placement",
-    description: "One slot per issue, sent with every new episode.",
+    title: "แพ็กเกจคลิปสั้น",
+    description: "เครดิตในคลิปสั้นที่ตัดจากแต่ละตอน สำหรับ TikTok, Reels และ Shorts",
   },
 ];
 
 export const seedHosts = [
-  { name: "Titi", role: "Co-founder & host · MD candidate, Year 1, Thammasat (CICM)" },
-  { name: "Pup", role: "Co-founder & host · MD candidate, Year 1, Thammasat (CICM)" },
+  {
+    name: "ติติ",
+    role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
+  },
+  {
+    name: "ปั๊บ",
+    role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
+  },
 ];

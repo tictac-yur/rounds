@@ -1,5 +1,5 @@
 import { Infer, v } from "convex/values";
-import { episodeStatus, textLang } from "./schema";
+import { episodeStatus, flagVerdict, textLang } from "./schema";
 
 // View models returned to the public site. Kept free of storage ids and
 // foreign keys so the site can render them directly.
@@ -35,6 +35,7 @@ export const episodeView = v.object({
   thumbLabel: v.string(),
   thumbVariant: v.number(),
   thumbnailUrl: v.union(v.string(), v.null()),
+  photoCaption: v.union(v.string(), v.null()),
   meta: v.string(),
   seriesName: v.union(v.string(), v.null()),
   guestName: v.union(v.string(), v.null()),
@@ -54,6 +55,8 @@ export const homeContent = v.object({
       key: v.string(),
       claim: v.string(),
       answer: v.string(),
+      verdict: flagVerdict,
+      answeredBy: v.union(v.string(), v.null()),
       episodeSpecialty: v.union(v.string(), v.null()),
     }),
   ),

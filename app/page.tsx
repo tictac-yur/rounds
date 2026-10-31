@@ -5,7 +5,7 @@ import { MythBusterSection } from "@/components/landing/MythBusterSection";
 import { AudienceSection } from "@/components/landing/AudienceSection";
 import { SeriesSection } from "@/components/landing/SeriesSection";
 import { PartnerSection } from "@/components/landing/PartnerSection";
-import { AboutNewsletterSection } from "@/components/landing/AboutNewsletterSection";
+import { HostsSection } from "@/components/landing/HostsSection";
 import { Footer } from "@/components/landing/Footer";
 import { getHomeContent } from "@/lib/content";
 
@@ -21,7 +21,7 @@ export default async function Home() {
       <AudienceSection settings={settings} segments={content.audienceSegments} />
       <SeriesSection series={content.series} />
       <PartnerSection settings={settings} guests={content.guests} packages={content.sponsorPackages} />
-      <AboutNewsletterSection hosts={content.hosts} />
+      <HostsSection hosts={content.hosts} />
       <Footer settings={settings} />
     </div>
   );

@@ -13,12 +13,11 @@ const NAV = [
   { href: "/admin/episodes", label: "Episodes" },
   { href: "/admin/series", label: "Series" },
   { href: "/admin/guests", label: "Guests" },
-  { href: "/admin/myths", label: "Myth-busters" },
+  { href: "/admin/myths", label: "Red / Green flags" },
   { href: "/admin/hosts", label: "Hosts" },
   { href: "/admin/audience", label: "Audience" },
   { href: "/admin/packages", label: "Sponsor packages" },
   { href: "/admin/settings", label: "Site settings" },
-  { href: "/admin/subscribers", label: "Subscribers" },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, IBM_Plex_Mono, Noto_Sans_Thai } from "next/font/google";
+import { Space_Grotesk, IBM_Plex_Mono, Noto_Sans_Thai, Mali } from "next/font/google";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -20,17 +20,25 @@ const notoSansThai = Noto_Sans_Thai({
   weight: ["400", "500", "600"],
 });
 
+// Handwritten font for polaroid captions.
+const mali = Mali({
+  variable: "--font-mali",
+  subsets: ["thai", "latin"],
+  weight: ["500"],
+});
+
 export const metadata: Metadata = {
-  title: "Rounds — Home",
+  title: "Rounds — ชีวิตนักศึกษาแพทย์แบบเรียลไทม์",
   description:
-    "Rounds follows Titi and Pup, two first-year medical students at Thammasat, as they document med school in real time and sit down with the specialists who teach it.",
+    "ติติและปั๊บ นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ บันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และชวนอาจารย์แพทย์เฉพาะทางมาตอบ Red flag / Green flag เรื่องสุขภาพ",
+  openGraph: { locale: "th_TH", siteName: "Rounds" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
-      className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${notoSansThai.variable} antialiased`}
+      lang="th"
+      className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${notoSansThai.variable} ${mali.variable} antialiased`}
     >
       <body>{children}</body>
     </html>

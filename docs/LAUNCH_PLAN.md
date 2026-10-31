@@ -1,7 +1,7 @@
 # Rounds website — plan to finish and polish
 
 Where things stand: the site has one page, a working admin portal and a
-newsletter form, but it isn't deployed, it still shows 17 `[PLACEHOLDER]`
+Thai-first design, but it isn't deployed, it still shows 17 `[PLACEHOLDER]`
 values, has no real photos, and the EN/TH switch does nothing. Most of what's
 left is **content the team has to supply**, not code.
 
@@ -41,8 +41,6 @@ All of this is entered in `/admin`. No code changes needed.
 | Deploy the site to Vercel and connect the domain | S |
 | **Mobile menu.** Below 820px the nav links are hidden and there's no menu to replace them, so phone visitors can't navigate | S |
 | Real favicon, app icon and default share image (currently the Next.js defaults); delete the unused starter SVGs in `public/` | S |
-| **Privacy notice and consent on the newsletter form.** Thailand's PDPA requires telling people what you collect and why before taking their email | S |
-| Rate-limit newsletter sign-ups so bots can't spam the list | S |
 | Branded 404 page | S |
 
 **Done when:** the site is live on its own domain, works on a phone, and has no
@@ -109,8 +107,8 @@ fully in Thai and English, and Lighthouse is 90+ on mobile.
 
 | Task | Why | Size |
 | --- | --- | --- |
-| Send the newsletter (e.g. Resend), with double opt-in and an unsubscribe link | Sign-ups are collected but nothing is ever sent | M |
-| "Vote for the next specialty" poll | Promised in the newsletter pitch; gives people a reason to come back | S |
+| Newsletter (on hold): sign-up with a PDPA privacy notice, then sending with double opt-in | Only if you decide you want one | M |
+| "Vote for the next specialty" poll | Gives people a reason to come back | S |
 | "Ask the specialist" form for audience questions | Content ideas, and the audience feels involved | S |
 | Standalone `/partner` page with an enquiry form that lands in the admin | Sponsors can find and contact you easily | M |
 | Live stats in the media kit | The numbers stay current | S |
@@ -132,22 +130,32 @@ fully in Thai and English, and Lighthouse is 90+ on mobile.
 
 ---
 
-## Decisions needed
+## Decisions
 
-1. **Domain name.** What will the site live at?
-2. **Default language.** Thai first (matches the audience) or English first
-   (matches sponsors and the current design)?
-3. **Medical review.** Who signs off on episode notes and myth answers before
-   they're published, e.g. the guest or a faculty member?
-4. **Newsletter tool.** Send from the site (Resend; simple, cheap) or use an
-   existing tool like Mailchimp or Substack?
-5. **Hosting accounts.** Who owns the Vercel and Convex accounts? Ideally a
+Made:
+
+- **Thai is the default language.** The public site is Thai-first; English
+  appears as small secondary lines (hero intro, disclaimer). The fake EN/TH
+  switch was removed until a real English version exists.
+- **Domain:** probably `roundsmed.com`, to be set up at launch.
+- **Medical review:** the guest doctor answers each Red flag / Green flag, and
+  the site credits them ("ตอบโดย …") through the linked episode.
+- **No newsletter for now.** The sign-up form, subscribers list and newsletter
+  sponsor package were removed. Phase 2 newsletter items are on hold.
+- **Episode photos:** each episode shows a photo of Titi, Pup and the doctor
+  in a polaroid frame (upload it in Admin → Episodes → "Polaroid photo").
+
+Still open:
+
+1. **Hosting accounts.** Who owns the Vercel and Convex accounts? Ideally a
    shared team account, not one person's.
+2. **Thai review.** A native speaker should read through the translated copy
+   before launch.
 
 ## Suggested order
 
 1. Phase 0 code tasks and content gathering, at the same time
 2. Launch
 3. Episode pages, then SEO, then Thai/English
-4. YouTube sync and newsletter sending
+4. YouTube sync
 5. Everything else as needed

@@ -2,119 +2,28 @@
 
 import { useState } from "react";
 import type { EpisodeView } from "@/convex/contentTypes";
+import { EpisodeArt } from "./EpisodeArt";
+import { episodeCaption, Polaroid } from "./Polaroid";
 
-type Circle = { cx: number; cy: number; r: number; fill: string };
-
-// Decorative circle layouts for generated thumbnails, picked per episode.
-export const THUMB_VARIANTS: Circle[][] = [
-  [
-    { cx: 200, cy: 160, r: 80, fill: "#16283d" },
-    { cx: 270, cy: 160, r: 80, fill: "#1b3a5f" },
-    { cx: 340, cy: 160, r: 80, fill: "#2b5c91" },
-  ],
-  [
-    { cx: 190, cy: 90, r: 52, fill: "#16283d" },
-    { cx: 240, cy: 90, r: 52, fill: "#1b3a5f" },
-    { cx: 290, cy: 90, r: 52, fill: "#2b5c91" },
-  ],
-  [
-    { cx: 250, cy: 110, r: 72, fill: "#16283d" },
-    { cx: 318, cy: 110, r: 72, fill: "#1b3a5f" },
-    { cx: 386, cy: 110, r: 72, fill: "#2b5c91" },
-  ],
-  [
-    { cx: 200, cy: 30, r: 62, fill: "#16283d" },
-    { cx: 250, cy: 90, r: 62, fill: "#1b3a5f" },
-    { cx: 300, cy: 150, r: 62, fill: "#2b5c91" },
-  ],
-];
-
-function EpisodeThumb({
-  circles,
-  label,
-  kicker,
-  imageUrl,
-  badge,
-}: {
-  circles: Circle[];
-  label: string;
-  kicker: string | null;
-  imageUrl: string | null;
-  badge?: string;
-}) {
-  return (
-    <div style={{ position: "relative", aspectRatio: "16 / 9", background: "#0a0f14", overflow: "hidden" }}>
-      {imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={imageUrl} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-      ) : (
-      <svg
-        viewBox="0 0 320 180"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        aria-hidden="true"
-      >
-        {circles.map((c, i) => (
-          <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill={c.fill} />
-        ))}
-      </svg>
-      )}
-      <div
-        style={{
-          position: "absolute",
-          left: 18,
-          top: 16,
-          fontFamily: "var(--font-mono)",
-          fontSize: 10,
-          letterSpacing: "0.26em",
-          textTransform: "uppercase",
-          color: "#a8bacd",
-        }}
-      >
-        {kicker}
-      </div>
-      <div style={{ position: "absolute", left: 18, bottom: 16, color: "#ffffff", fontSize: 24, lineHeight: 1, fontWeight: 600, whiteSpace: "pre-line" }}>
-        {label}
-      </div>
-      {badge && (
-        <div
-          style={{
-            position: "absolute",
-            right: 14,
-            top: 14,
-            background: "#ffffff",
-            color: "#0a0f14",
-            fontFamily: "var(--font-mono)",
-            fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            padding: "5px 8px",
-          }}
-        >
-          {badge}
-        </div>
-      )}
-    </div>
-  );
-}
+const ALL = "ทั้งหมด";
+const TILTS = [-2.5, 1.5, -1, 2.5];
 
 export function EpisodesSection({ episodes }: { episodes: EpisodeView[] }) {
-  const [filter, setFilter] = useState("All");
-  const filters = ["All", ...new Set(episodes.map((ep) => ep.specialty).filter(Boolean))];
-  const shown = filter === "All" ? episodes : episodes.filter((ep) => ep.specialty === filter);
+  const [filter, setFilter] = useState(ALL);
+  const filters = [ALL, ...new Set(episodes.map((ep) => ep.specialty).filter(Boolean))];
+  const shown = filter === ALL ? episodes : episodes.filter((ep) => ep.specialty === filter);
   return (
     <section id="episodes" style={{ maxWidth: 1280, margin: "0 auto", padding: "24px 24px 96px", display: "flex", flexDirection: "column", gap: 28 }}>
       <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
           02
         </span>
-        <h2 style={{ margin: 0, fontSize: 40, lineHeight: "44px", fontWeight: 600, letterSpacing: "-0.02em" }}>
-          The Consult
+        <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600, letterSpacing: "-0.01em" }}>
+          ทุกตอน
         </h2>
       </div>
 
-      <div role="group" aria-label="Filter by specialty" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div role="group" aria-label="กรองตามสาขา" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {filters.map((option) => (
           <button
             key={option}
@@ -128,7 +37,7 @@ export function EpisodesSection({ episodes }: { episodes: EpisodeView[] }) {
               background: option === filter ? "#0a0f14" : "#ffffff",
               color: option === filter ? "#ffffff" : "#0a0f14",
               font: "inherit",
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: 500,
               cursor: "pointer",
             }}
@@ -138,36 +47,52 @@ export function EpisodesSection({ episodes }: { episodes: EpisodeView[] }) {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
-        {shown.map((ep) => (
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "48px 36px", paddingTop: 12 }}>
+        {shown.map((ep, i) => (
           <a
             key={ep.key}
             href={ep.featured && ep.status === "published" ? "#latest" : (ep.youtubeUrl ?? "#episodes")}
-            style={{ display: "flex", flexDirection: "column", gap: 16, color: "#0a0f14", textDecoration: "none" }}
+            style={{ display: "flex", flexDirection: "column", gap: 20, color: "#0a0f14", textDecoration: "none" }}
           >
-            <EpisodeThumb
-              circles={THUMB_VARIANTS[ep.thumbVariant % THUMB_VARIANTS.length]}
-              label={ep.thumbLabel}
-              kicker={ep.seriesName}
+            <Polaroid
               imageUrl={ep.thumbnailUrl}
-              badge={ep.status === "coming_soon" ? "Coming soon" : undefined}
-            />
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "#5d666f" }}>
-                {ep.meta}
+              alt={episodeCaption(ep)}
+              caption={episodeCaption(ep)}
+              tilt={TILTS[i % TILTS.length]}
+              fallback={<EpisodeArt variant={ep.thumbVariant} label={ep.thumbLabel} kicker={ep.seriesName} />}
+            >
+              {ep.status === "coming_soon" && (
+                <div
+                  style={{
+                    position: "absolute",
+                    right: 10,
+                    top: 12,
+                    transform: "rotate(4deg)",
+                    background: "#f4e7a1",
+                    color: "#0a0f14",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    padding: "4px 12px",
+                    boxShadow: "0 2px 4px rgba(10, 15, 20, 0.2)",
+                  }}
+                >
+                  เร็วๆ นี้
+                </div>
+              )}
+            </Polaroid>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ fontSize: 13, lineHeight: "20px", color: "#5d666f" }}>
+                {[ep.specialty, ep.meta].filter(Boolean).join(" · ")}
               </div>
-              <div style={{ fontSize: 20, lineHeight: "26px", fontWeight: 600 }}>{ep.title}</div>
-              <div
-                lang={ep.guestLang === "th" ? "th" : undefined}
-                style={{
-                  fontFamily: ep.guestLang === "th" ? "var(--font-thai)" : undefined,
-                  fontSize: 14,
-                  lineHeight: "22px",
-                  color: "#5d666f",
-                }}
-              >
-                {ep.guestName}
-              </div>
+              <div style={{ fontSize: 20, lineHeight: 1.4, fontWeight: 600 }}>{ep.title}</div>
+              {ep.guestName && (
+                <div
+                  lang={ep.guestLang === "th" ? "th" : "en"}
+                  style={{ fontSize: 14, lineHeight: "22px", color: "#5d666f" }}
+                >
+                  {ep.guestName}
+                </div>
+              )}
             </div>
           </a>
         ))}

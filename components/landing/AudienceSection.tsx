@@ -15,16 +15,16 @@ export function AudienceSection({
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
               03
             </span>
-            <h2 style={{ margin: 0, fontSize: 40, lineHeight: "44px", fontWeight: 600, letterSpacing: "-0.02em" }}>
-              Who&apos;s watching
+            <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600 }}>
+              ใครดูเราอยู่
             </h2>
           </div>
-          <p style={{ margin: 0, fontSize: 18, lineHeight: "28px" }}>
+          <p style={{ margin: 0, fontSize: 18, lineHeight: 1.7 }}>
             {settings.audienceIntro}
           </p>
         </div>
         <a href={settings.mediaKitUrl} style={{ fontSize: 15, fontWeight: 600 }}>
-          Download the media kit →
+          ดาวน์โหลด Media Kit →
         </a>
       </div>
 
@@ -41,8 +41,8 @@ export function AudienceSection({
             }}
           >
             <div style={{ fontSize: 56, lineHeight: "56px", fontWeight: 600, letterSpacing: "-0.03em" }}>{seg.stat}</div>
-            <div style={{ fontSize: 20, lineHeight: "26px", fontWeight: 600 }}>{seg.title}</div>
-            <p style={{ margin: 0, fontSize: 15, lineHeight: "23px", color: "#5d666f" }}>{seg.description}</p>
+            <div style={{ fontSize: 20, lineHeight: 1.4, fontWeight: 600 }}>{seg.title}</div>
+            <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: "#5d666f" }}>{seg.description}</p>
           </div>
         ))}
       </div>

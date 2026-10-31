@@ -1,5 +1,4 @@
-import { ConvexError, v } from "convex/values";
-import { mutation, query, QueryCtx } from "./_generated/server";
+import { query, QueryCtx } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { episodeMeta, EpisodeView, homeContent, pickLatest } from "./contentTypes";
 import { seedSettings } from "./seedData";
@@ -66,6 +65,7 @@ export const home = query({
         thumbLabel: e.thumbLabel,
         thumbVariant: e.thumbVariant,
         thumbnailUrl: await fileUrl(ctx, e.thumbnailId),
+        photoCaption: e.photoCaption ?? null,
         meta: episodeMeta(e),
         seriesName: series?.name ?? null,
         guestName: guest?.name ?? null,
@@ -84,6 +84,11 @@ export const home = query({
       .withIndex("by_published_and_order", (q) => q.eq("published", true))
       .take(LIST_LIMIT);
 
+    const answeredBy = (episodeId: Id<"episodes"> | undefined) => {
+      const guestId = episodeId && episodesById.get(episodeId)?.guestId;
+      return (guestId && guestsById.get(guestId)?.name) || null;
+    };
+
     const hostDocs = await ctx.db.query("hosts").withIndex("by_order").take(LIST_LIMIT);
 
     return {
@@ -94,6 +99,8 @@ export const home = query({
         key: m._id,
         claim: m.claim,
         answer: m.answer,
+        verdict: m.verdict ?? "red",
+        answeredBy: answeredBy(m.episodeId),
         episodeSpecialty: (m.episodeId && episodesById.get(m.episodeId)?.specialty) || null,
       })),
       audienceSegments: (
@@ -119,26 +126,5 @@ export const home = query({
         })),
       ),
     };
-  },
-});
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export const subscribe = mutation({
-  args: { email: v.string() },
-  returns: v.null(),
-  handler: async (ctx, args) => {
-    const email = args.email.trim().toLowerCase();
-    if (email.length > 254 || !EMAIL_PATTERN.test(email)) {
-      throw new ConvexError("Please enter a valid email address.");
-    }
-    const existing = await ctx.db
-      .query("subscribers")
-      .withIndex("by_email", (q) => q.eq("email", email))
-      .unique();
-    if (existing === null) {
-      await ctx.db.insert("subscribers", { email });
-    }
-    return null;
   },
 });

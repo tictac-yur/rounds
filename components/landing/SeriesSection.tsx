@@ -8,8 +8,8 @@ export function SeriesSection({ series }: { series: HomeContent["series"] }) {
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
             04
           </span>
-          <h2 style={{ margin: 0, fontSize: 40, lineHeight: "44px", fontWeight: 600, letterSpacing: "-0.02em" }}>
-            One channel, three series
+          <h2 style={{ margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 600 }}>
+            หนึ่งช่อง สามซีรีส์
           </h2>
         </div>
 
@@ -25,11 +25,11 @@ export function SeriesSection({ series }: { series: HomeContent["series"] }) {
                 borderTop: `2px solid ${s.accentColor}`,
               }}
             >
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500, letterSpacing: "0.26em", textTransform: "uppercase", color: "#5d666f" }}>
+              <div style={{ fontSize: 14, fontWeight: 500, color: "#5d666f" }}>
                 {s.kicker}
               </div>
-              <h3 style={{ margin: 0, fontSize: 26, lineHeight: "30px", fontWeight: 600 }}>{s.name}</h3>
-              <p style={{ margin: 0, fontSize: 16, lineHeight: "25px" }}>{s.description}</p>
+              <h3 style={{ margin: 0, fontSize: 26, lineHeight: 1.3, fontWeight: 600 }}>{s.name}</h3>
+              <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7 }}>{s.description}</p>
             </div>
           ))}
         </div>

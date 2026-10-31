@@ -7,15 +7,14 @@ import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 
 const SECTIONS = [
-  { href: "/admin/episodes", title: "Episodes", body: "Titles, guests, release dates, links and which episode is featured." },
+  { href: "/admin/episodes", title: "Episodes", body: "Titles, guests, polaroid photos, release dates, links and which episode is featured." },
   { href: "/admin/series", title: "Series", body: "The shows on the channel: The Consult, the vlog, A Day With a Doctor." },
   { href: "/admin/guests", title: "Guests", body: "Specialists who appear on the show." },
-  { href: "/admin/myths", title: "Myth-busters", body: "The rapid-fire myths shown on the home page." },
+  { href: "/admin/myths", title: "Red / Green flags", body: "Beliefs the guest doctor rates as a red flag or a green flag." },
   { href: "/admin/hosts", title: "Hosts", body: "Host bios and photos." },
   { href: "/admin/audience", title: "Audience", body: "Audience segments and stats for sponsors." },
   { href: "/admin/packages", title: "Sponsor packages", body: "What partners can buy." },
   { href: "/admin/settings", title: "Site settings", body: "Hero copy, stats, social links and contact details." },
-  { href: "/admin/subscribers", title: "Subscribers", body: "Newsletter sign-ups." },
 ];
 
 function StarterContent() {

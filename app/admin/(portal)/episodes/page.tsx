@@ -56,14 +56,27 @@ export default function EpisodesPage() {
         { name: "youtubeUrl", label: "YouTube link", type: "url", optional: true },
         { name: "spotifyUrl", label: "Spotify link", type: "url", optional: true },
         { name: "appleUrl", label: "Apple Podcasts link", type: "url", optional: true },
-        { name: "thumbnailId", label: "Thumbnail image", type: "image", optional: true },
+        {
+          name: "thumbnailId",
+          label: "Polaroid photo",
+          type: "image",
+          optional: true,
+          help: "Photo of Titi, Pup and the doctor. Shown in a polaroid frame; square photos fit best.",
+        },
+        {
+          name: "photoCaption",
+          label: "Polaroid caption",
+          type: "text",
+          optional: true,
+          help: "Handwritten line under the photo. Defaults to “ติติ · ปั๊บ · {guest name}”.",
+        },
         {
           name: "thumbLabel",
-          label: "Thumbnail label",
+          label: "Placeholder label",
           type: "textarea",
-          help: "Large text on the generated thumbnail. Use a new line to break it.",
+          help: "Large text on the artwork shown in the polaroid until a photo is uploaded. Use a new line to break it.",
         },
-        { name: "thumbVariant", label: "Thumbnail circle layout (0–3)", type: "number" },
+        { name: "thumbVariant", label: "Placeholder circle layout (0–3)", type: "number" },
       ]}
       summary={(row) => (
         <>

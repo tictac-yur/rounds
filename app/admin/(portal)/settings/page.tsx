@@ -8,8 +8,8 @@ import { RecordForm } from "@/components/admin/RecordForm";
 const FIELDS: Field[] = [
   { name: "heroKicker", label: "Hero kicker", type: "text" },
   { name: "heroHeadline", label: "Hero headline", type: "textarea", help: "Use a new line to break the headline." },
-  { name: "heroIntro", label: "Hero intro (English)", type: "textarea" },
-  { name: "heroIntroTh", label: "Hero intro (Thai)", type: "textarea" },
+  { name: "heroIntroTh", label: "Hero intro (Thai, main)", type: "textarea" },
+  { name: "heroIntro", label: "Hero intro (English, small line under it)", type: "textarea" },
   { name: "heroImageId", label: "Hero photo", type: "image", optional: true },
   { name: "heroImageCaption", label: "Hero photo caption", type: "text" },
   { name: "stats", label: "Hero stats", type: "pairs", placeholder: "120K | Followers, all platforms", help: "One per line: value | label" },

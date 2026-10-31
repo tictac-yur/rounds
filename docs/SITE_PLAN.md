@@ -4,7 +4,7 @@ Rounds is a bilingual (TH/EN) channel following two Thammasat medical students
 and the specialists they interview. The site has three jobs:
 
 1. **Audience** — watch the latest episode, browse the back catalogue, read
-   myth-busters, join the newsletter.
+   the doctors' Red flag / Green flag verdicts.
 2. **Partners** — understand who watches and what can be sponsored, then get
    in touch.
 3. **Team** — keep all of the above current without touching code, through the
@@ -18,11 +18,11 @@ Status: ✅ built in this change · 🔜 next phase · 💡 later
 /                         ✅ Home (one-page overview, all sections below)
 │  #latest                   Latest episode (the featured published episode)
 │  #episodes                 The Consult grid + specialty filter
-│  (myth-buster)             Rapid-fire myths from published episodes
+│  #flags                    Red flag / Green flag: the guest doctor's verdicts
 │  #audience                 Who's watching + platform handles
 │  (series)                  One channel, three series
 │  #partner                  Sponsorship pitch, guests, packages
-│  #about / #newsletter      Hosts + newsletter sign-up
+│  #about                    Hosts
 │
 /episodes                 🔜 Full episode archive, filter by series & specialty
 /episodes/[slug]          🔜 Episode page: embed, summary, guest, myths, links
@@ -37,12 +37,11 @@ Status: ✅ built in this change · 🔜 next phase · 💡 later
 /admin/episodes           ✅ Episodes (status, featured, series, guest, links, thumbnail)
 /admin/series             ✅ Series
 /admin/guests             ✅ Guests (photo, Thai/English name)
-/admin/myths              ✅ Myth-busters (linked to an episode, publish toggle)
+/admin/myths              ✅ Red / Green flags (verdict, linked episode, publish toggle)
 /admin/hosts              ✅ Hosts (photo)
 /admin/audience           ✅ Audience segments
 /admin/packages           ✅ Sponsor packages
 /admin/settings           ✅ Hero copy, stats, social links, contact, media kit
-/admin/subscribers        ✅ Newsletter subscribers (paginated, copy emails)
 ```
 
 The episode slugs already exist in the data model so `/episodes/[slug]` can be
@@ -59,11 +58,10 @@ shows first) and a `by_order` index.
 | `episodes` | Latest episode, episode grid | `slug` (unique), `status` (`draft`/`coming_soon`/`published`), `featured`, `seriesId`, `guestId`, `specialty`, `summary`, `releaseDate`, `runtime`, platform links, `thumbnailId` or generated thumbnail (`thumbLabel`, `thumbVariant`) |
 | `series` | "One channel, three series" | `name`, `kicker`, `description`, `accentColor` |
 | `guests` | Partner section, episode cards | `name`, `nameLang` (`en`/`th` → font), `field`, `affiliation`, `photoId` |
-| `myths` | Myth-buster section | `claim`, `answer`, `episodeId`, `published` |
+| `myths` | Red flag / Green flag section | `claim`, `answer`, `verdict` (`red`/`green`), `episodeId` (credits that episode's guest), `published` |
 | `audienceSegments` | "Who's watching" | `stat`, `title`, `description` |
 | `sponsorPackages` | Partner packages | `letter`, `title`, `description` |
 | `hosts` | "The hosts" | `name`, `role`, `photoId` |
-| `subscribers` | Newsletter | `email` (unique, lower-cased) |
 | `users` + Convex Auth tables | Admin accounts | `email`, `role: "admin"` |
 
 Rules:
@@ -90,8 +88,6 @@ Admin portal (client, Convex React)          Public site (server components)
 - If `NEXT_PUBLIC_CONVEX_URL` isn't set or Convex is unreachable, the site
   falls back to the starter content in `convex/seedData.ts` (the original
   landing-page copy), so it never renders empty.
-- The newsletter form posts through a server action (`app/actions/subscribe.ts`)
-  to `content.subscribe`.
 
 ## 4. Authentication & authorization
 
@@ -109,7 +105,8 @@ Admin portal (client, Convex React)          Public site (server components)
 
 **Phase 1 — CMS foundation (this change)**
 Convex schema, Convex Auth, admin portal for every section on the home page,
-home page reads from Convex, working newsletter sign-up.
+home page reads from Convex. Since then: Thai-first copy, Red flag / Green flag
+verdicts, polaroid episode photos, newsletter removed.
 
 **Phase 2 — Episode pages & SEO**
 - `/episodes` archive and `/episodes/[slug]` pages (YouTube embed, guest card,
@@ -126,8 +123,8 @@ home page reads from Convex, working newsletter sign-up.
 **Phase 4 — Partners & growth**
 - Upload the media kit PDF to Convex storage from the admin portal.
 - Contact/partnership enquiry form stored in Convex with an admin inbox.
-- Newsletter sending (e.g. Resend component) and CSV export.
-- "Vote for the next specialty" poll from the newsletter.
+- Newsletter: on hold.
+- "Vote for the next specialty" poll.
 
 **Phase 5 — Team workflow**
 - Editor vs. admin roles, scheduled publishing (`releaseDate` → scheduled

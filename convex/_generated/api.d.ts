@@ -23,7 +23,6 @@ import type * as admin_seed from "../admin/seed.js";
 import type * as admin_series from "../admin/series.js";
 import type * as admin_settings from "../admin/settings.js";
 import type * as admin_sponsorPackages from "../admin/sponsorPackages.js";
-import type * as admin_subscribers from "../admin/subscribers.js";
 import type * as auth from "../auth.js";
 import type * as content from "../content.js";
 import type * as contentTypes from "../contentTypes.js";
@@ -52,7 +51,6 @@ declare const fullApi: ApiFromModules<{
   "admin/series": typeof admin_series;
   "admin/settings": typeof admin_settings;
   "admin/sponsorPackages": typeof admin_sponsorPackages;
-  "admin/subscribers": typeof admin_subscribers;
   auth: typeof auth;
   content: typeof content;
   contentTypes: typeof contentTypes;

@@ -10,6 +10,8 @@ export const episodeStatus = v.union(
 
 export const textLang = v.union(v.literal("en"), v.literal("th"));
 
+export const flagVerdict = v.union(v.literal("red"), v.literal("green"));
+
 export default defineSchema({
   ...authTables,
 
@@ -76,7 +78,9 @@ export default defineSchema({
     summary: v.string(),
     thumbLabel: v.string(),
     thumbVariant: v.number(),
+    // Polaroid photo of Titi, Pup and the guest doctor.
     thumbnailId: v.optional(v.id("_storage")),
+    photoCaption: v.optional(v.string()),
     releaseDate: v.optional(v.string()),
     runtime: v.optional(v.string()),
     metaNote: v.optional(v.string()),
@@ -91,9 +95,11 @@ export default defineSchema({
     .index("by_seriesId", ["seriesId"])
     .index("by_guestId", ["guestId"]),
 
+  // Red flag / Green flag: a belief, and the guest doctor's verdict on it.
   myths: defineTable({
     claim: v.string(),
     answer: v.string(),
+    verdict: v.optional(flagVerdict),
     episodeId: v.optional(v.id("episodes")),
     published: v.boolean(),
     order: v.number(),
@@ -122,8 +128,4 @@ export default defineSchema({
     photoId: v.optional(v.id("_storage")),
     order: v.number(),
   }).index("by_order", ["order"]),
-
-  subscribers: defineTable({
-    email: v.string(),
-  }).index("by_email", ["email"]),
 });

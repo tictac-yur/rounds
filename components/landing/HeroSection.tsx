@@ -6,7 +6,7 @@ function Nav() {
   return (
     <header style={{ position: "relative" }}>
       <nav
-        aria-label="Main"
+        aria-label="เมนูหลัก"
         style={{
           maxWidth: 1280,
           margin: "0 auto",
@@ -20,7 +20,7 @@ function Nav() {
       >
         <a
           href="#top"
-          aria-label="Rounds home"
+          aria-label="Rounds หน้าแรก"
           style={{
             display: "flex",
             alignItems: "center",
@@ -43,61 +43,19 @@ function Nav() {
           }}
         >
           <a href="#episodes" style={{ color: "#ffffff", textDecoration: "none" }}>
-            Episodes
+            ทุกตอน
           </a>
-          <a href="#audience" style={{ color: "#ffffff", textDecoration: "none" }}>
-            Audience
+          <a href="#flags" style={{ color: "#ffffff", textDecoration: "none" }}>
+            Red / Green flag
           </a>
           <a href="#partner" style={{ color: "#ffffff", textDecoration: "none" }}>
-            Partner
+            ร่วมงานกับเรา
           </a>
           <a href="#about" style={{ color: "#ffffff", textDecoration: "none" }}>
-            About
+            พิธีกร
           </a>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div
-            role="group"
-            aria-label="Language"
-            style={{
-              display: "flex",
-              border: "1px solid #5d666f",
-              fontFamily: "var(--font-mono)",
-              fontSize: 12,
-              letterSpacing: "0.1em",
-            }}
-          >
-            <button
-              type="button"
-              aria-pressed="true"
-              style={{
-                border: 0,
-                background: "#ffffff",
-                color: "#0a0f14",
-                padding: "0 12px",
-                height: 44,
-                font: "inherit",
-                cursor: "pointer",
-              }}
-            >
-              EN
-            </button>
-            <button
-              type="button"
-              aria-pressed="false"
-              style={{
-                border: 0,
-                background: "transparent",
-                color: "#ffffff",
-                padding: "0 12px",
-                height: 44,
-                font: "inherit",
-                cursor: "pointer",
-              }}
-            >
-              TH
-            </button>
-          </div>
           <a
             href="#partner"
             className="nav-cta"
@@ -113,7 +71,7 @@ function Nav() {
               fontSize: 15,
             }}
           >
-            Partner with us
+            ติดต่อสปอนเซอร์
           </a>
         </div>
       </nav>
@@ -147,34 +105,14 @@ function StatsStrip({ stats }: { stats: HomeContent["settings"]["stats"] }) {
             <div style={{ fontSize: 36, lineHeight: "40px", fontWeight: 600, letterSpacing: "-0.02em" }}>
               {stat.value}
             </div>
-            <div
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 11,
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                color: "#a8bacd",
-              }}
-            >
-              {stat.label}
-            </div>
+            <div style={{ fontSize: 14, lineHeight: "20px", color: "#a8bacd" }}>{stat.label}</div>
           </div>
         ))}
         <div style={{ padding: "28px 24px", borderLeft: "1px solid #26313d", display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ fontSize: 18, lineHeight: "24px", fontWeight: 600, paddingTop: 8 }}>
-            Faculty of Medicine, Thammasat University
+          <div style={{ fontSize: 18, lineHeight: 1.4, fontWeight: 600, paddingTop: 8 }}>
+            คณะแพทยศาสตร์ มหาวิทยาลัยธรรมศาสตร์
           </div>
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 11,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "#a8bacd",
-            }}
-          >
-            Where our guests teach
-          </div>
+          <div style={{ fontSize: 14, lineHeight: "20px", color: "#a8bacd" }}>อาจารย์แพทย์ที่มาร่วมรายการ</div>
         </div>
       </div>
     </div>
@@ -206,11 +144,8 @@ export function HeroSection({ settings }: { settings: HomeContent["settings"] })
               display: "flex",
               alignItems: "center",
               gap: 12,
-              fontFamily: "var(--font-mono)",
-              fontSize: 12,
+              fontSize: 15,
               fontWeight: 500,
-              letterSpacing: "0.26em",
-              textTransform: "uppercase",
               color: "#a8bacd",
             }}
           >
@@ -221,32 +156,22 @@ export function HeroSection({ settings }: { settings: HomeContent["settings"] })
           <h1
             style={{
               margin: 0,
-              fontSize: "clamp(48px, 7vw, 96px)",
-              lineHeight: 0.95,
+              fontSize: "clamp(44px, 6.4vw, 88px)",
+              lineHeight: 1.15,
               fontWeight: 600,
-              letterSpacing: "-0.03em",
+              letterSpacing: "-0.01em",
               whiteSpace: "pre-line",
             }}
           >
             {settings.heroHeadline}
           </h1>
 
-          <p style={{ margin: 0, fontSize: 20, lineHeight: "31px", color: "#e6ebf0", maxWidth: 560 }}>
-            {settings.heroIntro}
+          <p style={{ margin: 0, fontSize: 20, lineHeight: 1.7, color: "#e6ebf0", maxWidth: 580 }}>
+            {settings.heroIntroTh}
           </p>
 
-          <p
-            lang="th"
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-thai)",
-              fontSize: 16,
-              lineHeight: "26px",
-              color: "#a8bacd",
-              maxWidth: 560,
-            }}
-          >
-            {settings.heroIntroTh}
+          <p lang="en" style={{ margin: 0, fontSize: 15, lineHeight: "24px", color: "#a8bacd", maxWidth: 560 }}>
+            {settings.heroIntro}
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, paddingTop: 4 }}>
@@ -266,7 +191,7 @@ export function HeroSection({ settings }: { settings: HomeContent["settings"] })
               }}
             >
               <PlayIcon />
-              Watch the latest episode
+              ดูตอนล่าสุด
             </a>
             <a
               href="#partner"
@@ -282,7 +207,7 @@ export function HeroSection({ settings }: { settings: HomeContent["settings"] })
                 fontSize: 16,
               }}
             >
-              Partner with Rounds
+              ร่วมงานกับ Rounds
             </a>
           </div>
         </div>

@@ -48,7 +48,6 @@ site copy into the database.
 ```
 app/                    Next.js routes (public site + /admin portal)
   admin/(portal)/       Admin pages, one per content type
-  actions/subscribe.ts  Newsletter server action
 components/landing/     Public site sections (render Convex content)
 components/admin/       Admin shell, generic list/edit screen, forms
 convex/                 Backend: schema, auth, public content query, admin CRUD

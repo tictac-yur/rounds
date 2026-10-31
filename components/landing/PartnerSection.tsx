@@ -19,12 +19,11 @@ export function PartnerSection({
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 500, letterSpacing: "0.26em", textTransform: "uppercase", color: "#a8bacd" }}>
             05 · Partner with Rounds
           </div>
-          <h2 style={{ margin: 0, fontSize: "clamp(36px, 4.4vw, 56px)", lineHeight: 1, fontWeight: 600, letterSpacing: "-0.02em" }}>
-            Reach the next generation of Thai doctors.
+          <h2 style={{ margin: 0, fontSize: "clamp(34px, 4.2vw, 52px)", lineHeight: 1.25, fontWeight: 600 }}>
+            เข้าถึงว่าที่แพทย์รุ่นใหม่ของไทย
           </h2>
-          <p style={{ margin: 0, fontSize: 17, lineHeight: "27px", color: "#e6ebf0", maxWidth: 520 }}>
-            Sponsors get placement around our content, never inside the medicine. Guests and
-            editorial calls stay ours.
+          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: "#e6ebf0", maxWidth: 520 }}>
+            สปอนเซอร์อยู่รอบๆ เนื้อหาของเรา แต่ไม่เคยอยู่ในเนื้อหาทางการแพทย์ การเลือกแขกรับเชิญและเนื้อหายังเป็นของเราเสมอ
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, paddingTop: 8 }}>
@@ -32,7 +31,7 @@ export function PartnerSection({
               href={`mailto:${settings.contactEmail}`}
               style={{ display: "inline-flex", alignItems: "center", height: 56, padding: "0 28px", background: "#ffffff", color: "#0a0f14", textDecoration: "none", fontWeight: 600, fontSize: 16 }}
             >
-              Get in touch
+              ติดต่อเรา
             </a>
             <a
               href={settings.mediaKitUrl}
@@ -43,8 +42,8 @@ export function PartnerSection({
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14, paddingTop: 24 }}>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: "#a8bacd" }}>
-              This season&apos;s guests
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#a8bacd" }}>
+              แขกรับเชิญซีซันนี้
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px 24px" }}>
               {guests.map((g) => (
@@ -73,8 +72,8 @@ export function PartnerSection({
             >
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "#a8bacd", paddingTop: 3 }}>{pkg.letter}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <div style={{ fontSize: 20, lineHeight: "26px", fontWeight: 600 }}>{pkg.title}</div>
-                <div style={{ fontSize: 15, lineHeight: "23px", color: "#a8bacd" }}>{pkg.description}</div>
+                <div style={{ fontSize: 20, lineHeight: 1.4, fontWeight: 600 }}>{pkg.title}</div>
+                <div style={{ fontSize: 15, lineHeight: 1.6, color: "#a8bacd" }}>{pkg.description}</div>
               </div>
             </div>
           ))}
