@@ -24,7 +24,7 @@ export function seedHomeContent(): HomeContent {
       summary: e.summary,
       thumbLabel: e.thumbLabel,
       thumbVariant: e.thumbVariant,
-      thumbnailUrl: null,
+      thumbnailUrl: e.youtubeThumbnailUrl ?? null,
       photoCaption: null,
       meta: episodeMeta(e),
       seriesName: seedSeries[e.seriesIndex]?.name ?? null,
@@ -32,8 +32,8 @@ export function seedHomeContent(): HomeContent {
       guestLang: guest?.nameLang ?? "en",
       guestAffiliation: guest?.affiliation ?? null,
       youtubeUrl: e.youtubeUrl ?? null,
-      spotifyUrl: e.spotifyUrl ?? null,
-      appleUrl: e.appleUrl ?? null,
+      spotifyUrl: null,
+      appleUrl: null,
     };
   });
   return {

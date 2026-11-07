@@ -629,7 +629,7 @@ a {
 }
 .now-card-art {
   position: relative;
-  aspect-ratio: 16 / 11;
+  aspect-ratio: 16 / 9;
   border-radius: var(--r-lg);
   overflow: hidden;
 }
@@ -867,17 +867,17 @@ a:hover .zoom {
 .latest-art {
   position: relative;
   display: block;
-  min-height: 420px;
+  aspect-ratio: 16 / 9;
+  align-self: center;
   overflow: hidden;
 }
 .latest-art .play-btn {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 88px;
-  height: 88px;
-  margin: -44px 0 0 -44px;
-  box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.14);
+  right: 20px;
+  bottom: 20px;
+  width: 72px;
+  height: 72px;
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.14);
 }
 .latest-body {
   display: flex;
@@ -920,8 +920,7 @@ a:hover .zoom {
     grid-template-columns: 1fr;
   }
   .latest-art {
-    min-height: 0;
-    aspect-ratio: 4 / 3;
+    align-self: stretch;
   }
   .latest-body {
     padding: var(--space-8) var(--space-6);
@@ -985,7 +984,7 @@ a:hover .zoom {
 
 .ep-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: var(--space-8) var(--space-6);
 }
 .ep-card {
@@ -1001,7 +1000,7 @@ a.ep-card:hover {
 }
 .ep-card-art {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 9;
   border-radius: var(--r-lg);
   overflow: hidden;
   background: var(--navy-deep);
@@ -1515,8 +1514,8 @@ a:hover .badge-watch {
   .statement {
     min-height: 0;
   }
-  .ep-card-art {
-    aspect-ratio: 16 / 11;
+  .ep-grid {
+    grid-template-columns: 1fr;
   }
   .ep-grid {
     gap: var(--space-8);
