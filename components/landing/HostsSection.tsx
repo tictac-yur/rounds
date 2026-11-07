@@ -1,53 +1,47 @@
 import type { HomeContent } from "@/convex/contentTypes";
-import { Mark } from "./Logo";
 import { SectionHeader } from "./SectionHeader";
+
+const DISC_SETS = [
+  ["#16283d", "#1b3a5f", "#2b5c91"],
+  ["#2b5c91", "#1b3a5f", "#16283d"],
+];
 
 export function HostsSection({ hosts }: { hosts: HomeContent["hosts"] }) {
   return (
-    <section id="about" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-      <SectionHeader number="05" en="The hosts" th="พิธีกร" />
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-6)" }}>
-        {hosts.map((host) => (
-          <div
-            key={host.key}
-            style={{
-              display: "flex",
-              gap: "var(--space-6)",
-              alignItems: "center",
-              background: "var(--surface-raised)",
-              border: "1px solid var(--line)",
-              padding: "var(--space-4)",
-            }}
-          >
-            {host.photoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={host.photoUrl} alt={host.name} style={{ width: "40%", maxWidth: 200, aspectRatio: "4 / 5", objectFit: "cover", flexShrink: 0 }} />
-            ) : (
-              <div
-                aria-hidden="true"
-                style={{
-                  width: "40%",
-                  maxWidth: 200,
-                  aspectRatio: "4 / 5",
-                  flexShrink: 0,
-                  background: "var(--navy)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Mark height={20} reverse />
+    <section id="hosts" className="wrap section" style={{ paddingTop: 0 }} aria-labelledby="hosts-title">
+      <SectionHeader id="hosts-title" label="05 · Hosts" en="Meet the hosts" th="นักศึกษาแพทย์สองคนที่ถามแทนคุณ" />
+      <div className="hosts-grid">
+        {hosts.map((host, i) => {
+          const [a, b, c] = DISC_SETS[i % DISC_SETS.length];
+          return (
+            <article key={host.key} className="host-card">
+              <div className="host-photo">
+                {host.photoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={host.photoUrl} alt={host.name} />
+                ) : (
+                  // Until a photo is uploaded: the host's initial over the logo's discs.
+                  <>
+                    <svg className="host-initial-discs" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                      <circle cx={i % 2 ? 40 : 360} cy={70} r={170} fill={a} />
+                      <circle cx={i % 2 ? 120 : 280} cy={430} r={160} fill={b} />
+                      <circle cx={i % 2 ? 400 : 0} cy={480} r={110} fill={c} />
+                    </svg>
+                    <span className="host-initial" aria-hidden="true">
+                      {host.name.charAt(0)}
+                    </span>
+                  </>
+                )}
               </div>
-            )}
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", minWidth: 0 }}>
-              <h3 className="ds-headline" style={{ fontSize: 26, lineHeight: "36px" }}>
-                {host.name}
-              </h3>
-              <p className="ds-body muted">{host.role}</p>
-            </div>
-          </div>
-        ))}
+              <div className="host-body">
+                <h3 className="host-name">{host.name}</h3>
+                <p className="body muted" style={{ fontFamily: "var(--font-thai)" }}>
+                  {host.role}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

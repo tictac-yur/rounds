@@ -1,83 +1,131 @@
 import type { HomeContent } from "@/convex/contentTypes";
-import { isPlaceholder } from "@/lib/placeholders";
-import { DecorCircles } from "./DecorCircles";
+import { filled, isPlaceholder } from "@/lib/placeholders";
+import { ArrowIcon, PlatformIcon } from "./Icons";
 
 export function PartnerSection({
   settings,
   guests,
   packages,
+  segments,
 }: {
   settings: HomeContent["settings"];
   guests: HomeContent["guests"];
   packages: HomeContent["sponsorPackages"];
+  segments: HomeContent["audienceSegments"];
 }) {
-  return (
-    <section id="partner" className="on-dark" style={{ position: "relative", overflow: "hidden" }}>
-      <DecorCircles corner="bottom-left" />
+  const email = filled(settings.contactEmail);
+  const instagram = filled(settings.instagramUrl);
+  const mediaKit = filled(settings.mediaKitUrl);
+  const realGuests = guests.filter((g) => !isPlaceholder(g.name));
 
-      <div className="container section" style={{ position: "relative", display: "flex", flexWrap: "wrap", gap: "var(--space-12)" }}>
-        <div style={{ flex: "1 1 400px", minWidth: 0, display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-          <span className="ds-label muted">07 · Partner with Rounds</span>
-          <h2 className="ds-display" lang="en" style={{ fontSize: "clamp(32px, 4.2vw, 52px)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-            Reach the next generation of Thai doctors.
-          </h2>
-          <p className="ds-body-lg" style={{ fontSize: 22, lineHeight: "34px", fontWeight: 500 }}>
-            เข้าถึงว่าที่แพทย์รุ่นใหม่ของไทย
-          </p>
-          <p className="ds-body-lg" style={{ color: "#e6ebf0", maxWidth: 520 }}>
-            สปอนเซอร์อยู่รอบๆ เนื้อหาของเรา แต่ไม่เคยอยู่ในเนื้อหาทางการแพทย์ การเลือกแขกรับเชิญและเนื้อหายังเป็นของเราเสมอ
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", paddingTop: "var(--space-2)" }}>
-            <a href={`mailto:${settings.contactEmail}`} className="btn btn-light">
-              ติดต่อเรา
-            </a>
-            {!isPlaceholder(settings.mediaKitUrl) && (
-              <a href={settings.mediaKitUrl} className="btn btn-outline-light">
-                Media kit
-              </a>
-            )}
+  return (
+    <section id="partner" className="dark" aria-labelledby="partner-title">
+      <div className="wrap section">
+        <div className="partner-top">
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+            <span className="eyebrow">
+              <span className="eyebrow-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              06 · For brands
+            </span>
+            <h2 className="partner-h" lang="en" id="partner-title">
+              Reach the next generation of Thai doctors.
+            </h2>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
+            <p className="body-lg" style={{ color: "#d6dee7", fontFamily: "var(--font-thai)" }}>
+              เข้าถึงว่าที่แพทย์รุ่นใหม่ของไทย สปอนเซอร์อยู่รอบๆ เนื้อหาของเรา แต่ไม่เคยอยู่ในเนื้อหาทางการแพทย์
+              การเลือกแขกรับเชิญและเนื้อหายังเป็นของเราเสมอ
+            </p>
+            <div className="partner-actions" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)" }}>
+              {email ? (
+                <a href={`mailto:${email}`} className="btn btn-light">
+                  ติดต่อเรื่องสปอนเซอร์
+                  <span className="btn-arrow">
+                    <ArrowIcon />
+                  </span>
+                </a>
+              ) : (
+                instagram && (
+                  // No contact email yet: send brands to an Instagram DM.
+                  <a href={instagram} className="btn btn-light">
+                    <PlatformIcon name="instagram" size={18} />
+                    ทักทาง Instagram
+                  </a>
+                )
+              )}
+              {mediaKit && (
+                <a href={mediaKit} className="btn btn-outline">
+                  ดาวน์โหลด Media kit
+                </a>
+              )}
+            </div>
           </div>
         </div>
 
-        <div style={{ flex: "1 1 460px", minWidth: 0, display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
-          <div>
-            {packages.map((pkg, i) => (
-              <div
-                key={pkg.key}
-                style={{
-                  display: "flex",
-                  gap: "var(--space-6)",
-                  padding: "var(--space-6) 0",
-                  borderTop: "1px solid var(--line-dark)",
-                  borderBottom: i === packages.length - 1 ? "1px solid var(--line-dark)" : undefined,
-                }}
-              >
-                <div className="ds-label muted" style={{ paddingTop: 6 }}>
-                  {pkg.letter}
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
-                  <h3 className="ds-title">{pkg.title}</h3>
-                  <p className="ds-small muted">{pkg.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-            <h3 className="ds-small muted" style={{ fontWeight: 600 }}>
-              แขกรับเชิญซีซันนี้
-            </h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--space-4) var(--space-6)" }}>
-              {guests.map((g) => (
-                <div key={g.key} style={{ display: "flex", flexDirection: "column" }}>
-                  <span lang={g.nameLang} style={{ fontSize: 15, lineHeight: "24px", fontWeight: 500 }}>
-                    {g.name}
-                  </span>
-                  <span className="ds-small muted">{g.field}</span>
+        <div className="partner-grid">
+          <div className="panel panel-audience">
+            <h3 className="title">ใครดู Rounds</h3>
+            <p className="small muted" style={{ fontFamily: "var(--font-thai)", maxWidth: 720 }}>
+              {settings.audienceIntro}
+            </p>
+            <div className="segments">
+              {segments.map((seg) => (
+                <div key={seg.key} className="segment">
+                  {/* Percentages show once real numbers are entered in the admin. */}
+                  {!isPlaceholder(seg.stat) && <div className="segment-stat">{seg.stat}</div>}
+                  <h4 className="title" style={{ fontSize: 18, fontFamily: "var(--font-thai)" }}>
+                    {seg.title}
+                  </h4>
+                  <p className="small muted" style={{ fontFamily: "var(--font-thai)" }}>
+                    {seg.description}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
+
+          {packages.length > 0 && (
+            <div className="panel panel-packages">
+              <h3 className="title">แพ็กเกจ</h3>
+              <div>
+                {packages.map((pkg) => (
+                  <div key={pkg.key} className="pkg">
+                    <span className="pkg-letter" aria-hidden="true">
+                      {pkg.letter}
+                    </span>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
+                      <h4 className="title" style={{ fontSize: 18, fontFamily: "var(--font-thai)" }}>
+                        {pkg.title}
+                      </h4>
+                      <p className="small muted" style={{ fontFamily: "var(--font-thai)" }}>
+                        {pkg.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {realGuests.length > 0 && (
+            <div className="panel panel-guests">
+              <h3 className="title">แขกรับเชิญซีซันนี้</h3>
+              <ul className="guest-list">
+                {realGuests.map((g) => (
+                  <li key={g.key}>
+                    <span lang={g.nameLang} style={{ fontWeight: 500 }}>
+                      {g.name}
+                    </span>
+                    <span className="small muted">{g.field}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </section>

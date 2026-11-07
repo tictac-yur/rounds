@@ -58,17 +58,17 @@ export default function EpisodesPage() {
         { name: "appleUrl", label: "Apple Podcasts link", type: "url", optional: true },
         {
           name: "thumbnailId",
-          label: "Polaroid photo",
+          label: "Episode photo",
           type: "image",
           optional: true,
-          help: "Photo of Titi, Pup and the doctor. Shown in a polaroid frame; square photos fit best.",
+          help: "Photo of Titi, Pup and the doctor. Shown on the episode card and the latest-episode panel; square or landscape photos fit best.",
         },
         {
           name: "photoCaption",
-          label: "Polaroid caption",
+          label: "Photo description",
           type: "text",
           optional: true,
-          help: "Short line under the photo, e.g. วันถ่ายที่ห้อง ER. Leave blank for a plain polaroid.",
+          help: "Describes the photo for screen readers, e.g. ตีตี้และปั๊บกับคุณหมอที่ห้อง ER.",
         },
         {
           name: "thumbLabel",

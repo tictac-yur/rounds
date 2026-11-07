@@ -1,115 +1,77 @@
 import type { EpisodeView } from "@/convex/contentTypes";
-import { PlayIcon } from "./DecorCircles";
-import { EpisodeArt } from "./EpisodeArt";
-import { Polaroid } from "./Polaroid";
+import { filled } from "@/lib/placeholders";
+import { episodeMeta, episodeTitle, guestName, watchUrl } from "@/lib/episodes";
+import { EpisodeVisual } from "./EpisodeArt";
+import { ArrowIcon, PlatformIcon, PlayIcon, type Platform } from "./Icons";
 import { SectionHeader } from "./SectionHeader";
 
 export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
-  const playUrl = episode.youtubeUrl ?? episode.spotifyUrl ?? episode.appleUrl;
-  const links = [
-    { label: "ดูบน YouTube", href: episode.youtubeUrl },
-    { label: "ฟังบน Spotify", href: episode.spotifyUrl },
-    { label: "Apple Podcasts", href: episode.appleUrl },
-  ].filter((link) => link.href);
+  const playUrl = watchUrl(episode);
+  const guest = guestName(episode);
+  const links = (
+    [
+      ["youtube", "ดูบน YouTube", episode.youtubeUrl],
+      ["spotify", "ฟังบน Spotify", episode.spotifyUrl],
+      ["apple", "Apple Podcasts", episode.appleUrl],
+    ] as [Platform, string, string | null][]
+  ).filter(([, , href]) => filled(href));
+  const title = episodeTitle(episode);
 
   return (
-    <section id="latest" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+    <section id="latest" className="wrap section" aria-labelledby="latest-title">
       <SectionHeader
-        number="01"
+        id="latest-title"
+        label="01 · Latest"
         en="Latest episode"
-        th="ตอนล่าสุด"
+        th="ตอนใหม่ที่เพิ่งออก ดูได้เลยตอนนี้"
         action={
           <a href="#episodes" className="text-link">
-            ดูทุกตอน →
+            ดูทุกตอน <ArrowIcon />
           </a>
         }
       />
 
-      <article className="on-dark" style={{ display: "flex", flexWrap: "wrap" }}>
-        <div
-          style={{
-            flex: "1 1 480px",
-            minWidth: 0,
-            position: "relative",
-            overflow: "hidden",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "var(--space-12) var(--space-8)",
-          }}
-        >
-          <svg
-            viewBox="0 0 640 360"
-            preserveAspectRatio="xMidYMid slice"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-            aria-hidden="true"
-          >
-            <circle cx={300} cy={40} r={170} fill="#16283d" />
-            <circle cx={520} cy={40} r={170} fill="#1b3a5f" />
-            <circle cx={740} cy={40} r={170} fill="#2b5c91" />
-          </svg>
-          <Polaroid
-            imageUrl={episode.thumbnailUrl}
-            alt={episode.photoCaption ?? `ตีตี้ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
-            caption={episode.photoCaption}
-            tilt={-3}
-            style={{ position: "relative", width: "min(360px, 100%)" }}
-            fallback={<EpisodeArt variant={episode.thumbVariant} label={episode.thumbLabel} kicker={episode.seriesName} />}
-          >
-            {playUrl && (
-              <a
-                href={playUrl}
-                aria-label={`ดูตอน ${episode.title}`}
-                style={{
-                  position: "absolute",
-                  right: "var(--space-4)",
-                  bottom: "var(--space-4)",
-                  width: 56,
-                  height: 56,
-                  background: "var(--white)",
-                  color: "var(--ink)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <PlayIcon size={18} />
-              </a>
-            )}
-          </Polaroid>
-        </div>
-
-        <div
-          style={{
-            flex: "1 1 380px",
-            minWidth: 0,
-            padding: "var(--space-12) var(--space-8)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--space-4)",
-            justifyContent: "center",
-          }}
-        >
-          <div className="ds-small muted">{[episode.seriesName, episode.specialty, episode.meta].filter(Boolean).join(" · ")}</div>
-          <h3 className="ds-headline">{episode.title}</h3>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {episode.guestName && (
-              <div lang={episode.guestLang} style={{ fontSize: 17, lineHeight: "28px", fontWeight: 500 }}>
-                {episode.guestName}
-              </div>
-            )}
-            {episode.guestAffiliation && <div className="ds-small muted">{episode.guestAffiliation}</div>}
+      <article className="latest">
+        {playUrl ? (
+          <a href={playUrl} className="latest-art" aria-label={`ดูตอน ${title}`}>
+            <EpisodeVisual episode={episode} alt="" />
+            <span className="play-btn" aria-hidden="true">
+              <PlayIcon size={26} />
+            </span>
+          </a>
+        ) : (
+          <div className="latest-art">
+            <EpisodeVisual episode={episode} />
           </div>
-          {episode.summary && (
-            <p className="ds-body" style={{ color: "#e6ebf0", lineHeight: "28px" }}>
+        )}
+
+        <div className="latest-body">
+          <span className="eyebrow eyebrow-th">{episodeMeta(episode, true)}</span>
+          <h3 className="latest-title">{title}</h3>
+          {guest && (
+            <div className="guest">
+              <span className="guest-disc" aria-hidden="true">
+                {guest.replace(/^(Asst\. Prof\. |Dr\. |อ\.พญ\.|อ\.นพ\.)+/, "").charAt(0)}
+              </span>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span lang={episode.guestLang} style={{ fontWeight: 600 }}>
+                  {guest}
+                </span>
+                {filled(episode.guestAffiliation) && <span className="small muted">{episode.guestAffiliation}</span>}
+              </div>
+            </div>
+          )}
+          {filled(episode.summary) && (
+            <p className="body" style={{ color: "#d6dee7", fontFamily: "var(--font-thai)" }}>
               {episode.summary}
             </p>
           )}
           {links.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)", paddingTop: "var(--space-2)" }}>
-              {links.map((link, i) => (
-                <a key={link.label} href={link.href ?? undefined} className={i === 0 ? "btn btn-light" : "btn btn-ghost-light"} style={{ fontSize: 15 }}>
-                  {link.label}
+            <div className="watch-links">
+              {links.map(([platform, label, href], i) => (
+                <a key={platform} href={href ?? undefined} className={i === 0 ? "btn btn-light" : "btn btn-outline"}>
+                  <PlatformIcon name={platform} size={18} />
+                  {label}
                 </a>
               ))}
             </div>

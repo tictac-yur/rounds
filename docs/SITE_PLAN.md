@@ -22,7 +22,7 @@ Status: ✅ built in this change · 🔜 next phase · 💡 later
 │  #audience                 Who's watching + platform handles
 │  (series)                  One channel, three series
 │  #partner                  Sponsorship pitch, guests, packages
-│  #about                    Hosts
+│  #hosts                    Hosts
 │
 /episodes                 🔜 Full episode archive, filter by series & specialty
 /episodes/[slug]          🔜 Episode page: embed, summary, guest, myths, links
@@ -106,7 +106,10 @@ Admin portal (client, Convex React)          Public site (server components)
 **Phase 1 — CMS foundation (this change)**
 Convex schema, Convex Auth, admin portal for every section on the home page,
 home page reads from Convex. Since then: Thai-first copy, Red flag / Green flag
-verdicts, polaroid episode photos, newsletter removed.
+verdicts, polaroid episode photos, newsletter removed. Then a redesign: rounded
+cards and pill buttons in the same navy/black/grey/white palette, a sticky nav
+with a phone menu, an interactive Red/Green flag quiz, and the logo's three
+discs as the recurring visual.
 
 **Phase 2 — Episode pages & SEO**
 - `/episodes` archive and `/episodes/[slug]` pages (YouTube embed, guest card,

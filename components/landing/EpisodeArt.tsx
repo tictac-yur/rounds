@@ -1,67 +1,59 @@
-type Circle = { cx: number; cy: number; r: number; fill: string };
+import type { EpisodeView } from "@/convex/contentTypes";
 
-// Decorative circle layouts used in place of a photo, picked per episode.
+type Circle = { cx: number; cy: number; r: number };
+
+// The logo's three discs, arranged differently per episode, stand in for a
+// photo until one is uploaded in the admin.
 const VARIANTS: Circle[][] = [
   [
-    { cx: 90, cy: 250, r: 90, fill: "#16283d" },
-    { cx: 170, cy: 250, r: 90, fill: "#1b3a5f" },
-    { cx: 250, cy: 250, r: 90, fill: "#2b5c91" },
+    { cx: 70, cy: 300, r: 120 },
+    { cx: 180, cy: 300, r: 120 },
+    { cx: 290, cy: 300, r: 120 },
   ],
   [
-    { cx: 110, cy: 110, r: 56, fill: "#16283d" },
-    { cx: 165, cy: 110, r: 56, fill: "#1b3a5f" },
-    { cx: 220, cy: 110, r: 56, fill: "#2b5c91" },
+    { cx: 230, cy: 40, r: 80 },
+    { cx: 290, cy: 100, r: 80 },
+    { cx: 350, cy: 160, r: 80 },
   ],
   [
-    { cx: 200, cy: 150, r: 80, fill: "#16283d" },
-    { cx: 270, cy: 150, r: 80, fill: "#1b3a5f" },
-    { cx: 340, cy: 150, r: 80, fill: "#2b5c91" },
+    { cx: 160, cy: 150, r: 64 },
+    { cx: 230, cy: 150, r: 64 },
+    { cx: 300, cy: 150, r: 64 },
   ],
   [
-    { cx: 100, cy: 60, r: 70, fill: "#16283d" },
-    { cx: 170, cy: 140, r: 70, fill: "#1b3a5f" },
-    { cx: 240, cy: 220, r: 70, fill: "#2b5c91" },
+    { cx: 310, cy: 300, r: 150 },
+    { cx: 310, cy: 300, r: 105 },
+    { cx: 310, cy: 300, r: 60 },
   ],
 ];
+const FILLS = ["#16283d", "#1b3a5f", "#2b5c91"];
 
-// Square placeholder artwork shown inside the polaroid until a photo is uploaded.
-export function EpisodeArt({
-  variant,
-  label,
-  kicker,
-}: {
-  variant: number;
-  label: string;
-  kicker: string | null;
-}) {
+export function EpisodeArt({ variant, label, kicker }: { variant: number; label: string; kicker: string | null }) {
   const circles = VARIANTS[Math.abs(variant) % VARIANTS.length];
   return (
-    <div style={{ position: "absolute", inset: 0, background: "var(--black)" }}>
-      <svg viewBox="0 0 320 320" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} aria-hidden="true">
+    <div className="ep-art zoom" aria-hidden="true">
+      <svg viewBox="0 0 360 360" preserveAspectRatio="xMidYMid slice">
         {circles.map((c, i) => (
-          <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill={c.fill} />
+          <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill={FILLS[i]} />
         ))}
       </svg>
-      {kicker && (
-        <div className="ds-label" style={{ position: "absolute", left: 16, top: 14, color: "var(--on-navy-muted)" }}>
-          {kicker}
-        </div>
-      )}
-      <div
-        style={{
-          position: "absolute",
-          left: 16,
-          bottom: 14,
-          right: 16,
-          color: "#ffffff",
-          fontSize: 26,
-          lineHeight: 1.2,
-          fontWeight: 600,
-          whiteSpace: "pre-line",
-        }}
-      >
-        {label}
-      </div>
+      {kicker && <div className="eyebrow ep-art-kicker">{kicker}</div>}
+      <div className="ep-art-label">{label}</div>
     </div>
   );
+}
+
+// The episode's photo, or the disc artwork when there is none.
+export function EpisodeVisual({ episode, alt }: { episode: EpisodeView; alt?: string }) {
+  if (episode.thumbnailUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        className="ep-photo zoom"
+        src={episode.thumbnailUrl}
+        alt={alt ?? episode.photoCaption ?? `ตีตี้ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
+      />
+    );
+  }
+  return <EpisodeArt variant={episode.thumbVariant} label={episode.thumbLabel} kicker={episode.seriesName} />;
 }

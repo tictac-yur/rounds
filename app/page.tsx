@@ -1,29 +1,44 @@
+import { SiteNav } from "@/components/landing/SiteNav";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { StatementSection } from "@/components/landing/StatementSection";
 import { LatestEpisodeSection } from "@/components/landing/LatestEpisodeSection";
 import { EpisodesSection } from "@/components/landing/EpisodesSection";
-import { MythBusterSection } from "@/components/landing/MythBusterSection";
-import { AudienceSection } from "@/components/landing/AudienceSection";
+import { FlagsQuiz } from "@/components/landing/FlagsQuiz";
 import { SeriesSection } from "@/components/landing/SeriesSection";
-import { PartnerSection } from "@/components/landing/PartnerSection";
 import { HostsSection } from "@/components/landing/HostsSection";
+import { PartnerSection } from "@/components/landing/PartnerSection";
 import { Footer } from "@/components/landing/Footer";
 import { getHomeContent } from "@/lib/content";
+import { isPlaceholder } from "@/lib/placeholders";
 
 export default async function Home() {
   const content = await getHomeContent();
   const { settings } = content;
+  // Starter rows like "[ตัวอย่าง Green flag ...]" stay out of the quiz.
+  const myths = content.myths.filter((m) => !isPlaceholder(m.claim) && !isPlaceholder(m.answer));
   return (
-    <div style={{ width: "100%" }}>
-      <HeroSection settings={settings} />
-      {content.latest && <LatestEpisodeSection episode={content.latest} />}
-      <EpisodesSection episodes={content.episodes} />
-      {content.myths.length > 0 && <MythBusterSection myths={content.myths} />}
-      <SeriesSection series={content.series} />
-      <HostsSection hosts={content.hosts} />
-      {/* For sponsors: kept together at the end. */}
-      <AudienceSection settings={settings} segments={content.audienceSegments} />
-      <PartnerSection settings={settings} guests={content.guests} packages={content.sponsorPackages} />
+    <>
+      <a href="#main" className="skip-link">
+        ข้ามไปที่เนื้อหา
+      </a>
+      <SiteNav />
+      <main id="main">
+        <HeroSection settings={settings} latest={content.latest} />
+        <StatementSection />
+        {content.latest && <LatestEpisodeSection episode={content.latest} />}
+        <EpisodesSection episodes={content.episodes} />
+        {myths.length > 0 && <FlagsQuiz myths={myths} />}
+        <SeriesSection series={content.series} />
+        <HostsSection hosts={content.hosts} />
+        {/* For sponsors: kept together at the end. */}
+        <PartnerSection
+          settings={settings}
+          guests={content.guests}
+          packages={content.sponsorPackages}
+          segments={content.audienceSegments}
+        />
+      </main>
       <Footer settings={settings} />
-    </div>
+    </>
   );
 }
