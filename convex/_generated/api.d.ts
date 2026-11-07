@@ -23,14 +23,18 @@ import type * as admin_seed from "../admin/seed.js";
 import type * as admin_series from "../admin/series.js";
 import type * as admin_settings from "../admin/settings.js";
 import type * as admin_sponsorPackages from "../admin/sponsorPackages.js";
+import type * as admin_youtube from "../admin/youtube.js";
 import type * as auth from "../auth.js";
 import type * as content from "../content.js";
 import type * as contentTypes from "../contentTypes.js";
+import type * as crons from "../crons.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
 import type * as lib_files from "../lib/files.js";
+import type * as lib_youtube from "../lib/youtube.js";
 import type * as seedData from "../seedData.js";
 import type * as users from "../users.js";
+import type * as youtube from "../youtube.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -51,14 +55,18 @@ declare const fullApi: ApiFromModules<{
   "admin/series": typeof admin_series;
   "admin/settings": typeof admin_settings;
   "admin/sponsorPackages": typeof admin_sponsorPackages;
+  "admin/youtube": typeof admin_youtube;
   auth: typeof auth;
   content: typeof content;
   contentTypes: typeof contentTypes;
+  crons: typeof crons;
   http: typeof http;
   "lib/access": typeof lib_access;
   "lib/files": typeof lib_files;
+  "lib/youtube": typeof lib_youtube;
   seedData: typeof seedData;
   users: typeof users;
+  youtube: typeof youtube;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

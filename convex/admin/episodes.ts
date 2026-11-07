@@ -4,6 +4,7 @@ import { Id } from "../_generated/dataModel";
 import schema from "../schema";
 import { requireAdmin } from "../lib/access";
 import { releaseFile } from "../lib/files";
+import { videoIdFromUrl } from "../lib/youtube";
 
 const fields = schema.tables.episodes.validator.fields;
 
@@ -20,6 +21,21 @@ async function assertSlugAvailable(ctx: MutationCtx, slug: string, self?: Id<"ep
   if (clash !== null && clash._id !== self) {
     throw new ConvexError(`Another episode already uses the slug "${slug}".`);
   }
+}
+
+// Keeps youtubeVideoId in step with the YouTube link. The admin form doesn't
+// send the sync's fields, so they carry over while the link points at the same video.
+function withYouTube<T extends { youtubeUrl?: string; youtubeVideoId?: string; youtubeThumbnailUrl?: string }>(
+  fields: T,
+  existing?: { youtubeVideoId?: string; youtubeThumbnailUrl?: string },
+): T {
+  const videoId = videoIdFromUrl(fields.youtubeUrl) ?? undefined;
+  const sameVideo = videoId !== undefined && videoId === existing?.youtubeVideoId;
+  return {
+    ...fields,
+    youtubeVideoId: videoId,
+    youtubeThumbnailUrl: fields.youtubeThumbnailUrl ?? (sameVideo ? existing?.youtubeThumbnailUrl : undefined),
+  };
 }
 
 export const list = query({
@@ -42,7 +58,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
     await assertSlugAvailable(ctx, args.slug);
-    return await ctx.db.insert("episodes", args);
+    return await ctx.db.insert("episodes", withYouTube(args));
   },
 });
 
@@ -55,7 +71,7 @@ export const update = mutation({
     if (existing === null) throw new ConvexError("Not found");
     await assertSlugAvailable(ctx, fields.slug, id);
     await releaseFile(ctx, existing.thumbnailId, fields.thumbnailId);
-    await ctx.db.replace("episodes", id, fields);
+    await ctx.db.replace("episodes", id, withYouTube(fields, existing));
     return null;
   },
 });

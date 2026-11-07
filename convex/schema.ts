@@ -80,7 +80,7 @@ export default defineSchema({
     summary: v.string(),
     thumbLabel: v.string(),
     thumbVariant: v.number(),
-    // Polaroid photo of Titi, Pup and the guest doctor.
+    // Photo of Titi, Pup and the guest doctor.
     thumbnailId: v.optional(v.id("_storage")),
     photoCaption: v.optional(v.string()),
     releaseDate: v.optional(v.string()),
@@ -89,10 +89,15 @@ export default defineSchema({
     youtubeUrl: v.optional(v.string()),
     spotifyUrl: v.optional(v.string()),
     appleUrl: v.optional(v.string()),
+    // Set from youtubeUrl; used to match uploads found by the YouTube sync.
+    youtubeVideoId: v.optional(v.string()),
+    // Best YouTube thumbnail found by the sync, used when no photo is uploaded.
+    youtubeThumbnailUrl: v.optional(v.string()),
     order: v.number(),
   })
     .index("by_order", ["order"])
     .index("by_slug", ["slug"])
+    .index("by_youtubeVideoId", ["youtubeVideoId"])
     .index("by_status_and_order", ["status", "order"])
     .index("by_seriesId", ["seriesId"])
     .index("by_guestId", ["guestId"]),
@@ -123,6 +128,16 @@ export default defineSchema({
     description: v.string(),
     order: v.number(),
   }).index("by_order", ["order"]),
+
+  // Singleton: state of the hourly YouTube sync (convex/youtube.ts).
+  youtubeSync: defineTable({
+    channelId: v.optional(v.string()),
+    // The channel link the id was looked up from, so a new link is looked up again.
+    channelUrl: v.optional(v.string()),
+    lastCheckedAt: v.optional(v.number()),
+    lastAddedCount: v.number(),
+    lastError: v.optional(v.string()),
+  }),
 
   hosts: defineTable({
     name: v.string(),

@@ -2,8 +2,14 @@ import { query, QueryCtx } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { episodeMeta, EpisodeView, homeContent, pickLatest } from "./contentTypes";
 import { seedSettings } from "./seedData";
+import { videoIdFromUrl } from "./lib/youtube";
 
 const LIST_LIMIT = 100;
+
+function youtubeThumb(url: string | undefined) {
+  const id = videoIdFromUrl(url);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}
 
 async function fileUrl(ctx: QueryCtx, id: Id<"_storage"> | undefined) {
   return id ? await ctx.storage.getUrl(id) : null;
@@ -65,7 +71,8 @@ export const home = query({
         summary: e.summary,
         thumbLabel: e.thumbLabel,
         thumbVariant: e.thumbVariant,
-        thumbnailUrl: await fileUrl(ctx, e.thumbnailId),
+        // An uploaded photo wins; otherwise the video's YouTube thumbnail.
+        thumbnailUrl: (await fileUrl(ctx, e.thumbnailId)) ?? e.youtubeThumbnailUrl ?? youtubeThumb(e.youtubeUrl),
         photoCaption: e.photoCaption ?? null,
         meta: episodeMeta(e),
         seriesName: series?.name ?? null,
