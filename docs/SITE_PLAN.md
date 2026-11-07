@@ -19,7 +19,7 @@ Status: ✅ built in this change · 🔜 next phase · 💡 later
 │  #latest                   Latest episode (the featured published episode)
 │  #episodes                 The Consult grid + specialty filter
 │  #flags                    Red flag / Green flag: the guest doctor's verdicts
-│  #audience                 Who's watching + platform handles
+│  (in #partner)             Who's watching
 │  (series)                  One channel, three series
 │  #partner                  Sponsorship pitch, guests, packages
 │  #hosts                    Hosts
