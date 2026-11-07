@@ -6,6 +6,27 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Lockup } from "@/components/landing/Logo";
 
+// Errors from the auth action arrive through the Next.js proxy as plain
+// messages like "[CONVEX A(auth:signIn)] ... Uncaught Error: <reason>".
+function describeAuthError(err: unknown, flow: "signIn" | "signUp"): string {
+  if (err instanceof ConvexError) return String(err.data);
+  const raw = err instanceof Error ? err.message : String(err);
+  const reason = raw.match(/Uncaught (?:ConvexError|Error): ([^\n]+)/)?.[1] ?? raw;
+  if (/InvalidSecret|InvalidAccountId|Invalid credentials/.test(reason)) {
+    return flow === "signIn" ? "Wrong email or password." : "That account doesn't exist yet.";
+  }
+  if (/already exists/i.test(reason)) {
+    return "An account with this email already exists. Sign in instead.";
+  }
+  if (/Invalid password/i.test(reason)) {
+    return "Passwords need at least 8 characters.";
+  }
+  if (/JWT_PRIVATE_KEY|JWKS|SITE_URL|pkcs8|Missing environment variable/i.test(reason)) {
+    return `The server's login settings aren't right: ${reason}`;
+  }
+  return reason || "Something went wrong. Please try again.";
+}
+
 export default function SignInPage() {
   const { signIn } = useAuthActions();
   const router = useRouter();
@@ -23,13 +44,7 @@ export default function SignInPage() {
       await signIn("password", formData);
       router.replace("/admin");
     } catch (err) {
-      setError(
-        err instanceof ConvexError
-          ? String(err.data)
-          : flow === "signIn"
-            ? "Wrong email or password."
-            : "Couldn't create the account. Passwords need at least 8 characters.",
-      );
+      setError(describeAuthError(err, flow));
     } finally {
       setPending(false);
     }
