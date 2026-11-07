@@ -13,7 +13,11 @@ export async function getHomeContent(): Promise<HomeContent> {
     return seedHomeContent();
   }
   try {
-    return await fetchQuery(api.content.home, {});
+    const content = await fetchQuery(api.content.home, {});
+    // A fresh deployment (e.g. a branch preview) has no content yet: show the
+    // starter content until it is loaded from the admin dashboard.
+    const isEmpty = content.episodes.length === 0 && content.series.length === 0 && content.hosts.length === 0;
+    return isEmpty ? seedHomeContent() : content;
   } catch (error) {
     console.error("Failed to load site content from Convex; using starter content.", error);
     return seedHomeContent();
