@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rounds
 
-## Getting Started
+Website for **Rounds** — medical school, as it happens. Next.js 16 front end,
+[Convex](https://convex.dev) backend, [Convex Auth](https://labs.convex.dev/auth)
+for the admin portal.
 
-First, run the development server:
+- Public site: `/`
+- Admin portal: `/admin` (content management for every section of the site)
+- Site structure: [`docs/SITE_PLAN.md`](docs/SITE_PLAN.md)
+- Plan to finish and polish the site: [`docs/LAUNCH_PLAN.md`](docs/LAUNCH_PLAN.md)
+- Design system: [Rounds design system](https://claude.ai/artifact/2ZTEdNhmkLWw4oTarazXXZ).
+  Its tokens live in `app/globals.css` (colours, spacing, type styles such as
+  `.ds-headline` and `.ds-label`) and its logo files in `public/brand/`.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+npx convex dev        # creates a deployment, writes NEXT_PUBLIC_CONVEX_URL to .env.local
+bun dev               # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without a Convex deployment the public site still runs, using the starter
+content in `convex/seedData.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### One-time auth setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Convex Auth needs a signing key pair and the admin allowlist on the Convex
+deployment:
 
-## Learn More
+```bash
+# 1. Generate JWT_PRIVATE_KEY and JWKS
+node -e 'import("jose").then(async({generateKeyPair,exportPKCS8,exportJWK})=>{const k=await generateKeyPair("RS256",{extractable:true});const priv=await exportPKCS8(k.privateKey);const pub=await exportJWK(k.publicKey);process.stdout.write(JSON.stringify({JWT_PRIVATE_KEY:priv.trimEnd().replace(/\n/g," "),JWKS:JSON.stringify({keys:[{use:"sig",...pub}]})}))})' > .auth-keys.json
 
-To learn more about Next.js, take a look at the following resources:
+# 2. Set them (NAME=VALUE form; the key starts with "-----")
+npx convex env set "JWT_PRIVATE_KEY=$(node -p 'require("./.auth-keys.json").JWT_PRIVATE_KEY')"
+npx convex env set "JWKS=$(node -p 'require("./.auth-keys.json").JWKS')"
+npx convex env set SITE_URL http://localhost:3000
+rm .auth-keys.json
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 3. Who may use the admin portal (comma-separated)
+npx convex env set ADMIN_EMAILS "titi@example.com,pup@example.com"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Then open `/admin/sign-in`, choose **Create an account** with an allowlisted
+email, and on the dashboard click **Load starter content** to copy the current
+site copy into the database.
 
-## Deploy on Vercel
+## Deploying to Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. In the Convex dashboard, open the **production** deployment → Settings →
+   **Generate Production Deploy Key**.
+2. In Vercel → Project → Settings → Environment Variables, add
+   `CONVEX_DEPLOY_KEY` with that key, scoped to **Production** only.
+   For preview deployments (any branch other than `main`), generate a
+   **Preview Deploy Key** in Convex and add it scoped to **Preview**.
+3. Build command: `bunx convex deploy --cmd 'bun run build'`. It deploys the
+   Convex functions, sets `NEXT_PUBLIC_CONVEX_URL`, then builds the site.
+4. On the production Convex deployment, set `JWT_PRIVATE_KEY`, `JWKS`,
+   `ADMIN_EMAILS`, and `SITE_URL` (the Vercel URL, later
+   `https://roundsmed.com`), as in "One-time auth setup" above.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project layout
+
+```
+app/                    Next.js routes (public site + /admin portal)
+  admin/(portal)/       Admin pages, one per content type
+components/landing/     Public site sections (render Convex content)
+components/admin/       Admin shell, generic list/edit screen, forms
+convex/                 Backend: schema, auth, public content query, admin CRUD
+lib/content.ts          Cached server-side fetch of home page content
+proxy.ts                Convex Auth proxy + /admin redirects
+```

@@ -1,69 +1,79 @@
-const MYTHS = [
-  {
-    claim: "Wearing glasses makes your eyes weaker over time.",
-    answer: "Glasses correct focus. They don't change the eye's structure or make it lazier.",
-  },
-  {
-    claim: "Darker sunglasses block more UV.",
-    answer: "UV protection comes from a UV400 rating, not how dark the lens looks.",
-  },
-  {
-    claim: "Sitting too close to the TV damages your eyes.",
-    answer: "No lasting damage. Kids who are already nearsighted sit closer so they can see.",
-  },
-];
+import type { HomeContent } from "@/convex/contentTypes";
 
-export function MythBusterSection() {
+// The design system has no accent colour and no emoji, so the two verdicts
+// differ by fill (solid vs outline) and by their words, not by red/green.
+const VERDICTS = {
+  red: { label: "Red flag", meaning: "อย่าเชื่อ", solid: true },
+  green: { label: "Green flag", meaning: "เรื่องจริง", solid: false },
+};
+
+function VerdictBadge({ verdict }: { verdict: keyof typeof VERDICTS }) {
+  const v = VERDICTS[verdict];
   return (
-    <section style={{ background: "#1b3a5f", color: "#ffffff" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "88px 24px", display: "flex", flexWrap: "wrap", gap: 56 }}>
-        <div style={{ flex: "1 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 500, letterSpacing: "0.26em", textTransform: "uppercase", color: "#a8bacd" }}>
-            Myth-buster
-          </div>
-          <h2 style={{ margin: 0, fontSize: 40, lineHeight: "44px", fontWeight: 600, letterSpacing: "-0.02em" }}>
-            Every episode ends with rapid-fire myths, answered by the specialist.
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "baseline",
+        gap: "var(--space-2)",
+        padding: "var(--space-1) var(--space-3)",
+        border: "1px solid var(--white)",
+        background: v.solid ? "var(--white)" : "transparent",
+        color: v.solid ? "var(--ink)" : "var(--on-navy)",
+      }}
+    >
+      <span className="ds-label">{v.label}</span>
+      <span className="ds-small" style={{ fontWeight: 600 }}>
+        {v.meaning}
+      </span>
+    </span>
+  );
+}
+
+// Red flag / Green flag: the guest doctor's verdict on beliefs people have.
+export function MythBusterSection({ myths }: { myths: HomeContent["myths"] }) {
+  const sourceSpecialty = myths.find((m) => m.episodeSpecialty)?.episodeSpecialty;
+  return (
+    <section id="flags" className="on-navy">
+      <div className="container section" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-12)" }}>
+        <div style={{ flex: "1 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+          <span className="ds-label muted">03</span>
+          <h2 className="ds-headline" lang="en">
+            Red flag or Green flag?
           </h2>
+          <p className="ds-body-lg muted">เชื่อแบบนี้ได้ไหม คุณหมอตอบให้ท้ายทุกตอน</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", paddingTop: "var(--space-2)" }}>
+            <VerdictBadge verdict="red" />
+            <VerdictBadge verdict="green" />
+          </div>
         </div>
 
         <div style={{ flex: "2 1 520px", minWidth: 0, display: "flex", flexDirection: "column" }}>
-          {MYTHS.map((myth, i) => (
+          {myths.map((myth, i) => (
             <div
-              key={myth.claim}
+              key={myth.key}
               style={{
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 24,
-                padding: "24px 0",
-                borderTop: "1px solid #4a7099",
-                borderBottom: i === MYTHS.length - 1 ? "1px solid #4a7099" : undefined,
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "var(--space-2)",
+                padding: "var(--space-6) 0",
+                borderTop: "1px solid var(--steel)",
+                borderBottom: i === myths.length - 1 ? "1px solid var(--steel)" : undefined,
               }}
             >
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <div style={{ fontSize: 20, lineHeight: "28px", fontWeight: 500 }}>{myth.claim}</div>
-                <div style={{ fontSize: 15, lineHeight: "23px", color: "#a8bacd" }}>{myth.answer}</div>
-              </div>
-              <div
-                style={{
-                  flexShrink: 0,
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 12,
-                  fontWeight: 500,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  background: "#ffffff",
-                  color: "#0a0f14",
-                  padding: "7px 11px",
-                }}
-              >
-                Busted
-              </div>
+              <VerdictBadge verdict={myth.verdict} />
+              <div style={{ fontSize: 20, lineHeight: "32px", fontWeight: 500 }}>“{myth.claim}”</div>
+              <p className="ds-body" style={{ color: "#e6ebf0", lineHeight: "28px" }}>
+                {myth.answer}
+              </p>
+              {myth.answeredBy && <div className="ds-small muted">ตอบโดย {myth.answeredBy}</div>}
             </div>
           ))}
-          <a href="#episodes" style={{ color: "#ffffff", fontWeight: 600, fontSize: 15, paddingTop: 20 }}>
-            Hear why in the ophthalmology episode →
-          </a>
+          {sourceSpecialty && (
+            <a href="#episodes" className="text-link" style={{ paddingTop: "var(--space-3)" }}>
+              ฟังคำอธิบายเต็มๆ ในตอน{sourceSpecialty} →
+            </a>
+          )}
         </div>
       </div>
     </section>

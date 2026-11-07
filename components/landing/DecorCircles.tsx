@@ -15,12 +15,8 @@ export function DecorCircles({ corner }: { corner: Corner }) {
   return (
     <svg
       viewBox="0 0 900 420"
-      style={{
-        position: "absolute",
-        height: "auto",
-        pointerEvents: "none",
-        ...POSITIONS[corner],
-      }}
+      className={`decor decor-${corner}`}
+      style={POSITIONS[corner]}
       aria-hidden="true"
     >
       <circle cx={210} cy={210} r={210} fill={c1} />

@@ -21,15 +21,16 @@ const notoSansThai = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "Rounds — Home",
+  title: "Rounds — ชีวิตนักศึกษาแพทย์แบบเรียลไทม์",
   description:
-    "Rounds follows Titi and Pup, two first-year medical students at Thammasat, as they document med school in real time and sit down with the specialists who teach it.",
+    "ตีตี้และปั๊บ นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ บันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และชวนอาจารย์แพทย์เฉพาะทางมาตอบ Red flag / Green flag เรื่องสุขภาพ",
+  openGraph: { locale: "th_TH", siteName: "Rounds" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="th"
       className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${notoSansThai.variable} antialiased`}
     >
       <body>{children}</body>

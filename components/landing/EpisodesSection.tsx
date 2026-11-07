@@ -1,193 +1,83 @@
-const FILTERS = ["All", "Emergency", "Ophthalmology", "ENT", "OB-GYN", "AI in Medicine"];
+"use client";
 
-function EpisodeThumb({
-  circles,
-  label,
-  badge,
-}: {
-  circles: { cx: number; cy: number; r: number; fill: string }[];
-  label: React.ReactNode;
-  badge?: string;
-}) {
-  return (
-    <div style={{ position: "relative", aspectRatio: "16 / 9", background: "#0a0f14", overflow: "hidden" }}>
-      <svg
-        viewBox="0 0 320 180"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        aria-hidden="true"
+import { useState } from "react";
+import type { EpisodeView } from "@/convex/contentTypes";
+import { EpisodeArt } from "./EpisodeArt";
+import { Polaroid } from "./Polaroid";
+import { SectionHeader } from "./SectionHeader";
+
+const ALL = "ทั้งหมด";
+const TILTS = [-2.5, 1.5, -1, 2.5];
+
+function EpisodeCard({ ep, tilt }: { ep: EpisodeView; tilt: number }) {
+  const body = (
+    <>
+      <Polaroid
+        imageUrl={ep.thumbnailUrl}
+        alt={ep.photoCaption ?? `ตีตี้ ปั๊บ และ${ep.guestName ?? "แขกรับเชิญ"}`}
+        caption={ep.photoCaption}
+        tilt={tilt}
+        fallback={<EpisodeArt variant={ep.thumbVariant} label={ep.thumbLabel} kicker={ep.seriesName} />}
       >
-        {circles.map((c, i) => (
-          <circle key={i} cx={c.cx} cy={c.cy} r={c.r} fill={c.fill} />
-        ))}
-      </svg>
-      <div
-        style={{
-          position: "absolute",
-          left: 18,
-          top: 16,
-          fontFamily: "var(--font-mono)",
-          fontSize: 10,
-          letterSpacing: "0.26em",
-          textTransform: "uppercase",
-          color: "#a8bacd",
-        }}
-      >
-        The Consult
+        {ep.status === "coming_soon" && (
+          <div
+            className="ds-small"
+            style={{
+              position: "absolute",
+              right: "var(--space-3)",
+              top: "var(--space-3)",
+              background: "var(--white)",
+              color: "var(--ink)",
+              fontWeight: 600,
+              padding: "var(--space-1) var(--space-3)",
+            }}
+          >
+            เร็วๆ นี้
+          </div>
+        )}
+      </Polaroid>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
+        <div className="ds-small muted">{[ep.specialty, ep.meta].filter(Boolean).join(" · ")}</div>
+        <h3 className="ds-title">{ep.title}</h3>
+        {ep.guestName && (
+          <div lang={ep.guestLang} className="ds-small muted">
+            {ep.guestName}
+          </div>
+        )}
       </div>
-      <div style={{ position: "absolute", left: 18, bottom: 16, color: "#ffffff", fontSize: 24, lineHeight: 1, fontWeight: 600 }}>
-        {label}
-      </div>
-      {badge && (
-        <div
-          style={{
-            position: "absolute",
-            right: 14,
-            top: 14,
-            background: "#ffffff",
-            color: "#0a0f14",
-            fontFamily: "var(--font-mono)",
-            fontSize: 10,
-            fontWeight: 500,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            padding: "5px 8px",
-          }}
-        >
-          {badge}
-        </div>
-      )}
-    </div>
+    </>
+  );
+  const style = { display: "flex", flexDirection: "column", gap: "var(--space-6)", color: "var(--ink)", textDecoration: "none" } as const;
+  // Link to the episode itself; coming-soon episodes aren't links.
+  const href = ep.youtubeUrl ?? (ep.featured && ep.status === "published" ? "#latest" : null);
+  return href ? (
+    <a href={href} style={style}>
+      {body}
+    </a>
+  ) : (
+    <div style={style}>{body}</div>
   );
 }
 
-const EPISODES = [
-  {
-    href: "#latest",
-    circles: [
-      { cx: 200, cy: 160, r: 80, fill: "#16283d" },
-      { cx: 270, cy: 160, r: 80, fill: "#1b3a5f" },
-      { cx: 340, cy: 160, r: 80, fill: "#2b5c91" },
-    ],
-    thumbLabel: (
-      <>
-        Emergency
-        <br />
-        Medicine
-      </>
-    ),
-    meta: "[DATE] · [RUNTIME]",
-    title: "The ER isn't first come, first served",
-    sub: "[Emergency Medicine physician — name pending]",
-  },
-  {
-    href: "#episodes",
-    circles: [
-      { cx: 190, cy: 90, r: 52, fill: "#16283d" },
-      { cx: 240, cy: 90, r: 52, fill: "#1b3a5f" },
-      { cx: 290, cy: 90, r: 52, fill: "#2b5c91" },
-    ],
-    thumbLabel: (
-      <>
-        Ophthal-
-        <br />
-        mology
-      </>
-    ),
-    meta: "[DATE] · [RUNTIME]",
-    title: "Screens, exams and your eyes",
-    sub: "Dr. Pakornkit Phrueksaudomchai",
-  },
-  {
-    href: "#episodes",
-    circles: [
-      { cx: 250, cy: 110, r: 72, fill: "#16283d" },
-      { cx: 318, cy: 110, r: 72, fill: "#1b3a5f" },
-      { cx: 386, cy: 110, r: 72, fill: "#2b5c91" },
-    ],
-    thumbLabel: "ENT",
-    badge: "Coming soon",
-    meta: "Two-part episode",
-    title: "What an ENT doctor actually does",
-    sub: "Asst. Prof. Dr. Dhave Setabutr",
-  },
-  {
-    href: "#episodes",
-    circles: [
-      { cx: 200, cy: 30, r: 62, fill: "#16283d" },
-      { cx: 250, cy: 90, r: 62, fill: "#1b3a5f" },
-      { cx: 300, cy: 150, r: 62, fill: "#2b5c91" },
-    ],
-    thumbLabel: "OB-GYN",
-    badge: "Coming soon",
-    meta: "With an IVF deep-dive",
-    title: "[EPISODE TITLE]",
-    sub: "อ.พญ.นิพัทธา",
-    subThai: true,
-  },
-];
-
-export function EpisodesSection() {
+export function EpisodesSection({ episodes }: { episodes: EpisodeView[] }) {
+  const [filter, setFilter] = useState(ALL);
+  const filters = [ALL, ...new Set(episodes.map((ep) => ep.specialty).filter(Boolean))];
+  const shown = filter === ALL ? episodes : episodes.filter((ep) => ep.specialty === filter);
   return (
-    <section id="episodes" style={{ maxWidth: 1280, margin: "0 auto", padding: "24px 24px 96px", display: "flex", flexDirection: "column", gap: 28 }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
-          02
-        </span>
-        <h2 style={{ margin: 0, fontSize: 40, lineHeight: "44px", fontWeight: 600, letterSpacing: "-0.02em" }}>
-          The Consult
-        </h2>
-      </div>
+    <section id="episodes" className="container" style={{ paddingTop: "var(--space-6)", paddingBottom: "var(--section-y)", display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+      <SectionHeader number="02" en="The Consult" th="ทุกตอน คุยกับอาจารย์แพทย์เฉพาะทาง" />
 
-      <div role="group" aria-label="Filter by specialty" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {FILTERS.map((filter, i) => (
-          <button
-            key={filter}
-            type="button"
-            aria-pressed={i === 0}
-            style={{
-              height: 44,
-              padding: "0 18px",
-              border: i === 0 ? "1px solid #0a0f14" : "1px solid #b6bec6",
-              background: i === 0 ? "#0a0f14" : "#ffffff",
-              color: i === 0 ? "#ffffff" : "#0a0f14",
-              font: "inherit",
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-          >
-            {filter}
+      <div role="group" aria-label="กรองตามสาขา" style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
+        {filters.map((option) => (
+          <button key={option} type="button" className="chip" aria-pressed={option === filter} onClick={() => setFilter(option)}>
+            {option}
           </button>
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
-        {EPISODES.map((ep) => (
-          <a
-            key={ep.title}
-            href={ep.href}
-            style={{ display: "flex", flexDirection: "column", gap: 16, color: "#0a0f14", textDecoration: "none" }}
-          >
-            <EpisodeThumb circles={ep.circles} label={ep.thumbLabel} badge={ep.badge} />
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "#5d666f" }}>
-                {ep.meta}
-              </div>
-              <div style={{ fontSize: 20, lineHeight: "26px", fontWeight: 600 }}>{ep.title}</div>
-              <div
-                lang={ep.subThai ? "th" : undefined}
-                style={{
-                  fontFamily: ep.subThai ? "var(--font-thai)" : undefined,
-                  fontSize: 14,
-                  lineHeight: "22px",
-                  color: "#5d666f",
-                }}
-              >
-                {ep.sub}
-              </div>
-            </div>
-          </a>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "var(--space-12) var(--space-8)", paddingTop: "var(--space-3)" }}>
+        {shown.map((ep, i) => (
+          <EpisodeCard key={ep.key} ep={ep} tilt={TILTS[i % TILTS.length]} />
         ))}
       </div>
     </section>

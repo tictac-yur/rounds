@@ -1,24 +1,43 @@
+import type { EpisodeView } from "@/convex/contentTypes";
 import { PlayIcon } from "./DecorCircles";
+import { EpisodeArt } from "./EpisodeArt";
+import { Polaroid } from "./Polaroid";
+import { SectionHeader } from "./SectionHeader";
 
-export function LatestEpisodeSection() {
+export function LatestEpisodeSection({ episode }: { episode: EpisodeView }) {
+  const playUrl = episode.youtubeUrl ?? episode.spotifyUrl ?? episode.appleUrl;
+  const links = [
+    { label: "ดูบน YouTube", href: episode.youtubeUrl },
+    { label: "ฟังบน Spotify", href: episode.spotifyUrl },
+    { label: "Apple Podcasts", href: episode.appleUrl },
+  ].filter((link) => link.href);
+
   return (
-    <section id="latest" style={{ maxWidth: 1280, margin: "0 auto", padding: "96px 24px 72px", display: "flex", flexDirection: "column", gap: 32 }}>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 20 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", color: "#5d666f" }}>
-            01
-          </span>
-          <h2 style={{ margin: 0, fontSize: 40, lineHeight: "44px", fontWeight: 600, letterSpacing: "-0.02em" }}>
-            Latest episode
-          </h2>
-        </div>
-        <a href="#episodes" style={{ fontSize: 15, fontWeight: 600 }}>
-          All episodes →
-        </a>
-      </div>
+    <section id="latest" className="container section" style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
+      <SectionHeader
+        number="01"
+        en="Latest episode"
+        th="ตอนล่าสุด"
+        action={
+          <a href="#episodes" className="text-link">
+            ดูทุกตอน →
+          </a>
+        }
+      />
 
-      <article style={{ background: "#0a0f14", color: "#ffffff", display: "flex", flexWrap: "wrap" }}>
-        <div style={{ flex: "1 1 520px", minWidth: 0, position: "relative", aspectRatio: "16 / 9", background: "#0a0f14", overflow: "hidden" }}>
+      <article className="on-dark" style={{ display: "flex", flexWrap: "wrap" }}>
+        <div
+          style={{
+            flex: "1 1 480px",
+            minWidth: 0,
+            position: "relative",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "var(--space-12) var(--space-8)",
+          }}
+        >
           <svg
             viewBox="0 0 640 360"
             preserveAspectRatio="xMidYMid slice"
@@ -29,77 +48,72 @@ export function LatestEpisodeSection() {
             <circle cx={520} cy={40} r={170} fill="#1b3a5f" />
             <circle cx={740} cy={40} r={170} fill="#2b5c91" />
           </svg>
-          <div style={{ position: "absolute", left: 32, bottom: 32, right: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "#a8bacd" }}>
-              Rounds · Emergency Medicine
-            </div>
-            <div style={{ height: 1, background: "#a8bacd", width: 64 }} />
-            <div style={{ fontSize: "clamp(36px, 4.4vw, 60px)", lineHeight: 0.95, fontWeight: 600, letterSpacing: "-0.01em" }}>
-              The Consult
-            </div>
-          </div>
-          <a
-            href="https://www.youtube.com/@roundsmed"
-            aria-label="Play episode"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 88,
-              height: 88,
-              borderRadius: "50%",
-              background: "#ffffff",
-              color: "#0a0f14",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+          <Polaroid
+            imageUrl={episode.thumbnailUrl}
+            alt={episode.photoCaption ?? `ตีตี้ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
+            caption={episode.photoCaption}
+            tilt={-3}
+            style={{ position: "relative", width: "min(360px, 100%)" }}
+            fallback={<EpisodeArt variant={episode.thumbVariant} label={episode.thumbLabel} kicker={episode.seriesName} />}
           >
-            <PlayIcon size={26} />
-          </a>
+            {playUrl && (
+              <a
+                href={playUrl}
+                aria-label={`ดูตอน ${episode.title}`}
+                style={{
+                  position: "absolute",
+                  right: "var(--space-4)",
+                  bottom: "var(--space-4)",
+                  width: 56,
+                  height: 56,
+                  background: "var(--white)",
+                  color: "var(--ink)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <PlayIcon size={18} />
+              </a>
+            )}
+          </Polaroid>
         </div>
 
-        <div style={{ flex: "1 1 380px", minWidth: 0, padding: 40, display: "flex", flexDirection: "column", gap: 18, justifyContent: "center" }}>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", color: "#a8bacd" }}>
-            The Consult · [DATE] · [RUNTIME]
+        <div
+          style={{
+            flex: "1 1 380px",
+            minWidth: 0,
+            padding: "var(--space-12) var(--space-8)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--space-4)",
+            justifyContent: "center",
+          }}
+        >
+          <div className="ds-small muted">{[episode.seriesName, episode.specialty, episode.meta].filter(Boolean).join(" · ")}</div>
+          <h3 className="ds-headline">{episode.title}</h3>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {episode.guestName && (
+              <div lang={episode.guestLang} style={{ fontSize: 17, lineHeight: "28px", fontWeight: 500 }}>
+                {episode.guestName}
+              </div>
+            )}
+            {episode.guestAffiliation && <div className="ds-small muted">{episode.guestAffiliation}</div>}
           </div>
-          <h3 style={{ margin: 0, fontSize: 32, lineHeight: "36px", fontWeight: 600, letterSpacing: "-0.01em" }}>
-            The ER isn&apos;t first come, first served
-          </h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <div style={{ fontSize: 17, lineHeight: "26px", fontWeight: 500 }}>
-              [Emergency Medicine physician — name pending]
+          {episode.summary && (
+            <p className="ds-body" style={{ color: "#e6ebf0", lineHeight: "28px" }}>
+              {episode.summary}
+            </p>
+          )}
+          {links.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)", paddingTop: "var(--space-2)" }}>
+              {links.map((link, i) => (
+                <a key={link.label} href={link.href ?? undefined} className={i === 0 ? "btn btn-light" : "btn btn-ghost-light"} style={{ fontSize: 15 }}>
+                  {link.label}
+                </a>
+              ))}
             </div>
-            <div style={{ fontSize: 15, lineHeight: "22px", color: "#a8bacd" }}>
-              Emergency Medicine, Thammasat University
-            </div>
-          </div>
-          <p style={{ margin: 0, fontSize: 16, lineHeight: "25px", color: "#e6ebf0" }}>
-            Who gets seen first when you walk into an ER, what really happens in the minutes
-            after a heart stops, why motorbikes and alcohol fill the night shift, and where AI
-            will change emergency care first.
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, paddingTop: 4 }}>
-            <a
-              href="https://www.youtube.com/@roundsmed"
-              style={{ display: "inline-flex", alignItems: "center", height: 46, padding: "0 20px", background: "#ffffff", color: "#0a0f14", textDecoration: "none", fontWeight: 600, fontSize: 15 }}
-            >
-              YouTube
-            </a>
-            <a
-              href="[SPOTIFY LINK]"
-              style={{ display: "inline-flex", alignItems: "center", height: 46, padding: "0 20px", border: "1px solid #5d666f", color: "#ffffff", textDecoration: "none", fontWeight: 600, fontSize: 15 }}
-            >
-              Spotify
-            </a>
-            <a
-              href="[APPLE PODCASTS LINK]"
-              style={{ display: "inline-flex", alignItems: "center", height: 46, padding: "0 20px", border: "1px solid #5d666f", color: "#ffffff", textDecoration: "none", fontWeight: 600, fontSize: 15 }}
-            >
-              Apple Podcasts
-            </a>
-          </div>
+          )}
         </div>
       </article>
     </section>
