@@ -31,7 +31,7 @@ export const seedSettings = {
   appleUrl: "[APPLE PODCASTS LINK]",
   instagramUrl: "https://www.instagram.com/rounds.md",
   tiktokUrl: "https://www.tiktok.com/@rounds.med",
-  linktreeUrl: "https://linktr.ee/rounds.md",
+  linktreeUrl: "https://linktr.ee/rounds.med",
 };
 
 export const seedSeries = [
