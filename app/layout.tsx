@@ -31,6 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="th"
+      data-scroll-behavior="smooth"
       className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} ${notoSansThai.variable} antialiased`}
     >
       <body>{children}</body>

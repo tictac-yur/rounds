@@ -47,6 +47,8 @@ export const list = query({
       docs.map(async (doc) => ({
         ...doc,
         imageUrl: doc.thumbnailId ? await ctx.storage.getUrl(doc.thumbnailId) : null,
+        // Shown in the list when no photo is uploaded.
+        youtubeThumb: doc.youtubeThumbnailUrl ?? null,
       })),
     );
   },

@@ -5,8 +5,9 @@ import { FunctionReference } from "convex/server";
 import { ReactNode, useState } from "react";
 import { Field, FieldValues, toFormValues } from "./fields";
 import { RecordForm } from "./RecordForm";
+import { AdminPageHeader } from "./AdminShell";
 
-type Row = FieldValues & { _id: string; order: number; imageUrl?: string | null };
+type Row = FieldValues & { _id: string; order: number; imageUrl?: string | null; youtubeThumb?: string | null };
 
 type AnyQuery = FunctionReference<"query", "public", Record<string, never>, Row[]>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +23,9 @@ export function ResourceManager({
   defaults,
   imageField,
   summary,
+  label = "Content",
 }: {
+  label?: string;
   title: string;
   description: string;
   singular: string;
@@ -48,11 +51,15 @@ export function ResourceManager({
     const isNew = editing === "new";
     return (
       <section className="admin-page">
-        <header className="admin-page-header">
-          <div>
-            <h1>{isNew ? `New ${singular}` : `Edit ${singular}`}</h1>
-          </div>
-        </header>
+        <AdminPageHeader
+          label={title}
+          title={isNew ? `New ${singular}` : `Edit ${singular}`}
+          actions={
+            <button className="admin-button admin-button-secondary" onClick={() => setEditing(null)}>
+              ← Back to {title.toLowerCase()}
+            </button>
+          }
+        />
         <div className="admin-card">
           <RecordForm
             fields={allFields}
@@ -76,32 +83,40 @@ export function ResourceManager({
 
   return (
     <section className="admin-page">
-      <header className="admin-page-header">
-        <div>
-          <h1>{title}</h1>
-          <p className="admin-muted">{description}</p>
-        </div>
-        <button className="admin-button" onClick={() => setEditing("new")}>
-          Add {singular}
-        </button>
-      </header>
+      <AdminPageHeader
+        label={label}
+        title={title}
+        description={description}
+        actions={
+          <button className="admin-button" onClick={() => setEditing("new")}>
+            + Add {singular}
+          </button>
+        }
+      />
       {rows === undefined ? (
         <p className="admin-muted">Loading…</p>
       ) : rows.length === 0 ? (
-        <div className="admin-card admin-empty">Nothing here yet.</div>
+        <div className="admin-card admin-empty">
+          <p>Nothing here yet.</p>
+          <button className="admin-button" onClick={() => setEditing("new")}>
+            + Add the first {singular}
+          </button>
+        </div>
       ) : (
         <ul className="admin-list">
           {rows.map((row) => (
             <li key={row._id} className="admin-list-row">
               {imageField &&
-                (row.imageUrl ? (
+                (row.imageUrl || row.youtubeThumb ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img className="admin-thumb" src={row.imageUrl} alt="" />
+                  <img className="admin-thumb" src={(row.imageUrl || row.youtubeThumb) as string} alt="" />
                 ) : (
                   <div className="admin-thumb admin-thumb-empty" />
                 ))}
               <div className="admin-list-summary">{summary(row)}</div>
-              <span className="admin-order">#{row.order}</span>
+              <span className="admin-order" title="Display order">
+                #{row.order}
+              </span>
               <div className="admin-list-actions">
                 <button className="admin-button admin-button-secondary" onClick={() => setEditing(row)}>
                   Edit

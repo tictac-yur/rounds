@@ -8,12 +8,8 @@
  * @module
  */
 
-import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
-} from "convex/server";
 import type * as admin_audienceSegments from "../admin/audienceSegments.js";
+import type * as admin_dashboard from "../admin/dashboard.js";
 import type * as admin_episodes from "../admin/episodes.js";
 import type * as admin_files from "../admin/files.js";
 import type * as admin_guests from "../admin/guests.js";
@@ -25,27 +21,29 @@ import type * as admin_settings from "../admin/settings.js";
 import type * as admin_sponsorPackages from "../admin/sponsorPackages.js";
 import type * as admin_youtube from "../admin/youtube.js";
 import type * as auth from "../auth.js";
+import type * as channelContent from "../channelContent.js";
 import type * as content from "../content.js";
 import type * as contentTypes from "../contentTypes.js";
 import type * as crons from "../crons.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
 import type * as lib_files from "../lib/files.js";
+import type * as lib_placeholder from "../lib/placeholder.js";
+import type * as lib_starter from "../lib/starter.js";
 import type * as lib_youtube from "../lib/youtube.js";
 import type * as seedData from "../seedData.js";
 import type * as users from "../users.js";
 import type * as youtube from "../youtube.js";
 
-/**
- * A utility for referencing Convex functions in your app's API.
- *
- * Usage:
- * ```js
- * const myFunctionReference = api.myModule.myFunction;
- * ```
- */
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
+
 declare const fullApi: ApiFromModules<{
   "admin/audienceSegments": typeof admin_audienceSegments;
+  "admin/dashboard": typeof admin_dashboard;
   "admin/episodes": typeof admin_episodes;
   "admin/files": typeof admin_files;
   "admin/guests": typeof admin_guests;
@@ -57,21 +55,42 @@ declare const fullApi: ApiFromModules<{
   "admin/sponsorPackages": typeof admin_sponsorPackages;
   "admin/youtube": typeof admin_youtube;
   auth: typeof auth;
+  channelContent: typeof channelContent;
   content: typeof content;
   contentTypes: typeof contentTypes;
   crons: typeof crons;
   http: typeof http;
   "lib/access": typeof lib_access;
   "lib/files": typeof lib_files;
+  "lib/placeholder": typeof lib_placeholder;
+  "lib/starter": typeof lib_starter;
   "lib/youtube": typeof lib_youtube;
   seedData: typeof seedData;
   users: typeof users;
   youtube: typeof youtube;
 }>;
+
+/**
+ * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
 export declare const api: FilterApi<
   typeof fullApi,
   FunctionReference<any, "public">
 >;
+
+/**
+ * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
+ */
 export declare const internal: FilterApi<
   typeof fullApi,
   FunctionReference<any, "internal">

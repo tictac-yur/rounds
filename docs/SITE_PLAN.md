@@ -115,11 +115,14 @@ discs as the recurring visual.
 **YouTube sync (done)**
 - `convex/youtube.ts`, run hourly by `convex/crons.ts`: reads the channel's
   public uploads feed (no API key) from Site settings → YouTube link. Each new
-  full-length video (Shorts skipped) becomes a **draft** episode with title,
+  full-length video (Shorts skipped) is **published** as an episode with title,
   summary (first paragraph of the description), Thai release date, link,
-  thumbnail and series (matched by name in the title). Videos already linked
-  from an episode are never added twice. Dashboard shows the last check and a
-  "Check YouTube now" button. Tests: `bun run test`.
+  thumbnail and series (matched by name in the title), and becomes the
+  featured latest episode. Videos already linked from an episode are never
+  added twice. Dashboard shows the last check and a "Check YouTube now" button.
+- `convex/channelContent.ts`: one-time switch (CONTENT_VERSION) run by the sync
+  that replaces the old placeholder episodes, guests and flags with EP.0/EP.1,
+  fixes the Linktree link and fills the contact email. Tests: `bun run test`.
 - Later: a Shorts strip on the home page; view counts via the YouTube Data API.
 
 **Phase 2 — Episode pages & SEO**

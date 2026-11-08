@@ -5,6 +5,7 @@ import { ConvexError } from "convex/values";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Lockup } from "@/components/landing/Logo";
+import { Discs } from "@/components/admin/AdminShell";
 
 // Errors from the auth action arrive through the Next.js proxy as plain
 // messages like "[CONVEX A(auth:signIn)] ... Uncaught Error: <reason>".
@@ -52,13 +53,23 @@ export default function SignInPage() {
 
   return (
     <main className="admin-centered admin-dark">
+      <Discs className="admin-signin-discs" />
       <form className="admin-card admin-signin" onSubmit={onSubmit}>
         <div className="admin-brand">
           <Lockup height={22} reverse={false} />
         </div>
-        <h1>{flow === "signIn" ? "Sign in to the admin portal" : "Create your admin account"}</h1>
+        <span className="admin-eyebrow">
+          <span className="admin-eyebrow-dots" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          Admin portal
+        </span>
+        <h1>{flow === "signIn" ? "Welcome back." : "Create your admin account"}</h1>
         <p className="admin-muted">
-          Only approved team emails can {flow === "signIn" ? "sign in" : "register"}.
+          Sign in to edit episodes, flags and everything else on the site. Only approved team
+          emails can {flow === "signIn" ? "sign in" : "register"}.
         </p>
         <label className="admin-field">
           <span>Email</span>
