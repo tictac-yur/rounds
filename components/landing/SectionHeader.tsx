@@ -1,25 +1,34 @@
 import { ReactNode } from "react";
 
-// Section title: mono number, English keyword as the headline, Thai line under it.
+// Section title: a small label, the English keyword as the headline, the Thai line under it.
 export function SectionHeader({
-  number,
+  label,
   en,
   th,
   action,
+  id,
 }: {
-  number: string;
+  label: string;
   en: string;
   th: string;
   action?: ReactNode;
+  id?: string;
 }) {
   return (
-    <div className="section-head" style={{ alignItems: "flex-end" }}>
-      <div style={{ flexDirection: "column", alignItems: "flex-start", gap: "var(--space-1)" }}>
-        <span className="ds-label">{number}</span>
-        <h2 className="ds-headline" lang="en">
+    <div className="section-head">
+      <div>
+        <span className="eyebrow">
+          <span className="eyebrow-dots" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          {label}
+        </span>
+        <h2 className="h2" lang="en" id={id}>
           {en}
         </h2>
-        <p className="ds-body-lg muted">{th}</p>
+        <p className="h2-th muted">{th}</p>
       </div>
       {action}
     </div>

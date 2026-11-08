@@ -31,7 +31,7 @@ export const seedSettings = {
   appleUrl: "[APPLE PODCASTS LINK]",
   instagramUrl: "https://www.instagram.com/rounds.md",
   tiktokUrl: "https://www.tiktok.com/@rounds.med",
-  linktreeUrl: "https://linktr.ee/rounds.md",
+  linktreeUrl: "https://linktr.ee/rounds.med",
 };
 
 export const seedSeries = [
@@ -59,116 +59,67 @@ export const seedSeries = [
 
 export const seedGuests = [
   {
-    name: "[ชื่ออาจารย์แพทย์เวชศาสตร์ฉุกเฉิน]",
+    name: "ผศ.นพ.กานต์ วิฑูรชาติ",
     nameLang: "th" as const,
-    field: "เวชศาสตร์ฉุกเฉิน",
-    affiliation: "เวชศาสตร์ฉุกเฉิน มหาวิทยาลัยธรรมศาสตร์",
-  },
-  {
-    name: "Dr. Pakornkit Phrueksaudomchai",
-    nameLang: "en" as const,
-    field: "กระจกตาและการผ่าตัดแก้ไขสายตา",
-  },
-  {
-    name: "Asst. Prof. Dr. Dhave Setabutr",
-    nameLang: "en" as const,
-    field: "หู คอ จมูกเด็ก",
-  },
-  {
-    name: "อ.พญ.นิพัทธา",
-    nameLang: "th" as const,
-    field: "สูติศาสตร์และนรีเวชวิทยา",
+    field: "อายุรศาสตร์โรคหัวใจ",
+    affiliation: "อายุรแพทย์โรคหัวใจ คณะแพทยศาสตร์ มหาวิทยาลัยธรรมศาสตร์",
   },
 ];
 
+// The episodes on the channel (youtube.com/@roundsmed). Newer uploads arrive
+// as drafts through the hourly YouTube sync (convex/youtube.ts).
 export const seedEpisodes = [
   {
-    slug: "emergency-medicine",
-    title: "ห้องฉุกเฉิน ไม่ใช่มาก่อนได้ก่อน",
+    slug: "cardiology",
+    title: "คุยกับหมอหัวใจ “ถอดรหัสโรคหัวใจ”",
     status: "published" as const,
     featured: true,
     seriesIndex: 0,
     guestIndex: 0,
-    specialty: "เวชศาสตร์ฉุกเฉิน",
+    specialty: "โรคหัวใจ",
     summary:
-      "ใครได้ตรวจก่อนเมื่อเดินเข้าห้องฉุกเฉิน นาทีหลังหัวใจหยุดเต้นเกิดอะไรขึ้นจริงๆ ทำไมเวรดึกถึงเต็มไปด้วยอุบัติเหตุมอเตอร์ไซค์และแอลกอฮอล์ และ AI จะเปลี่ยนการแพทย์ฉุกเฉินตรงไหนก่อน",
-    thumbLabel: "เวชศาสตร์\nฉุกเฉิน",
+      "อกหักจนหัวใจวายได้จริงไหม? ชีพจร 90 ต้องตกใจหรือเปล่า? แล้วกาแฟที่ดื่มทุกวัน ดีหรือร้ายกับหัวใจกันแน่? ตั้งแต่วิธีเช็คหัวใจเองที่บ้าน ภาวะ “หัวใจสลาย” ที่เกิดจากความเครียด ไปจนถึง myth เรื่องหัวใจที่คนเชื่อกันผิดมาตลอด",
+    thumbLabel: "โรค\nหัวใจ",
     thumbVariant: 0,
-    releaseDate: "[วันที่]",
-    runtime: "[ความยาว]",
-    youtubeUrl: "https://www.youtube.com/@roundsmed",
-    spotifyUrl: "[SPOTIFY LINK]",
-    appleUrl: "[APPLE PODCASTS LINK]",
+    releaseDate: "1 พ.ย. 2026",
+    youtubeUrl: "https://www.youtube.com/watch?v=o4kY44zLgig",
+    youtubeVideoId: "o4kY44zLgig",
+    youtubeThumbnailUrl: "https://i.ytimg.com/vi/o4kY44zLgig/maxresdefault.jpg",
   },
   {
-    slug: "ophthalmology",
-    title: "จ้องจอ ตรวจตา และดวงตาของเรา",
+    slug: "what-is-rounds",
+    title: "ทำความรู้จักกับเรา “What is Rounds?”",
     status: "published" as const,
     featured: false,
     seriesIndex: 0,
-    guestIndex: 1,
-    specialty: "จักษุวิทยา",
-    summary: "",
-    thumbLabel: "จักษุ\nวิทยา",
-    thumbVariant: 1,
-    releaseDate: "[วันที่]",
-    runtime: "[ความยาว]",
-  },
-  {
-    slug: "ent",
-    title: "หมอหู คอ จมูก ทำอะไรบ้างจริงๆ",
-    status: "coming_soon" as const,
-    featured: false,
-    seriesIndex: 0,
-    guestIndex: 2,
-    specialty: "หู คอ จมูก",
-    summary: "",
-    thumbLabel: "หู คอ\nจมูก",
+    guestIndex: -1,
+    specialty: "",
+    summary:
+      "เรียนหมอ 6 ปี เริ่มนับจากวันนี้... ตีตี้และปั๊บพาไปรู้จักช่อง Rounds ว่าเป็นใคร เริ่มต้นมาจากไหน ทำไมชื่อ “ROUNDS” และในช่องนี้จะมีอะไรให้ดูบ้าง",
+    thumbLabel: "What is\nRounds?",
     thumbVariant: 2,
-    metaNote: "แบ่งเป็น 2 ตอน",
-  },
-  {
-    slug: "ob-gyn",
-    title: "[ชื่อตอน]",
-    status: "coming_soon" as const,
-    featured: false,
-    seriesIndex: 0,
-    guestIndex: 3,
-    specialty: "สูติ-นรีเวช",
-    summary: "",
-    thumbLabel: "สูติ-\nนรีเวช",
-    thumbVariant: 3,
-    metaNote: "พร้อมเจาะลึกเรื่อง IVF",
+    releaseDate: "26 ต.ค. 2026",
+    youtubeUrl: "https://www.youtube.com/watch?v=27T2ZaG26K4",
+    youtubeVideoId: "27T2ZaG26K4",
+    youtubeThumbnailUrl: "https://i.ytimg.com/vi/27T2ZaG26K4/maxresdefault.jpg",
   },
 ];
 
 // The doctor's verdict on a common belief: "red" (don't believe it) or
-// "green" (true / a healthy habit).
+// "green" (true / a healthy habit). From The Consult EP.1.
 export const seedMyths = [
   {
-    claim: "ใส่แว่นนานๆ แล้วสายตาจะแย่ลง",
-    answer: "แว่นแค่ช่วยปรับโฟกัส ไม่ได้เปลี่ยนโครงสร้างของตา หรือทำให้ตาขี้เกียจ",
+    claim: "กินไข่วันละ 1–2 ฟอง ทำให้ไขมันอุดตันเส้นเลือด",
+    answer: "ไข่ 1–2 ฟองไม่ได้น่ากลัวอย่างที่คิด แต่ขึ้นอยู่กับว่ากินแบบไหน และเราเป็นใคร",
     verdict: "red" as const,
-    episodeIndex: 1,
+    episodeIndex: 0,
   },
   {
-    claim: "แว่นกันแดดยิ่งสีเข้ม ยิ่งกัน UV ได้มาก",
-    answer: "การกัน UV ขึ้นอยู่กับมาตรฐาน UV400 ไม่ใช่ความเข้มของเลนส์",
-    verdict: "red" as const,
-    episodeIndex: 1,
-  },
-  {
-    claim: "นั่งดูทีวีใกล้ๆ ทำให้ตาเสีย",
-    answer: "ไม่ทำให้ตาเสียถาวร เด็กที่สายตาสั้นอยู่แล้วต่างหากที่ต้องนั่งใกล้เพื่อให้มองเห็นชัด",
-    verdict: "red" as const,
-    episodeIndex: 1,
-  },
-  {
-    claim: "[ตัวอย่าง Green flag — ใส่คำถามจริงในหน้าแอดมิน]",
-    answer: "[คำตอบจากคุณหมอ]",
+    claim: "อกหักจนหัวใจพังได้จริง",
+    answer:
+      "มีภาวะที่เรียกว่า “ทาโกะสึโบะ” หรือภาวะหัวใจสลาย มักเกี่ยวกับการตกใจอย่างรุนแรง และส่วนใหญ่รักษาให้ดีขึ้นได้",
     verdict: "green" as const,
-    // Not linked to an episode, so no doctor is credited with a placeholder.
-    episodeIndex: -1,
+    episodeIndex: 0,
   },
 ];
 

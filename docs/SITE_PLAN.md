@@ -19,10 +19,10 @@ Status: ✅ built in this change · 🔜 next phase · 💡 later
 │  #latest                   Latest episode (the featured published episode)
 │  #episodes                 The Consult grid + specialty filter
 │  #flags                    Red flag / Green flag: the guest doctor's verdicts
-│  #audience                 Who's watching + platform handles
+│  (in #partner)             Who's watching
 │  (series)                  One channel, three series
 │  #partner                  Sponsorship pitch, guests, packages
-│  #about                    Hosts
+│  #hosts                    Hosts
 │
 /episodes                 🔜 Full episode archive, filter by series & specialty
 /episodes/[slug]          🔜 Episode page: embed, summary, guest, myths, links
@@ -55,7 +55,8 @@ shows first) and a `by_order` index.
 | Table | Drives | Key fields |
 | --- | --- | --- |
 | `siteSettings` (single row) | Hero, stats, audience intro, footer links, contact | `heroHeadline`, `heroIntro`/`heroIntroTh`, `heroImageId`, `stats[]`, `platformHandles[]`, social URLs, `contactEmail`, `mediaKitUrl` |
-| `episodes` | Latest episode, episode grid | `slug` (unique), `status` (`draft`/`coming_soon`/`published`), `featured`, `seriesId`, `guestId`, `specialty`, `summary`, `releaseDate`, `runtime`, platform links, `thumbnailId` or generated thumbnail (`thumbLabel`, `thumbVariant`) |
+| `episodes` | Latest episode, episode grid | `slug` (unique), `status` (`draft`/`coming_soon`/`published`), `featured`, `seriesId`, `guestId`, `specialty`, `summary`, `releaseDate`, `runtime`, platform links, `thumbnailId`, else the YouTube thumbnail, else generated art (`thumbLabel`, `thumbVariant`); `youtubeVideoId` |
+| `youtubeSync` (single row) | YouTube sync status | `channelId`, `lastCheckedAt`, `lastAddedCount`, `lastError` |
 | `series` | "One channel, three series" | `name`, `kicker`, `description`, `accentColor` |
 | `guests` | Partner section, episode cards | `name`, `nameLang` (`en`/`th` → font), `field`, `affiliation`, `photoId` |
 | `myths` | Red flag / Green flag section | `claim`, `answer`, `verdict` (`red`/`green`), `episodeId` (credits that episode's guest), `published` |
@@ -106,7 +107,20 @@ Admin portal (client, Convex React)          Public site (server components)
 **Phase 1 — CMS foundation (this change)**
 Convex schema, Convex Auth, admin portal for every section on the home page,
 home page reads from Convex. Since then: Thai-first copy, Red flag / Green flag
-verdicts, polaroid episode photos, newsletter removed.
+verdicts, polaroid episode photos, newsletter removed. Then a redesign: rounded
+cards and pill buttons in the same navy/black/grey/white palette, a sticky nav
+with a phone menu, an interactive Red/Green flag quiz, and the logo's three
+discs as the recurring visual.
+
+**YouTube sync (done)**
+- `convex/youtube.ts`, run hourly by `convex/crons.ts`: reads the channel's
+  public uploads feed (no API key) from Site settings → YouTube link. Each new
+  full-length video (Shorts skipped) becomes a **draft** episode with title,
+  summary (first paragraph of the description), Thai release date, link,
+  thumbnail and series (matched by name in the title). Videos already linked
+  from an episode are never added twice. Dashboard shows the last check and a
+  "Check YouTube now" button. Tests: `bun run test`.
+- Later: a Shorts strip on the home page; view counts via the YouTube Data API.
 
 **Phase 2 — Episode pages & SEO**
 - `/episodes` archive and `/episodes/[slug]` pages (YouTube embed, guest card,
