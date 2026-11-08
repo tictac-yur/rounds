@@ -4,11 +4,20 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import type { HomeContent } from "@/convex/contentTypes";
 import { seedHomeContent } from "./seedContent";
+import { withChannelVideos } from "./channelVideos";
+import { fetchChannelVideos } from "./youtubeFeed";
 
 export async function getHomeContent(): Promise<HomeContent> {
   "use cache";
   // Edits made in the admin portal show up on the site within a minute.
   cacheLife("minutes");
+  const content = await loadContent();
+  // The channel's videos always show, even before the hourly sync has run.
+  const videos = await fetchChannelVideos(content.settings.youtubeUrl);
+  return withChannelVideos(content, seedHomeContent(), videos);
+}
+
+async function loadContent(): Promise<HomeContent> {
   if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
     return seedHomeContent();
   }
