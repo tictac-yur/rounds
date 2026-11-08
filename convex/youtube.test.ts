@@ -4,6 +4,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import schema from "./schema";
 import { internal } from "./_generated/api";
 import { parseFeed, thaiDate, videoIdFromUrl } from "./lib/youtube";
+import { seedSettings } from "./seedData";
 
 const modules = import.meta.glob("./**/*.ts");
 
@@ -37,13 +38,13 @@ const FEED = `<?xml version="1.0" encoding="UTF-8"?>
  </entry>
 </feed>`;
 
-function stubYouTube() {
+function stubYouTube(feed = FEED) {
   const fetchMock = vi.fn(async (input: string | URL | Request) => {
     const url = String(input instanceof Request ? input.url : input);
     if (url.startsWith("https://www.youtube.com/@roundsmed")) {
       return new Response(`<link rel="canonical" href="https://www.youtube.com/channel/${CHANNEL}">`);
     }
-    if (url === `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL}`) return new Response(FEED);
+    if (url === `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL}`) return new Response(feed);
     if (url.includes("maxresdefault")) return new Response(null, { status: url.includes("o4kY44zLgig") ? 200 : 404 });
     return new Response(null, { status: 404 });
   });
@@ -79,44 +80,109 @@ describe("youtube helpers", () => {
   });
 });
 
-describe("youtube sync", () => {
-  test("adds new full-length videos as drafts, once", async () => {
-    const fetchMock = stubYouTube();
+// A video newer than EP.1, as if just uploaded.
+const NEW_ENTRY = ` <entry>
+  <yt:videoId>NeWVide0_01</yt:videoId>
+  <title>คุยกับจักษุแพทย์ | The Consult EP.2</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=NeWVide0_01"/>
+  <published>2026-11-15T11:00:00+00:00</published>
+  <media:group><media:description>เล่นมือถือในที่มืดทำให้ตาเสียจริงไหม?</media:description></media:group>
+ </entry>
+</feed>`;
+
+describe("channel content switch", () => {
+  test("replaces placeholder content with EP.0 and EP.1", async () => {
+    stubYouTube();
     const t = convexTest(schema, modules);
     await t.run(async (ctx) => {
+      await ctx.db.insert("siteSettings", { ...seedSettings, contactEmail: "[EMAIL]", linktreeUrl: "https://linktr.ee/rounds.md" });
       await ctx.db.insert("series", { name: "The Consult", kicker: "", description: "", accentColor: "#000", order: 0 });
-      // An episode already linked by hand to one of the videos.
-      await ctx.db.insert("episodes", {
-        slug: "what-is-rounds",
-        title: "What is Rounds?",
+      const oldGuest = await ctx.db.insert("guests", { name: "[ชื่ออาจารย์]", nameLang: "th", field: "ER", order: 0 });
+      const old = await ctx.db.insert("episodes", {
+        slug: "emergency-medicine",
+        title: "ห้องฉุกเฉิน",
         status: "published",
+        featured: true,
+        guestId: oldGuest,
+        specialty: "ER",
+        summary: "",
+        thumbLabel: "",
+        thumbVariant: 0,
+        youtubeUrl: "https://www.youtube.com/@roundsmed",
+        order: 0,
+      });
+      await ctx.db.insert("myths", { claim: "old", answer: "old", verdict: "red", episodeId: old, published: true, order: 0 });
+      // EP.0 already imported as a draft by an earlier sync.
+      await ctx.db.insert("episodes", {
+        slug: "yt-27t2zag26k4",
+        title: "draft",
+        status: "draft",
         featured: false,
         specialty: "",
         summary: "",
         thumbLabel: "",
         thumbVariant: 0,
-        youtubeUrl: "https://youtu.be/27T2ZaG26K4",
-        order: 0,
+        youtubeUrl: "https://www.youtube.com/watch?v=27T2ZaG26K4",
+        youtubeVideoId: "27T2ZaG26K4",
+        order: 1,
       });
     });
 
     await t.action(internal.youtube.sync, {});
 
     const episodes = await t.run((ctx) => ctx.db.query("episodes").withIndex("by_order").collect());
-    expect(episodes).toHaveLength(2);
-    const added = episodes[0];
-    expect(added).toMatchObject({
-      slug: "yt-o4ky44zlgig",
-      title: 'คุยกับหมอหัวใจ "ถอดรหัสโรคหัวใจ" | The Consult EP.1',
-      status: "draft",
-      summary: "อกหักจนหัวใจวายได้จริงไหม?",
-      releaseDate: "1 พ.ย. 2026",
-      youtubeUrl: "https://www.youtube.com/watch?v=o4kY44zLgig",
-      youtubeVideoId: "o4kY44zLgig",
-      youtubeThumbnailUrl: "https://i.ytimg.com/vi/o4kY44zLgig/maxresdefault.jpg",
+    expect(episodes.map((e) => [e.youtubeVideoId, e.status, e.featured])).toEqual([
+      ["o4kY44zLgig", "published", true],
+      ["27T2ZaG26K4", "published", false],
+    ]);
+    expect(episodes[1].slug).toBe("what-is-rounds");
+    const guests = await t.run((ctx) => ctx.db.query("guests").collect());
+    expect(guests.map((g) => g.name)).toEqual(["ผศ.นพ.กานต์ วิฑูรชาติ"]);
+    expect(episodes[0].guestId).toBe(guests[0]._id);
+    const myths = await t.run((ctx) => ctx.db.query("myths").collect());
+    expect(myths.map((m) => [m.verdict, m.episodeId])).toEqual([
+      ["red", episodes[0]._id],
+      ["green", episodes[0]._id],
+    ]);
+    const settings = await t.run((ctx) => ctx.db.query("siteSettings").first());
+    expect(settings).toMatchObject({ linktreeUrl: "https://linktr.ee/rounds.med", contactEmail: "roundsmedofficial@gmail.com" });
+
+    // It runs once: later edits survive the next sync.
+    await t.run((ctx) => ctx.db.patch("episodes", episodes[1]._id, { title: "edited" }));
+    await t.action(internal.youtube.sync, {});
+    expect((await t.run((ctx) => ctx.db.get("episodes", episodes[1]._id)))?.title).toBe("edited");
+  });
+
+  test("fills an empty database with the starter content", async () => {
+    stubYouTube();
+    const t = convexTest(schema, modules);
+    await t.action(internal.youtube.sync, {});
+    const episodes = await t.run((ctx) => ctx.db.query("episodes").withIndex("by_order").collect());
+    expect(episodes.map((e) => e.slug)).toEqual(["cardiology", "what-is-rounds"]);
+    expect(await t.run((ctx) => ctx.db.query("hosts").collect())).toHaveLength(2);
+  });
+});
+
+describe("youtube sync", () => {
+  test("publishes a new upload once and makes it the latest episode", async () => {
+    const fetchMock = stubYouTube(FEED.replace("</feed>", NEW_ENTRY));
+    const t = convexTest(schema, modules);
+    await t.action(internal.youtube.sync, {});
+
+    const episodes = await t.run((ctx) => ctx.db.query("episodes").withIndex("by_order").collect());
+    expect(episodes).toHaveLength(3);
+    expect(episodes[0]).toMatchObject({
+      slug: "yt-newvide0-01",
+      title: "คุยกับจักษุแพทย์ | The Consult EP.2",
+      status: "published",
+      featured: true,
+      summary: "เล่นมือถือในที่มืดทำให้ตาเสียจริงไหม?",
+      releaseDate: "15 พ.ย. 2026",
+      youtubeUrl: "https://www.youtube.com/watch?v=NeWVide0_01",
+      youtubeThumbnailUrl: "https://i.ytimg.com/vi/NeWVide0_01/hqdefault.jpg",
     });
-    expect(added.seriesId).toBeDefined();
-    expect(added.order).toBeLessThan(episodes[1].order);
+    expect(episodes[0].seriesId).toBeDefined();
+    expect(episodes.filter((e) => e.featured)).toHaveLength(1);
 
     const state = await t.run((ctx) => ctx.db.query("youtubeSync").first());
     expect(state).toMatchObject({ channelId: CHANNEL, lastAddedCount: 1 });
@@ -124,7 +190,7 @@ describe("youtube sync", () => {
     // A second run finds nothing new, and reuses the cached channel id.
     fetchMock.mockClear();
     await t.action(internal.youtube.sync, {});
-    expect(await t.run((ctx) => ctx.db.query("episodes").collect())).toHaveLength(2);
+    expect(await t.run((ctx) => ctx.db.query("episodes").collect())).toHaveLength(3);
     expect(fetchMock.mock.calls.some(([u]) => String(u).includes("@roundsmed"))).toBe(false);
   });
 
@@ -134,5 +200,6 @@ describe("youtube sync", () => {
     await t.action(internal.youtube.sync, {});
     const state = await t.run((ctx) => ctx.db.query("youtubeSync").first());
     expect(state?.lastError).toContain("HTTP 500");
+    expect(state?.contentVersion).toBe(1);
   });
 });

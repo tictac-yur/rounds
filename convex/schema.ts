@@ -137,6 +137,9 @@ export default defineSchema({
     lastCheckedAt: v.optional(v.number()),
     lastAddedCount: v.number(),
     lastError: v.optional(v.string()),
+    // Version of the one-time switch to the channel's real content
+    // (convex/channelContent.ts) applied to this database.
+    contentVersion: v.optional(v.number()),
   }),
 
   hosts: defineTable({

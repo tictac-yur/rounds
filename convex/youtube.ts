@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { internalAction, internalMutation, internalQuery, MutationCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 import { seedSettings } from "./seedData";
 import {
   channelIdFromPage,
@@ -16,9 +17,9 @@ import {
 } from "./lib/youtube";
 
 // Hourly sync (convex/crons.ts): reads the channel's public uploads feed and
-// adds every new full-length video as a draft episode. Shorts are skipped.
-// Drafts stay hidden until someone fills in the guest and specialty in the
-// admin and publishes them.
+// publishes every new full-length video as an episode; the newest one becomes
+// the featured "latest episode". Shorts are skipped. Guest and specialty can
+// be added afterwards in the admin.
 
 const feedVideo = v.object({
   videoId: v.string(),
@@ -45,6 +46,7 @@ export const sync = internalAction({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
+    await ctx.runMutation(internal.channelContent.apply, {});
     const { channelUrl, channelId: cached } = await ctx.runQuery(internal.youtube.getSource, {});
     try {
       let channelId = cached ?? channelIdFromUrl(channelUrl);
@@ -115,6 +117,7 @@ export const importVideos = internalMutation({
     let order = (first?.order ?? 0) - 1;
     const series = await ctx.db.query("series").withIndex("by_order").take(50);
     let added = 0;
+    let newest: Id<"episodes"> | null = null;
 
     // Oldest first, so the newest upload ends up first in the list.
     const sorted = [...videos].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
@@ -133,10 +136,10 @@ export const importVideos = internalMutation({
       // "… | The Consult EP.1" → the series called The Consult, if there is one.
       const seriesMatch = series.find((s) => title.toLowerCase().includes(s.name.toLowerCase()));
 
-      await ctx.db.insert("episodes", {
+      const id = await ctx.db.insert("episodes", {
         slug,
         title,
-        status: "draft",
+        status: "published",
         featured: false,
         seriesId: seriesMatch?._id,
         specialty: "",
@@ -151,6 +154,17 @@ export const importVideos = internalMutation({
       });
       order -= 1;
       added += 1;
+      newest = id;
+    }
+
+    // The newest upload becomes the latest episode on the home page.
+    if (newest !== null) {
+      for (const episode of await ctx.db.query("episodes").withIndex("by_order").take(500)) {
+        if (episode.featured && episode._id !== newest) {
+          await ctx.db.patch("episodes", episode._id, { featured: false });
+        }
+      }
+      await ctx.db.patch("episodes", newest, { featured: true });
     }
 
     await writeState(ctx, { channelId, channelUrl, lastCheckedAt: Date.now(), lastAddedCount: added, lastError: undefined });
@@ -188,6 +202,6 @@ async function writeState(
   if (state === null) {
     await ctx.db.insert("youtubeSync", fields);
   } else {
-    await ctx.db.replace("youtubeSync", state._id, fields);
+    await ctx.db.patch("youtubeSync", state._id, fields);
   }
 }

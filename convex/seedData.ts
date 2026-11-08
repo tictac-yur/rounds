@@ -24,7 +24,7 @@ export const seedSettings = {
     "Instagram @rounds.md",
     "Spotify · Apple Podcasts",
   ],
-  contactEmail: "[EMAIL]",
+  contactEmail: "roundsmedofficial@gmail.com",
   mediaKitUrl: "[MEDIA KIT LINK]",
   youtubeUrl: "https://www.youtube.com/@roundsmed",
   spotifyUrl: "[SPOTIFY LINK]",

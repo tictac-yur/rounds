@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { ReactNode, Suspense } from "react";
+import { connection } from "next/server";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import "./admin.css";
+
+// The admin reads the session on every request, so it opts out of instant
+// navigation validation (see the authentication-with-cache-components guide).
+export const instant = false;
 
 export const metadata: Metadata = {
   title: "Rounds — Admin",
@@ -10,6 +15,8 @@ export const metadata: Metadata = {
 };
 
 async function AuthProviders({ url, children }: { url: string; children: ReactNode }) {
+  // Auth reads cookies and the clock, so this part always renders per request.
+  await connection();
   return (
     <ConvexAuthNextjsServerProvider>
       <ConvexClientProvider url={url}>{children}</ConvexClientProvider>
