@@ -78,4 +78,22 @@ describe("one-time content updates", () => {
     expect(myths.filter((m) => m.claim === ep1TranscriptFlags[0].claim)).toHaveLength(1);
     expect(myths).toHaveLength(3 + ep1TranscriptFlags.length - 1);
   });
+
+  test("gives the hosts page addresses, without redoing version 1", async () => {
+    const t = await liveDatabase();
+    await t.run(async (ctx) => {
+      const state = await ctx.db.query("youtubeSync").first();
+      await ctx.db.patch("youtubeSync", state!._id, { contentUpdates: 1 });
+      await ctx.db.insert("hosts", { name: "ตีตี้", role: "พิธีกร", order: 0 });
+      await ctx.db.insert("hosts", { name: "ปั๊บ", role: "พิธีกร", slug: "pup-custom", order: 1 });
+    });
+    await t.mutation(internal.contentUpdates.apply, {});
+    const { hosts, myths } = await t.run(async (ctx) => ({
+      hosts: await ctx.db.query("hosts").withIndex("by_order").collect(),
+      myths: await ctx.db.query("myths").collect(),
+    }));
+    expect(hosts.map((h) => h.slug)).toEqual(["titi", "pup-custom"]);
+    // A flag deleted after version 1 isn't brought back.
+    expect(myths).toHaveLength(2);
+  });
 });

@@ -109,8 +109,10 @@ export const homeContent = v.object({
   hosts: v.array(
     v.object({
       key: v.string(),
+      path: v.string(),
       name: v.string(),
       role: v.string(),
+      bio: v.union(v.string(), v.null()),
       photoUrl: v.union(v.string(), v.null()),
     }),
   ),
@@ -118,6 +120,7 @@ export const homeContent = v.object({
 
 export type HomeContent = Infer<typeof homeContent>;
 export type GuestView = HomeContent["guests"][number];
+export type HostView = HomeContent["hosts"][number];
 export type EpisodeView = Infer<typeof episodeView>;
 
 export function episodeMeta(episode: {

@@ -77,6 +77,6 @@ export function seedHomeContent(): HomeContent {
       profileUrl: null,
       photoUrl: null,
     })),
-    hosts: seedHosts.map((h, i) => ({ key: String(i), ...h, photoUrl: null })),
+    hosts: seedHosts.map((h, i) => ({ key: String(i), path: h.slug, ...h, bio: null, photoUrl: null })),
   };
 }

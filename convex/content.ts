@@ -150,8 +150,10 @@ export const home = query({
       hosts: await Promise.all(
         hostDocs.map(async (h) => ({
           key: h._id,
+          path: h.slug ?? h._id,
           name: h.name,
           role: h.role,
+          bio: h.bio ?? null,
           photoUrl: await fileUrl(ctx, h.photoId),
         })),
       ),

@@ -216,10 +216,12 @@ export const seedSponsorPackages = [
 export const seedHosts = [
   {
     name: "ตีตี้",
+    slug: "titi",
     role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
   },
   {
     name: "ปั๊บ",
+    slug: "pup",
     role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
   },
 ];

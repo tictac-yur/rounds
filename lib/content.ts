@@ -40,6 +40,7 @@ function withDefaults(c: HomeContent): HomeContent {
       profileUrl: g.profileUrl ?? null,
       photoUrl: g.photoUrl ?? null,
     })),
+    hosts: c.hosts.map((h) => ({ ...h, path: h.path ?? h.key, bio: h.bio ?? null })),
   };
 }
 

@@ -255,7 +255,7 @@ function Photos() {
     {
       kind: "host",
       title: "Host portraits",
-      help: "One photo of each host on their own, for “Meet the hosts”.",
+      help: "One photo of each host on their own, for their page (/hosts/…).",
       href: "/admin/hosts",
     },
     {
