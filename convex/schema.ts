@@ -12,6 +12,15 @@ export const textLang = v.union(v.literal("en"), v.literal("th"));
 
 export const flagVerdict = v.union(v.literal("red"), v.literal("green"));
 
+// Who watches, from YouTube Analytics: shares of viewers (0–100) over the
+// last `days` days. Empty lists when YouTube withholds small numbers.
+export const audienceData = v.object({
+  days: v.number(),
+  ageGroups: v.array(v.object({ group: v.string(), percent: v.number() })),
+  genders: v.array(v.object({ gender: v.string(), percent: v.number() })),
+  countries: v.array(v.object({ country: v.string(), percent: v.number() })),
+});
+
 export default defineSchema({
   ...authTables,
 
@@ -60,14 +69,22 @@ export default defineSchema({
     order: v.number(),
   }).index("by_order", ["order"]),
 
+  // Guest doctors. A guest with a slug gets a profile page at /doctors/<slug>.
   guests: defineTable({
     name: v.string(),
     nameLang: textLang,
+    // The name in the other language, e.g. the Thai name of an English-named guest.
+    nameAlt: v.optional(v.string()),
+    slug: v.optional(v.string()),
     field: v.string(),
     affiliation: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    profileUrl: v.optional(v.string()),
     photoId: v.optional(v.id("_storage")),
     order: v.number(),
-  }).index("by_order", ["order"]),
+  })
+    .index("by_order", ["order"])
+    .index("by_slug", ["slug"]),
 
   episodes: defineTable({
     slug: v.string(),
@@ -93,6 +110,8 @@ export default defineSchema({
     youtubeVideoId: v.optional(v.string()),
     // Best YouTube thumbnail found by the sync, used when no photo is uploaded.
     youtubeThumbnailUrl: v.optional(v.string()),
+    // Chapters from the video's YouTube description (the sync fills them in).
+    chapters: v.optional(v.array(v.object({ seconds: v.number(), title: v.string() }))),
     order: v.number(),
   })
     .index("by_order", ["order"])
@@ -141,6 +160,33 @@ export default defineSchema({
     // (convex/channelContent.ts) applied to this database.
     contentVersion: v.optional(v.number()),
   }),
+
+  // Singleton: the channel's numbers, refreshed hourly (convex/youtubeStats.ts).
+  channelStats: defineTable({
+    subscribers: v.optional(v.number()),
+    views: v.optional(v.number()),
+    videos: v.optional(v.number()),
+    statsUpdatedAt: v.optional(v.number()),
+    statsError: v.optional(v.string()),
+    audience: v.optional(audienceData),
+    audienceUpdatedAt: v.optional(v.number()),
+    audienceError: v.optional(v.string()),
+  }),
+
+  // Singleton, never returned to clients: the channel owner's permission to
+  // read YouTube Analytics, from "Connect YouTube" in the admin.
+  youtubeAuth: defineTable({
+    refreshToken: v.string(),
+    connectedAt: v.number(),
+    connectedBy: v.id("users"),
+  }),
+
+  // One-time values tying a Google sign-in back to the admin who started it.
+  youtubeOAuthStates: defineTable({
+    state: v.string(),
+    userId: v.id("users"),
+    expiresAt: v.number(),
+  }).index("by_state", ["state"]),
 
   hosts: defineTable({
     name: v.string(),

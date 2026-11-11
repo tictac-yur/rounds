@@ -24,7 +24,7 @@ function footerColumns(settings: HomeContent["settings"]) {
     {
       heading: "ร่วมงานกับเรา",
       links: [
-        { label: "สปอนเซอร์", href: "#partner" },
+        { label: "สปอนเซอร์", href: "/partners" },
         { label: "มาเป็นแขกรับเชิญ", href: email ? `mailto:${email}` : "" },
         { label: "Media kit", href: settings.mediaKitUrl },
       ],
@@ -67,7 +67,7 @@ export function Footer({ settings }: { settings: HomeContent["settings"] }) {
           <p lang="en">
             See you
             <br />
-            on rounds.
+            a Round(s).
           </p>
           <a href="#top" className="btn btn-outline btn-sm">
             กลับขึ้นด้านบน ↑

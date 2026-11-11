@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import type { FeedVideo } from "@/convex/lib/youtube";
 import { withChannelVideos } from "./channelVideos";
 import { seedHomeContent } from "./seedContent";
+import { seedMyths } from "@/convex/seedData";
 
 const video = (videoId: string, publishedAt: string, isShort = false): FeedVideo => ({
   videoId,
@@ -36,7 +37,7 @@ describe("withChannelVideos", () => {
     const result = withChannelVideos(staleContent(), seedHomeContent(), FEED);
     expect(result.episodes.map((e) => e.slug)).toEqual(["cardiology", "what-is-rounds"]);
     expect(result.latest?.slug).toBe("cardiology");
-    expect(result.myths).toHaveLength(2);
+    expect(result.myths).toHaveLength(seedMyths.length);
     expect(result.settings.linktreeUrl).toBe("https://linktr.ee/rounds.med");
   });
 

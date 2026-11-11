@@ -1,47 +1,46 @@
-import type { HomeContent } from "@/convex/contentTypes";
-import { SectionHeader } from "./SectionHeader";
+import type { EpisodeView, HomeContent } from "@/convex/contentTypes";
+import { watchUrl } from "@/lib/episodes";
+import { ArrowIcon } from "./Icons";
 
-const DISC_SETS = [
-  ["#16283d", "#1b3a5f", "#2b5c91"],
-  ["#2b5c91", "#1b3a5f", "#16283d"],
-];
-
-export function HostsSection({ hosts }: { hosts: HomeContent["hosts"] }) {
+// The hosts with a real photo of them: their own portraits once uploaded,
+// until then the thumbnail of the episode that introduces them.
+export function HostsSection({ hosts, intro }: { hosts: HomeContent["hosts"]; intro: EpisodeView | null }) {
+  const portraits = hosts.filter((h) => h.photoUrl);
+  const introUrl = intro ? watchUrl(intro) : null;
   return (
-    <section id="hosts" className="wrap section" style={{ paddingTop: 0 }} aria-labelledby="hosts-title">
-      <SectionHeader id="hosts-title" label="05 · Hosts" en="Meet the hosts" th="นักศึกษาแพทย์สองคนที่ถามแทนคุณ" />
-      <div className="hosts-grid">
-        {hosts.map((host, i) => {
-          const [a, b, c] = DISC_SETS[i % DISC_SETS.length];
-          return (
-            <article key={host.key} className="host-card">
-              <div className="host-photo">
-                {host.photoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={host.photoUrl} alt={host.name} />
-                ) : (
-                  // Until a photo is uploaded: the host's initial over the logo's discs.
-                  <>
-                    <svg className="host-initial-discs" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-                      <circle cx={i % 2 ? 40 : 360} cy={70} r={170} fill={a} />
-                      <circle cx={i % 2 ? 120 : 280} cy={430} r={160} fill={b} />
-                      <circle cx={i % 2 ? 400 : 0} cy={480} r={110} fill={c} />
-                    </svg>
-                    <span className="host-initial" aria-hidden="true">
-                      {host.name.charAt(0)}
-                    </span>
-                  </>
-                )}
-              </div>
-              <div className="host-body">
-                <h3 className="host-name">{host.name}</h3>
-                <p className="body muted" style={{ fontFamily: "var(--font-thai)" }}>
-                  {host.role}
-                </p>
-              </div>
-            </article>
-          );
-        })}
+    <section id="hosts" className="wrap section" aria-labelledby="hosts-title">
+      <div className="hosts-layout">
+        <div className="hosts-photo" data-split={portraits.length === hosts.length && hosts.length > 1}>
+          {portraits.length === hosts.length && hosts.length > 0
+            ? hosts.map((h) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={h.key} src={h.photoUrl!} alt={h.name} loading="lazy" />
+              ))
+            : intro?.thumbnailUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={intro.thumbnailUrl} alt={hosts.map((h) => h.name).join(" และ ")} loading="lazy" />
+              )}
+        </div>
+
+        <div className="hosts-text">
+          <h2 className="h2" lang="en" id="hosts-title">
+            Meet the hosts
+          </h2>
+          <p className="h2-th muted">นักศึกษาแพทย์สองคน ที่ถามคำถามแทนคุณ</p>
+          <ul className="host-list">
+            {hosts.map((h) => (
+              <li key={h.key}>
+                <span className="host-name">{h.name}</span>
+                <span className="small muted">{h.role}</span>
+              </li>
+            ))}
+          </ul>
+          {introUrl && (
+            <a href={introUrl} className="text-link" target="_blank" rel="noopener">
+              ดูตอนที่เราแนะนำตัว <ArrowIcon />
+            </a>
+          )}
+        </div>
       </div>
     </section>
   );

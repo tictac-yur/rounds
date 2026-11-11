@@ -63,6 +63,8 @@ export const seedGuests = [
     nameLang: "th" as const,
     field: "อายุรศาสตร์โรคหัวใจ",
     affiliation: "อายุรแพทย์โรคหัวใจ คณะแพทยศาสตร์ มหาวิทยาลัยธรรมศาสตร์",
+    // From what he says in The Consult EP.1.
+    bio: "อายุรแพทย์โรคหัวใจ โรงพยาบาลธรรมศาสตร์ เชี่ยวชาญการตรวจภาพหัวใจขั้นสูง (advanced cardiac imaging) ด้วย CT และ MRI และเป็นอาจารย์แพทย์ที่สอนนักศึกษาแพทย์ อาจารย์เลือกสายหัวใจเพราะชอบงานที่ต้องตัดสินใจภายใต้ความกดดัน และได้เห็นคนไข้ที่หัวใจหยุดเต้นกลับมาใช้ชีวิตได้อีกครั้ง",
   },
 ];
 
@@ -85,6 +87,24 @@ export const seedEpisodes = [
     youtubeUrl: "https://www.youtube.com/watch?v=o4kY44zLgig",
     youtubeVideoId: "o4kY44zLgig",
     youtubeThumbnailUrl: "https://i.ytimg.com/vi/o4kY44zLgig/maxresdefault.jpg",
+    // From the video's YouTube description.
+    chapters: [
+      { seconds: 0, title: "Highlight" },
+      { seconds: 37, title: "ต้อนรับ ผศ. นพ. กานต์ วิฑูรชาติ (หมอหัวใจ)" },
+      { seconds: 74, title: "สรุปง่ายๆ หัวใจทำงานยังไง" },
+      { seconds: 136, title: "ชีพจรปกติ & ความต่างของนักกีฬา" },
+      { seconds: 255, title: "Resting Heart Rate กับอายุขัย" },
+      { seconds: 430, title: "เครียดจนหัวใจวายได้จริงไหม?" },
+      { seconds: 525, title: "บุหรี่: พฤติกรรมอันดับ 1 ที่ทำร้ายหัวใจ" },
+      { seconds: 707, title: "ภาวะหัวใจสลาย (Takotsubo) มีจริงไหม?" },
+      { seconds: 908, title: "กาแฟ คาเฟอีน และโรคหัวใจ" },
+      { seconds: 1116, title: "การออกกำลังกาย & วิ่งโซน 2" },
+      { seconds: 1430, title: "สุขภาพผู้สูงวัย มวลกล้ามเนื้อและกระดูก" },
+      { seconds: 1536, title: "ไข่ คอเลสเตอรอล และไขมัน" },
+      { seconds: 1740, title: "เบื้องหลังชีวิตหมอหัวใจ" },
+      { seconds: 2016, title: "Red Flag or Green Flag" },
+      { seconds: 2105, title: "Outro" },
+    ],
   },
   {
     slug: "what-is-rounds",
@@ -119,6 +139,39 @@ export const seedMyths = [
     answer:
       "มีภาวะที่เรียกว่า “ทาโกะสึโบะ” หรือภาวะหัวใจสลาย มักเกี่ยวกับการตกใจอย่างรุนแรง และส่วนใหญ่รักษาให้ดีขึ้นได้",
     verdict: "green" as const,
+    episodeIndex: 0,
+  },
+  {
+    claim: "สูบบุหรี่ไม่เป็นไร ถ้าออกกำลังกายสม่ำเสมอ",
+    answer:
+      "ในคนอ้วน คนไม่ออกกำลังกาย และคนที่ออกกำลังกายแต่สูบบุหรี่จัด คนสูบบุหรี่เสี่ยงโรคหัวใจที่สุด บุหรี่ทำให้ความดันขึ้นและคราบไขมันในหลอดเลือดแตกจนหัวใจวายได้",
+    verdict: "red" as const,
+    episodeIndex: 0,
+  },
+  {
+    claim: "กาแฟหรือเครื่องดื่มชูกำลัง ทำให้หัวใจมีปัญหา",
+    answer:
+      "ไม่จริง 100% คนทั่วไปกินกาแฟได้ แต่คนที่ใจสั่นง่าย ไทรอยด์ผิดปกติ หรือมีโรคหัวใจ ต้องระวังปริมาณ",
+    verdict: "red" as const,
+    episodeIndex: 0,
+  },
+  {
+    claim: "มือเย็น แปลว่าเลือดไหลเวียนไม่ดี หัวใจอ่อนแอ",
+    answer: "ไม่จริงแน่นอน มือเย็นมีได้หลายสาเหตุ เช่นอยู่ในห้องเย็น ไม่ควรสรุปว่าเป็นโรคหัวใจ",
+    verdict: "red" as const,
+    episodeIndex: 0,
+  },
+  {
+    claim: "กินเนื้อติดมันบ่อยๆ ทำให้คอเลสเตอรอลสูง",
+    answer: "เพิ่มความเสี่ยงจริง เพราะมีคอเลสเตอรอลเยอะ ขึ้นอยู่กับว่ากินเนื้อและมันมากแค่ไหน",
+    verdict: "green" as const,
+    episodeIndex: 0,
+  },
+  {
+    claim: "หัวใจวายต้องเจ็บหน้าอกแรงๆ เสมอ",
+    answer:
+      "คนไข้หัวใจวายส่วนใหญ่เจ็บหน้าอก แต่ไม่ใช่ทุกคน ถ้ามีความเสี่ยง ควรไปตรวจแม้ไม่มีอาการ",
+    verdict: "red" as const,
     episodeIndex: 0,
   },
 ];

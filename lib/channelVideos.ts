@@ -1,5 +1,5 @@
 import type { EpisodeView, HomeContent } from "@/convex/contentTypes";
-import { cleanTitle, summaryFrom, thaiDate, thumbLabelFrom, videoIdFromUrl, watchUrl, type FeedVideo } from "@/convex/lib/youtube";
+import { cleanTitle, parseChapters, summaryFrom, thaiDate, thumbLabelFrom, videoIdFromUrl, watchUrl, type FeedVideo } from "@/convex/lib/youtube";
 
 // Makes sure the home page shows the channel's real videos, whatever state the
 // database is in:
@@ -53,11 +53,13 @@ export function withChannelVideos(content: HomeContent, starter: HomeContent, fe
         meta: thaiDate(v.publishedAt) ?? "",
         seriesName: seriesNames.find((name) => title.toLowerCase().includes(name.toLowerCase())) ?? null,
         guestName: null,
+        guestPath: null,
         guestLang: "en",
         guestAffiliation: null,
         youtubeUrl: watchUrl(v.videoId),
         spotifyUrl: null,
         appleUrl: null,
+        chapters: parseChapters(v.description),
       };
     });
 

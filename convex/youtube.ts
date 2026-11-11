@@ -7,6 +7,7 @@ import {
   channelIdFromPage,
   channelIdFromUrl,
   cleanTitle,
+  parseChapters,
   parseFeed,
   slugFor,
   summaryFrom,
@@ -74,6 +75,11 @@ export const sync = internalAction({
       );
 
       await ctx.runMutation(internal.youtube.importVideos, { channelId, channelUrl, videos: withThumbs });
+      // Episodes already on the site pick up chapters added to their descriptions later.
+      const chapters = videos
+        .map((video) => ({ videoId: video.videoId, chapters: parseChapters(video.description) }))
+        .filter((c) => c.chapters.length > 0);
+      if (chapters.length > 0) await ctx.runMutation(internal.youtube.updateChapters, { videos: chapters });
     } catch (error) {
       await ctx.runMutation(internal.youtube.recordError, {
         channelUrl,
@@ -150,6 +156,7 @@ export const importVideos = internalMutation({
         youtubeUrl: watchUrl(video.videoId),
         youtubeVideoId: video.videoId,
         youtubeThumbnailUrl: video.thumbnailUrl,
+        chapters: parseChapters(video.description),
         order,
       });
       order -= 1;
@@ -168,6 +175,27 @@ export const importVideos = internalMutation({
     }
 
     await writeState(ctx, { channelId, channelUrl, lastCheckedAt: Date.now(), lastAddedCount: added, lastError: undefined });
+    return null;
+  },
+});
+
+export const updateChapters = internalMutation({
+  args: {
+    videos: v.array(
+      v.object({ videoId: v.string(), chapters: v.array(v.object({ seconds: v.number(), title: v.string() })) }),
+    ),
+  },
+  returns: v.null(),
+  handler: async (ctx, { videos }) => {
+    for (const { videoId, chapters } of videos) {
+      const episode = await ctx.db
+        .query("episodes")
+        .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", videoId))
+        .first();
+      if (episode && JSON.stringify(episode.chapters ?? []) !== JSON.stringify(chapters)) {
+        await ctx.db.patch("episodes", episode._id, { chapters });
+      }
+    }
     return null;
   },
 });

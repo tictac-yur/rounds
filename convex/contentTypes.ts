@@ -1,5 +1,5 @@
 import { Infer, v } from "convex/values";
-import { episodeStatus, flagVerdict, textLang } from "./schema";
+import { audienceData, episodeStatus, flagVerdict, textLang } from "./schema";
 
 // View models returned to the public site. Kept free of storage ids and
 // foreign keys so the site can render them directly.
@@ -40,15 +40,28 @@ export const episodeView = v.object({
   meta: v.string(),
   seriesName: v.union(v.string(), v.null()),
   guestName: v.union(v.string(), v.null()),
+  // The guest's profile page path segment (/doctors/<guestPath>).
+  guestPath: v.union(v.string(), v.null()),
   guestLang: textLang,
   guestAffiliation: v.union(v.string(), v.null()),
   youtubeUrl: v.union(v.string(), v.null()),
   spotifyUrl: v.union(v.string(), v.null()),
   appleUrl: v.union(v.string(), v.null()),
+  chapters: v.array(v.object({ seconds: v.number(), title: v.string() })),
 });
 
 export const homeContent = v.object({
   settings: settingsView,
+  // Live from YouTube (convex/youtubeStats.ts); null until the first refresh.
+  channel: v.union(
+    v.object({
+      subscribers: v.union(v.number(), v.null()),
+      views: v.union(v.number(), v.null()),
+      videos: v.union(v.number(), v.null()),
+    }),
+    v.null(),
+  ),
+  audience: v.union(audienceData, v.null()),
   episodes: v.array(episodeView),
   latest: v.union(episodeView, v.null()),
   myths: v.array(
@@ -58,7 +71,11 @@ export const homeContent = v.object({
       answer: v.string(),
       verdict: flagVerdict,
       answeredBy: v.union(v.string(), v.null()),
+      answeredByPath: v.union(v.string(), v.null()),
       episodeSpecialty: v.union(v.string(), v.null()),
+      episodeTitle: v.union(v.string(), v.null()),
+      // Where "Learn more" goes: the episode on YouTube.
+      episodeUrl: v.union(v.string(), v.null()),
     }),
   ),
   audienceSegments: v.array(
@@ -77,7 +94,19 @@ export const homeContent = v.object({
     v.object({ key: v.string(), letter: v.string(), title: v.string(), description: v.string() }),
   ),
   guests: v.array(
-    v.object({ key: v.string(), name: v.string(), nameLang: textLang, field: v.string() }),
+    v.object({
+      key: v.string(),
+      // Profile page path segment: the guest's slug, else their id.
+      path: v.string(),
+      name: v.string(),
+      nameAlt: v.union(v.string(), v.null()),
+      nameLang: textLang,
+      field: v.string(),
+      affiliation: v.union(v.string(), v.null()),
+      bio: v.union(v.string(), v.null()),
+      profileUrl: v.union(v.string(), v.null()),
+      photoUrl: v.union(v.string(), v.null()),
+    }),
   ),
   hosts: v.array(
     v.object({
@@ -90,6 +119,7 @@ export const homeContent = v.object({
 });
 
 export type HomeContent = Infer<typeof homeContent>;
+export type GuestView = HomeContent["guests"][number];
 export type EpisodeView = Infer<typeof episodeView>;
 
 export function episodeMeta(episode: {
