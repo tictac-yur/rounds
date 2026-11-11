@@ -48,6 +48,7 @@ export const sync = internalAction({
   returns: v.null(),
   handler: async (ctx) => {
     await ctx.runMutation(internal.channelContent.apply, {});
+    await ctx.runMutation(internal.contentUpdates.apply, {});
     const { channelUrl, channelId: cached } = await ctx.runQuery(internal.youtube.getSource, {});
     try {
       let channelId = cached ?? channelIdFromUrl(channelUrl);

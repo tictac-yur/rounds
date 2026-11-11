@@ -61,6 +61,7 @@ export const seedGuests = [
   {
     name: "ผศ.นพ.กานต์ วิฑูรชาติ",
     nameLang: "th" as const,
+    nameAlt: "Asst. Prof. Dr. Kan Witoonchart",
     field: "อายุรศาสตร์โรคหัวใจ",
     affiliation: "อายุรแพทย์โรคหัวใจ คณะแพทยศาสตร์ มหาวิทยาลัยธรรมศาสตร์",
     // From what he says in The Consult EP.1.
@@ -127,20 +128,8 @@ export const seedEpisodes = [
 
 // The doctor's verdict on a common belief: "red" (don't believe it) or
 // "green" (true / a healthy habit). From The Consult EP.1.
-export const seedMyths = [
-  {
-    claim: "กินไข่วันละ 1–2 ฟอง ทำให้ไขมันอุดตันเส้นเลือด",
-    answer: "ไข่ 1–2 ฟองไม่ได้น่ากลัวอย่างที่คิด แต่ขึ้นอยู่กับว่ากินแบบไหน และเราเป็นใคร",
-    verdict: "red" as const,
-    episodeIndex: 0,
-  },
-  {
-    claim: "อกหักจนหัวใจพังได้จริง",
-    answer:
-      "มีภาวะที่เรียกว่า “ทาโกะสึโบะ” หรือภาวะหัวใจสลาย มักเกี่ยวกับการตกใจอย่างรุนแรง และส่วนใหญ่รักษาให้ดีขึ้นได้",
-    verdict: "green" as const,
-    episodeIndex: 0,
-  },
+// From อ.กานต์'s answers in the EP.1 transcript (myth-buster and smoking segments).
+export const ep1TranscriptFlags = [
   {
     claim: "สูบบุหรี่ไม่เป็นไร ถ้าออกกำลังกายสม่ำเสมอ",
     answer:
@@ -174,6 +163,23 @@ export const seedMyths = [
     verdict: "red" as const,
     episodeIndex: 0,
   },
+];
+
+export const seedMyths = [
+  {
+    claim: "กินไข่วันละ 1–2 ฟอง ทำให้ไขมันอุดตันเส้นเลือด",
+    answer: "ไข่ 1–2 ฟองไม่ได้น่ากลัวอย่างที่คิด แต่ขึ้นอยู่กับว่ากินแบบไหน และเราเป็นใคร",
+    verdict: "red" as const,
+    episodeIndex: 0,
+  },
+  {
+    claim: "อกหักจนหัวใจพังได้จริง",
+    answer:
+      "มีภาวะที่เรียกว่า “ทาโกะสึโบะ” หรือภาวะหัวใจสลาย มักเกี่ยวกับการตกใจอย่างรุนแรง และส่วนใหญ่รักษาให้ดีขึ้นได้",
+    verdict: "green" as const,
+    episodeIndex: 0,
+  },
+  ...ep1TranscriptFlags,
 ];
 
 export const seedAudienceSegments = [
