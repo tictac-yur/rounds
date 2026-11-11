@@ -47,6 +47,7 @@ export const episodeView = v.object({
   youtubeUrl: v.union(v.string(), v.null()),
   spotifyUrl: v.union(v.string(), v.null()),
   appleUrl: v.union(v.string(), v.null()),
+  chapters: v.array(v.object({ seconds: v.number(), title: v.string() })),
 });
 
 export const homeContent = v.object({

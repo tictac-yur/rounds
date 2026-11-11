@@ -37,6 +37,7 @@ export function seedHomeContent(): HomeContent {
       youtubeUrl: e.youtubeUrl ?? null,
       spotifyUrl: null,
       appleUrl: null,
+      chapters: ("chapters" in e && e.chapters) || [],
     };
   });
   return {

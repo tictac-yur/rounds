@@ -84,6 +84,7 @@ export const home = query({
         youtubeUrl: e.youtubeUrl ?? null,
         spotifyUrl: e.spotifyUrl ?? null,
         appleUrl: e.appleUrl ?? null,
+        chapters: e.chapters ?? [],
       };
     };
     const episodes = await Promise.all(visibleEpisodes.map(toView));

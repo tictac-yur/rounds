@@ -118,3 +118,25 @@ export function slugFor(videoId: string): string {
   const base = `yt-${videoId.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   return base.replace(/-+/g, "-").replace(/-$/, "");
 }
+
+export type Chapter = { seconds: number; title: string };
+
+// The chapter list in a video description: lines like "00:37 - Welcome"
+// or "1:02:03 Outro". YouTube needs at least two, starting at 0:00.
+export function parseChapters(description: string): Chapter[] {
+  const chapters: Chapter[] = [];
+  for (const line of description.split("\n")) {
+    const m = line.trim().match(/^(?:(\d{1,2}):)?(\d{1,2}):(\d{2})\s*[-–—:|]?\s*(.+)$/);
+    if (!m) continue;
+    const seconds = Number(m[1] ?? 0) * 3600 + Number(m[2]) * 60 + Number(m[3]);
+    chapters.push({ seconds, title: m[4].trim() });
+  }
+  return chapters.length >= 2 && chapters[0].seconds === 0 ? chapters : [];
+}
+
+export function timestamp(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = String(seconds % 60).padStart(2, "0");
+  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
+}

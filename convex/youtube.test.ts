@@ -202,3 +202,18 @@ describe("youtube sync", () => {
     expect(state?.contentVersion).toBe(1);
   });
 });
+
+describe("chapters", () => {
+  test("reads the timestamp list from a description", async () => {
+    const { parseChapters, timestamp } = await import("./lib/youtube");
+    const desc = "intro\n\n📍 Timestamps\n00:00 - Highlight\n00:37 - ต้อนรับ\n1:02:03 Outro\n\nnot 12:00 a chapter? no";
+    expect(parseChapters(desc)).toEqual([
+      { seconds: 0, title: "Highlight" },
+      { seconds: 37, title: "ต้อนรับ" },
+      { seconds: 3723, title: "Outro" },
+    ]);
+    expect(parseChapters("12:00 noon\n13:00 lunch")).toEqual([]);
+    expect(timestamp(3723)).toBe("1:02:03");
+    expect(timestamp(37)).toBe("0:37");
+  });
+});

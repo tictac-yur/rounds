@@ -9,7 +9,8 @@ import { Mark } from "@/components/landing/Logo";
 import { getHomeContent } from "@/lib/content";
 import { doctorEpisodes, doctorFlags, doctorPhoto, doctors } from "@/lib/doctors";
 import { cleanJoin, filled } from "@/lib/placeholders";
-import { watchUrl } from "@/lib/episodes";
+import { episodeTitle, watchUrl } from "@/lib/episodes";
+import { timestamp } from "@/convex/lib/youtube";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -107,6 +108,31 @@ export default async function DoctorPage({ params }: Props) {
                 <EpisodeCard key={ep.key} ep={ep} />
               ))}
             </div>
+            {episodes
+              .filter((ep) => ep.chapters.length > 0 && ep.youtubeUrl)
+              .map((ep) => (
+                <details key={ep.key} className="chapters">
+                  <summary>
+                    {/* With one episode the heading needs no title; with several it names each. */}
+                    <span>{episodes.length > 1 ? episodeTitle(ep) : "หัวข้อในตอนนี้"}</span>
+                    <span className="small muted">{ep.chapters.length}</span>
+                  </summary>
+                  <ol>
+                    {ep.chapters.map((c) => (
+                      <li key={c.seconds}>
+                        <a
+                          href={`${ep.youtubeUrl}${ep.youtubeUrl!.includes("?") ? "&" : "?"}t=${c.seconds}s`}
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          <span className="chapter-time">{timestamp(c.seconds)}</span>
+                          {c.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </details>
+              ))}
           </section>
         )}
 

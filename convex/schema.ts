@@ -110,6 +110,8 @@ export default defineSchema({
     youtubeVideoId: v.optional(v.string()),
     // Best YouTube thumbnail found by the sync, used when no photo is uploaded.
     youtubeThumbnailUrl: v.optional(v.string()),
+    // Chapters from the video's YouTube description (the sync fills them in).
+    chapters: v.optional(v.array(v.object({ seconds: v.number(), title: v.string() }))),
     order: v.number(),
   })
     .index("by_order", ["order"])

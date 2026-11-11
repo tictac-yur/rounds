@@ -67,7 +67,7 @@ export function Footer({ settings }: { settings: HomeContent["settings"] }) {
           <p lang="en">
             See you
             <br />
-            on rounds.
+            a Round(s).
           </p>
           <a href="#top" className="btn btn-outline btn-sm">
             กลับขึ้นด้านบน ↑
