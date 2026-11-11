@@ -11,6 +11,7 @@ export type FeedVideo = {
   // From the YouTube Data API only.
   views?: number;
   thumbnailUrl?: string;
+  wideThumbnailUrl?: string;
 };
 
 const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
@@ -191,11 +192,16 @@ export async function fetchUploads(channelId: string, key: string): Promise<Feed
       isShort: isoDurationSeconds(d?.contentDetails?.duration ?? "") <= SHORT_MAX_SECONDS,
       views: Number(d?.statistics?.viewCount ?? 0),
       thumbnailUrl: (t.maxres ?? t.standard ?? t.high ?? t.medium)?.url,
+      // Only the widescreen sizes have no black bars, so a Short's upright
+      // design can be cut from their middle.
+      wideThumbnailUrl: (t.maxres ?? t.medium)?.url,
     };
   });
 }
 
-// The vertical (9:16) thumbnail YouTube makes for a Short.
-export function shortThumbnail(videoId: string): string {
-  return `https://i.ytimg.com/vi/${videoId}/oar2.jpg`;
+// A Short's own thumbnail, as chosen in YouTube Studio. YouTube stores it
+// widescreen with the upright design in the middle (the site crops to that);
+// its upright oar2.jpg is a frame YouTube picks, not the chosen thumbnail.
+export function shortThumbnail(videoId: string, wideUrl?: string): string {
+  return wideUrl ?? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
 }

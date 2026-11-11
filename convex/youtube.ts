@@ -82,7 +82,7 @@ export const sync = internalAction({
           .filter((video) => video.isShort)
           .sort((a, b) => (b.views ?? 0) - (a.views ?? 0))
           .slice(0, 5)
-          .map((video) => ({ videoId: video.videoId, title: cleanTitle(video.title), thumbnailUrl: shortThumbnail(video.videoId) }));
+          .map((video) => ({ videoId: video.videoId, title: cleanTitle(video.title), thumbnailUrl: shortThumbnail(video.videoId, video.wideThumbnailUrl) }));
         await ctx.runMutation(internal.youtube.saveTopShorts, { shorts: topShorts });
       }
 
