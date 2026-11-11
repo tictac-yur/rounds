@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth/core": "0.37.0",
     "@convex-dev/auth": "^0.0.96",
+    "@vercel/speed-insights": "^2.1.0",
     "convex": "^1.47.0",
     "next": "16.4.2",
     "react": "19.3.0",
