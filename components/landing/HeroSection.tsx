@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import type { EpisodeView, HomeContent } from "@/convex/contentTypes";
 import { filled, isPlaceholder } from "@/lib/placeholders";
-import { compactNumber } from "@/lib/youtubeNumbers";
 import { episodeTitle, guestName } from "@/lib/episodes";
 import { EpisodeVisual } from "./EpisodeArt";
 import { ArrowIcon, PLATFORMS, PlatformIcon, PlayIcon, type Platform } from "./Icons";
@@ -37,22 +36,9 @@ function NowShowing({ episode }: { episode: EpisodeView }) {
   );
 }
 
-export function HeroSection({
-  settings,
-  latest,
-  channel,
-}: {
-  settings: HomeContent["settings"];
-  latest: EpisodeView | null;
-  channel: HomeContent["channel"];
-}) {
+export function HeroSection({ settings, latest }: { settings: HomeContent["settings"]; latest: EpisodeView | null }) {
   const [line1, ...rest] = settings.heroHeadline.split("\n");
-  // Live YouTube counts first, then the stats typed in Site settings.
-  const live = [
-    channel?.subscribers ? { value: compactNumber(channel.subscribers), label: "ผู้ติดตามบน YouTube" } : null,
-    channel?.views ? { value: compactNumber(channel.views), label: "ยอดวิวบน YouTube" } : null,
-  ].filter((s): s is { value: string; label: string } => s !== null);
-  const stats = [...live, ...settings.stats.filter((stat) => !isPlaceholder(stat.value))];
+  const stats = settings.stats.filter((stat) => !isPlaceholder(stat.value));
   const platforms = (
     [
       ["youtube", settings.youtubeUrl],

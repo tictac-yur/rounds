@@ -1576,19 +1576,6 @@ a:hover .badge-watch {
   font-weight: 600;
   letter-spacing: -0.04em;
 }
-.partner-rows {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-12) var(--space-16);
-  padding-top: var(--space-12);
-  border-top: 1px solid var(--line-dark);
-}
-.partner-rows > div {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  font-family: var(--font-thai);
-}
 .row-list {
   list-style: none;
   margin: var(--space-4) 0 0;
@@ -1622,14 +1609,62 @@ a:hover .badge-watch {
   }
 }
 
-/* Live audience from YouTube Analytics */
-.audience-live {
+/* ---------- /partners ---------- */
+.partners-hero {
+  padding-top: calc(var(--nav-h) + var(--space-16));
+  padding-bottom: var(--space-16);
+}
+.partners-hero .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+.partners-lead {
+  color: #d6dee7;
+  font-family: var(--font-thai);
+  max-width: 620px;
+}
+.partners-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-16);
+  margin: var(--space-6) 0 0;
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--line-dark);
+  width: 100%;
+}
+.partners-numbers div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-1);
+}
+.partners-numbers dd {
+  margin: 0;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-12) var(--space-16);
+}
+.partners-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-family: var(--font-thai);
+}
+.partners-grid .row-list li {
+  border-top-color: var(--line);
+}
+.partners-ages {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--line-dark);
 }
 .age-bars {
   list-style: none;
@@ -1653,7 +1688,7 @@ a:hover .badge-watch {
 .age-bar {
   height: 10px;
   border-radius: 999px;
-  background: linear-gradient(var(--white), var(--white)) left / var(--w) 100% no-repeat, rgba(255, 255, 255, 0.12);
+  background: linear-gradient(var(--navy), var(--navy)) left / var(--w) 100% no-repeat, var(--surface-sunk);
 }
 
 /* ---------- Footer ---------- */

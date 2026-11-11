@@ -1,25 +1,12 @@
-import type { CSSProperties } from "react";
-import { countryLabel, genderLabel, percent } from "@/lib/youtubeNumbers";
+import Link from "next/link";
 import type { HomeContent } from "@/convex/contentTypes";
-import { filled, isPlaceholder } from "@/lib/placeholders";
+import { filled } from "@/lib/placeholders";
 import { ArrowIcon, PlatformIcon } from "./Icons";
 
-export function PartnerSection({
-  settings,
-  packages,
-  segments,
-  audience,
-}: {
-  settings: HomeContent["settings"];
-  packages: HomeContent["sponsorPackages"];
-  segments: HomeContent["audienceSegments"];
-  audience: HomeContent["audience"];
-}) {
-  const ages = audience?.ageGroups.filter((a) => a.percent >= 1) ?? [];
-  const countries = audience?.countries ?? [];
+// The home page's short pitch to brands; the numbers live on /partners.
+export function PartnerSection({ settings }: { settings: HomeContent["settings"] }) {
   const email = filled(settings.contactEmail);
   const instagram = filled(settings.instagramUrl);
-  const mediaKit = filled(settings.mediaKitUrl);
 
   return (
     <section id="partner" className="dark" aria-labelledby="partner-title">
@@ -52,70 +39,13 @@ export function PartnerSection({
                   </a>
                 )
               )}
-              {mediaKit && (
-                <a href={mediaKit} className="btn btn-outline">
-                  ดาวน์โหลด Media kit
-                </a>
-              )}
+              <Link href="/partners" className="btn btn-outline">
+                ดูผู้ชมและแพ็กเกจ
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="partner-rows">
-          <div>
-            <h3 className="title">ใครดู Rounds</h3>
-            <p className="small muted">{settings.audienceIntro}</p>
-            {ages.length > 0 && (
-              <div className="audience-live">
-                <span className="small muted">อายุผู้ชมบน YouTube · {audience!.days} วันล่าสุด</span>
-                <ul className="age-bars">
-                  {ages.map((a) => (
-                    <li key={a.group}>
-                      <span>{a.group}</span>
-                      <span className="age-bar" style={{ "--w": `${a.percent}%` } as CSSProperties} />
-                      <b>{percent(a.percent)}</b>
-                    </li>
-                  ))}
-                </ul>
-                <p className="small muted">
-                  {[
-                    ...(audience!.genders.length > 0
-                      ? [audience!.genders.map((g) => `${genderLabel(g.gender)} ${percent(g.percent)}`).join(" · ")]
-                      : []),
-                    ...(countries.length > 0
-                      ? [`ดูจาก ${countries.slice(0, 3).map((c) => `${countryLabel(c.country)} ${percent(c.percent)}`).join(", ")}`]
-                      : []),
-                  ].join(" — ")}
-                </p>
-              </div>
-            )}
-            <ul className="row-list">
-              {segments.map((seg) => (
-                <li key={seg.key}>
-                  {/* Percentages show once real numbers are entered in the admin. */}
-                  {!isPlaceholder(seg.stat) && <span className="row-stat">{seg.stat}</span>}
-                  <span className="row-title">{seg.title}</span>
-                  <span className="small muted">{seg.description}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {packages.length > 0 && (
-            <div>
-              <h3 className="title">แพ็กเกจ</h3>
-              <p className="small muted">ทุกแพ็กเกจอยู่นอกเนื้อหาทางการแพทย์</p>
-              <ul className="row-list">
-                {packages.map((pkg) => (
-                  <li key={pkg.key}>
-                    <span className="row-title">{pkg.title}</span>
-                    <span className="small muted">{pkg.description}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
       </div>
     </section>
   );

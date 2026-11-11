@@ -24,7 +24,7 @@ function footerColumns(settings: HomeContent["settings"]) {
     {
       heading: "ร่วมงานกับเรา",
       links: [
-        { label: "สปอนเซอร์", href: "#partner" },
+        { label: "สปอนเซอร์", href: "/partners" },
         { label: "มาเป็นแขกรับเชิญ", href: email ? `mailto:${email}` : "" },
         { label: "Media kit", href: settings.mediaKitUrl },
       ],

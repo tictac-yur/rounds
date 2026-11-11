@@ -24,7 +24,7 @@ export default async function Home() {
       </a>
       <SiteNav />
       <main id="main">
-        <HeroSection settings={settings} latest={content.latest} channel={content.channel} />
+        <HeroSection settings={settings} latest={content.latest} />
         <StatementSection />
         {content.latest && <LatestEpisodeSection episode={content.latest} />}
         <EpisodesSection episodes={content.episodes} />
@@ -33,12 +33,7 @@ export default async function Home() {
         <HostsSection hosts={content.hosts} intro={content.episodes.find((ep) => ep.status === "published" && !ep.guestName) ?? null} />
         <SeriesSection series={content.series} />
         {/* For sponsors: kept together at the end. */}
-        <PartnerSection
-          settings={settings}
-          packages={content.sponsorPackages}
-          segments={content.audienceSegments}
-          audience={content.audience}
-        />
+        <PartnerSection settings={settings} />
       </main>
       <Footer settings={settings} />
     </>

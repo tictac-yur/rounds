@@ -161,8 +161,9 @@ function YouTubeNumbers() {
       <div>
         <h2>YouTube numbers</h2>
         <p className="admin-muted">
-          Subscribers and views show in the hero; once YouTube is connected, viewers&apos; ages, gender
-          and countries show in “ใครดู Rounds”. Both refresh every hour.
+          Shown only on the brands page (<a href="/partners">/partners</a>), not the home page:
+          subscribers and views, and once YouTube is connected, viewers&apos; ages, gender and
+          countries. Both refresh every hour.
         </p>
 
         {!stats.apiKeySet ? (
