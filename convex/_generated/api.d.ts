@@ -31,9 +31,11 @@ import type * as lib_files from "../lib/files.js";
 import type * as lib_placeholder from "../lib/placeholder.js";
 import type * as lib_starter from "../lib/starter.js";
 import type * as lib_youtube from "../lib/youtube.js";
+import type * as lib_youtubeAnalytics from "../lib/youtubeAnalytics.js";
 import type * as seedData from "../seedData.js";
 import type * as users from "../users.js";
 import type * as youtube from "../youtube.js";
+import type * as youtubeStats from "../youtubeStats.js";
 
 import type {
   ApiFromModules,
@@ -65,9 +67,11 @@ declare const fullApi: ApiFromModules<{
   "lib/placeholder": typeof lib_placeholder;
   "lib/starter": typeof lib_starter;
   "lib/youtube": typeof lib_youtube;
+  "lib/youtubeAnalytics": typeof lib_youtubeAnalytics;
   seedData: typeof seedData;
   users: typeof users;
   youtube: typeof youtube;
+  youtubeStats: typeof youtubeStats;
 }>;
 
 /**

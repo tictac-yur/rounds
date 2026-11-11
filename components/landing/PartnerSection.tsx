@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+import { countryLabel, genderLabel, percent } from "@/lib/youtubeNumbers";
 import type { HomeContent } from "@/convex/contentTypes";
 import { filled, isPlaceholder } from "@/lib/placeholders";
 import { ArrowIcon, PlatformIcon } from "./Icons";
@@ -6,11 +8,15 @@ export function PartnerSection({
   settings,
   packages,
   segments,
+  audience,
 }: {
   settings: HomeContent["settings"];
   packages: HomeContent["sponsorPackages"];
   segments: HomeContent["audienceSegments"];
+  audience: HomeContent["audience"];
 }) {
+  const ages = audience?.ageGroups.filter((a) => a.percent >= 1) ?? [];
+  const countries = audience?.countries ?? [];
   const email = filled(settings.contactEmail);
   const instagram = filled(settings.instagramUrl);
   const mediaKit = filled(settings.mediaKitUrl);
@@ -59,6 +65,30 @@ export function PartnerSection({
           <div>
             <h3 className="title">ใครดู Rounds</h3>
             <p className="small muted">{settings.audienceIntro}</p>
+            {ages.length > 0 && (
+              <div className="audience-live">
+                <span className="small muted">อายุผู้ชมบน YouTube · {audience!.days} วันล่าสุด</span>
+                <ul className="age-bars">
+                  {ages.map((a) => (
+                    <li key={a.group}>
+                      <span>{a.group}</span>
+                      <span className="age-bar" style={{ "--w": `${a.percent}%` } as CSSProperties} />
+                      <b>{percent(a.percent)}</b>
+                    </li>
+                  ))}
+                </ul>
+                <p className="small muted">
+                  {[
+                    ...(audience!.genders.length > 0
+                      ? [audience!.genders.map((g) => `${genderLabel(g.gender)} ${percent(g.percent)}`).join(" · ")]
+                      : []),
+                    ...(countries.length > 0
+                      ? [`ดูจาก ${countries.slice(0, 3).map((c) => `${countryLabel(c.country)} ${percent(c.percent)}`).join(", ")}`]
+                      : []),
+                  ].join(" — ")}
+                </p>
+              </div>
+            )}
             <ul className="row-list">
               {segments.map((seg) => (
                 <li key={seg.key}>

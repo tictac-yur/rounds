@@ -101,8 +101,14 @@ export const home = query({
 
     const hostDocs = await ctx.db.query("hosts").withIndex("by_order").take(LIST_LIMIT);
 
+    const stats = await ctx.db.query("channelStats").first();
+
     return {
       settings,
+      channel: stats?.statsUpdatedAt
+        ? { subscribers: stats.subscribers ?? null, views: stats.views ?? null, videos: stats.videos ?? null }
+        : null,
+      audience: stats?.audience ?? null,
       episodes,
       latest: pickLatest(episodes),
       myths: mythDocs.map((m) => ({

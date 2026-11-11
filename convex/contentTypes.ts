@@ -1,5 +1,5 @@
 import { Infer, v } from "convex/values";
-import { episodeStatus, flagVerdict, textLang } from "./schema";
+import { audienceData, episodeStatus, flagVerdict, textLang } from "./schema";
 
 // View models returned to the public site. Kept free of storage ids and
 // foreign keys so the site can render them directly.
@@ -51,6 +51,16 @@ export const episodeView = v.object({
 
 export const homeContent = v.object({
   settings: settingsView,
+  // Live from YouTube (convex/youtubeStats.ts); null until the first refresh.
+  channel: v.union(
+    v.object({
+      subscribers: v.union(v.number(), v.null()),
+      views: v.union(v.number(), v.null()),
+      videos: v.union(v.number(), v.null()),
+    }),
+    v.null(),
+  ),
+  audience: v.union(audienceData, v.null()),
   episodes: v.array(episodeView),
   latest: v.union(episodeView, v.null()),
   myths: v.array(

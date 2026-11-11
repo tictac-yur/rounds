@@ -137,6 +137,114 @@ function YouTubeSync() {
   );
 }
 
+function YouTubeNumbers() {
+  const stats = useQuery(api.admin.youtube.stats);
+  const refresh = useMutation(api.admin.youtube.refreshNumbers);
+  const startConnect = useMutation(api.admin.youtube.startConnect);
+  const disconnect = useMutation(api.admin.youtube.disconnect);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // Back from Google: ?youtube=connected | cancelled | expired | failed
+  const [result] = useState(() =>
+    typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("youtube"),
+  );
+  if (!stats) return null;
+
+  const fmt = (n: number | null) => (n === null ? "—" : n.toLocaleString("en"));
+  const ages = stats.audience?.ageGroups ?? [];
+
+  return (
+    <section className="admin-card admin-yt">
+      <span className="admin-yt-logo" aria-hidden="true">
+        <PlatformIcon name="youtube" size={26} />
+      </span>
+      <div>
+        <h2>YouTube numbers</h2>
+        <p className="admin-muted">
+          Subscribers and views show in the hero; once YouTube is connected, viewers&apos; ages, gender
+          and countries show in “ใครดู Rounds”. Both refresh every hour.
+        </p>
+
+        {!stats.apiKeySet ? (
+          <p className="admin-error">Add YOUTUBE_API_KEY in Convex → Settings → Environment Variables.</p>
+        ) : (
+          <span className="admin-status-line" data-error={Boolean(stats.statsError)} role="status">
+            <span className="admin-status-dot" aria-hidden="true" />
+            {stats.statsError
+              ? `Couldn't read the numbers: ${stats.statsError}`
+              : stats.statsUpdatedAt
+                ? `${fmt(stats.subscribers)} subscribers · ${fmt(stats.views)} views · ${fmt(stats.videos)} videos · updated ${timeAgo(stats.statsUpdatedAt)}`
+                : "Waiting for the first refresh."}
+          </span>
+        )}
+
+        <span className="admin-status-line" data-error={Boolean(stats.audienceError)} role="status">
+          <span className="admin-status-dot" aria-hidden="true" />
+          {stats.audienceError
+            ? stats.audienceError
+            : stats.connected
+              ? ages.length > 0
+                ? `Connected · ${ages.map((a) => `${a.group}: ${Math.round(a.percent)}%`).join(", ")}`
+                : stats.audienceUpdatedAt
+                  ? "Connected · YouTube hasn't released age data yet (it needs more views)."
+                  : "Connected · reading the first numbers…"
+              : "Audience data isn't connected."}
+        </span>
+        {result === "connected" && <p className="admin-muted">YouTube connected.</p>}
+        {result && result !== "connected" && (
+          <p className="admin-error">Connecting YouTube didn&apos;t finish ({result}). Try again.</p>
+        )}
+        {error && <p className="admin-error">{error}</p>}
+        {!stats.oauthSet && (
+          <p className="admin-muted">
+            To connect: set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in Convex. The redirect URI to give
+            Google is <code>{stats.callbackUrl}</code>
+          </p>
+        )}
+
+        <div className="admin-actions-row">
+          <button
+            className="admin-button"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              await refresh();
+              setTimeout(() => setBusy(false), 6000);
+            }}
+          >
+            {busy ? "Refreshing…" : "Refresh numbers"}
+          </button>
+          {stats.connected ? (
+            <button
+              className="admin-button admin-button-secondary"
+              onClick={() => {
+                if (window.confirm("Stop reading audience data from YouTube?")) void disconnect();
+              }}
+            >
+              Disconnect YouTube
+            </button>
+          ) : (
+            <button
+              className="admin-button admin-button-secondary"
+              disabled={!stats.oauthSet || !stats.siteUrlSet}
+              onClick={async () => {
+                setError(null);
+                try {
+                  window.location.href = await startConnect();
+                } catch (err) {
+                  setError(err instanceof ConvexError ? String(err.data) : "Couldn't start the YouTube sign-in.");
+                }
+              }}
+            >
+              Connect YouTube
+            </button>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function StarterContent() {
   const status = useQuery(api.admin.seed.status);
   const load = useMutation(api.admin.seed.loadStarterContent);
@@ -179,6 +287,7 @@ export function Dashboard() {
       <Overview />
       <StarterContent />
       <YouTubeSync />
+      <YouTubeNumbers />
       <div className="admin-grid">
         {SECTIONS.map((section) => (
           <Link key={section.href} href={section.href} className="admin-card admin-tile">

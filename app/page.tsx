@@ -24,7 +24,7 @@ export default async function Home() {
       </a>
       <SiteNav />
       <main id="main">
-        <HeroSection settings={settings} latest={content.latest} />
+        <HeroSection settings={settings} latest={content.latest} channel={content.channel} />
         <StatementSection />
         {content.latest && <LatestEpisodeSection episode={content.latest} />}
         <EpisodesSection episodes={content.episodes} />
@@ -37,6 +37,7 @@ export default async function Home() {
           settings={settings}
           packages={content.sponsorPackages}
           segments={content.audienceSegments}
+          audience={content.audience}
         />
       </main>
       <Footer settings={settings} />
