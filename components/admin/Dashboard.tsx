@@ -260,8 +260,8 @@ function Photos() {
     },
     {
       kind: "episode",
-      title: "Episode photos",
-      help: "One photo of Titi, Pup and the guest per episode. It replaces the YouTube thumbnail on the site.",
+      title: "Photos with the doctor (optional)",
+      help: "Titi, Pup and the guest together, for the doctor's profile page. Without one, it uses the YouTube thumbnail.",
       href: "/admin/episodes",
     },
   ] as const;

@@ -99,11 +99,14 @@ export const sync = internalAction({
       );
 
       await ctx.runMutation(internal.youtube.importVideos, { channelId, channelUrl, videos: withThumbs });
-      // Episodes already on the site pick up chapters added to their descriptions later.
-      const chapters = videos
-        .map((video) => ({ videoId: video.videoId, chapters: parseChapters(video.description) }))
-        .filter((c) => c.chapters.length > 0);
-      if (chapters.length > 0) await ctx.runMutation(internal.youtube.updateChapters, { videos: chapters });
+      // Episodes already on the site follow later changes on YouTube: a new
+      // thumbnail, or chapters added to the description.
+      const updates = videos.map((video) => ({
+        videoId: video.videoId,
+        chapters: parseChapters(video.description),
+        thumbnailUrl: video.thumbnailUrl,
+      }));
+      if (updates.length > 0) await ctx.runMutation(internal.youtube.refreshEpisodes, { videos: updates });
     } catch (error) {
       await ctx.runMutation(internal.youtube.recordError, {
         channelUrl,
@@ -216,22 +219,32 @@ export const saveTopShorts = internalMutation({
   },
 });
 
-export const updateChapters = internalMutation({
+export const refreshEpisodes = internalMutation({
   args: {
     videos: v.array(
-      v.object({ videoId: v.string(), chapters: v.array(v.object({ seconds: v.number(), title: v.string() })) }),
+      v.object({
+        videoId: v.string(),
+        chapters: v.array(v.object({ seconds: v.number(), title: v.string() })),
+        // Only known through the YouTube API.
+        thumbnailUrl: v.optional(v.string()),
+      }),
     ),
   },
   returns: v.null(),
   handler: async (ctx, { videos }) => {
-    for (const { videoId, chapters } of videos) {
+    for (const { videoId, chapters, thumbnailUrl } of videos) {
       const episode = await ctx.db
         .query("episodes")
         .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", videoId))
         .first();
-      if (episode && JSON.stringify(episode.chapters ?? []) !== JSON.stringify(chapters)) {
-        await ctx.db.patch("episodes", episode._id, { chapters });
+      if (!episode) continue;
+      const patch: { chapters?: typeof chapters; youtubeThumbnailUrl?: string } = {};
+      // Chapters removed from a description are kept rather than wiped.
+      if (chapters.length > 0 && JSON.stringify(episode.chapters ?? []) !== JSON.stringify(chapters)) {
+        patch.chapters = chapters;
       }
+      if (thumbnailUrl && thumbnailUrl !== episode.youtubeThumbnailUrl) patch.youtubeThumbnailUrl = thumbnailUrl;
+      if (Object.keys(patch).length > 0) await ctx.db.patch("episodes", episode._id, patch);
     }
     return null;
   },

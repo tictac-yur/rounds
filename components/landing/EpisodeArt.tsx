@@ -51,7 +51,7 @@ export function EpisodeVisual({ episode, alt }: { episode: EpisodeView; alt?: st
       <img
         className="ep-photo zoom"
         src={episode.thumbnailUrl}
-        alt={alt ?? episode.photoCaption ?? `ตีตี้ ปั๊บ และ${episode.guestName ?? "แขกรับเชิญ"}`}
+        alt={alt ?? episode.title}
       />
     );
   }

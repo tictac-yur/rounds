@@ -27,6 +27,7 @@ export function seedHomeContent(): HomeContent {
       thumbLabel: e.thumbLabel,
       thumbVariant: e.thumbVariant,
       thumbnailUrl: e.youtubeThumbnailUrl ?? null,
+      photoUrl: null,
       photoCaption: null,
       meta: episodeMeta(e),
       seriesName: seedSeries[e.seriesIndex]?.name ?? null,
