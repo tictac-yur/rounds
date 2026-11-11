@@ -70,7 +70,9 @@ export const home = query({
         thumbLabel: e.thumbLabel,
         thumbVariant: e.thumbVariant,
         // An uploaded photo wins; otherwise the video's YouTube thumbnail.
-        thumbnailUrl: (await fileUrl(ctx, e.thumbnailId)) ?? e.youtubeThumbnailUrl ?? youtubeThumb(e.youtubeUrl),
+        // Match YouTube: its thumbnail whenever the episode has a video.
+        thumbnailUrl: e.youtubeThumbnailUrl ?? youtubeThumb(e.youtubeUrl) ?? (await fileUrl(ctx, e.thumbnailId)),
+        photoUrl: await fileUrl(ctx, e.thumbnailId),
         photoCaption: e.photoCaption ?? null,
         meta: episodeMeta(e),
         seriesName: series?.name ?? null,

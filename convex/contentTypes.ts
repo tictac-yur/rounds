@@ -32,7 +32,10 @@ export const episodeView = v.object({
   summary: v.string(),
   thumbLabel: v.string(),
   thumbVariant: v.number(),
+  // The video's YouTube thumbnail (an uploaded photo only when there's no video).
   thumbnailUrl: v.union(v.string(), v.null()),
+  // Photo of the hosts with the guest uploaded in the admin, for the doctor's page.
+  photoUrl: v.union(v.string(), v.null()),
   photoCaption: v.union(v.string(), v.null()),
   meta: v.string(),
   seriesName: v.union(v.string(), v.null()),

@@ -58,18 +58,11 @@ export default function EpisodesPage() {
         { name: "appleUrl", label: "Apple Podcasts link", type: "url", optional: true },
         {
           name: "thumbnailId",
-          label: "Episode photo",
+          label: "Photo with the doctor (optional)",
           type: "image",
           optional: true,
           crop: { aspect: 16 / 9, width: 1600, guides: "center" },
-          help: "Photo of Titi, Pup and the guest, cropped to the YouTube shape. Replaces the YouTube thumbnail on the episode card, the latest-episode panel and the doctor's profile.",
-        },
-        {
-          name: "photoCaption",
-          label: "Photo description",
-          type: "text",
-          optional: true,
-          help: "Describes the photo for screen readers, e.g. ตีตี้และปั๊บกับคุณหมอที่ห้อง ER.",
+          help: "Titi, Pup and the guest together, shown on the doctor's profile page. Episode cards always use the YouTube thumbnail. Without a photo, the doctor's page uses the YouTube thumbnail too.",
         },
         {
           name: "thumbLabel",

@@ -16,7 +16,14 @@ export function doctorFlags(content: HomeContent, guest: GuestView) {
   );
 }
 
-// Their own portrait, else the thumbnail of an episode they're in.
+// Their own portrait, else a photo of them with the hosts, else the YouTube
+// thumbnail of an episode they're in.
 export function doctorPhoto(content: HomeContent, guest: GuestView): string | null {
-  return guest.photoUrl ?? doctorEpisodes(content, guest).find((ep) => ep.thumbnailUrl)?.thumbnailUrl ?? null;
+  const episodes = doctorEpisodes(content, guest);
+  return (
+    guest.photoUrl ??
+    episodes.find((ep) => ep.photoUrl)?.photoUrl ??
+    episodes.find((ep) => ep.thumbnailUrl)?.thumbnailUrl ??
+    null
+  );
 }

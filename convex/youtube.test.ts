@@ -222,8 +222,14 @@ describe("chapters", () => {
 describe("sync through the YouTube API", () => {
   test("imports full videos and keeps the most-watched Shorts", async () => {
     vi.stubEnv("YOUTUBE_API_KEY", "key");
+    // Flipped later on to simulate a new thumbnail uploaded on YouTube.
+    let newThumbnail = false;
+    const thumbnail = (videoId: string) =>
+      newThumbnail && videoId === "o4kY44zLgig"
+        ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg?v=2`
+        : `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
     const item = (videoId: string, title: string, publishedAt: string) => ({
-      snippet: { title, description: "00:00 - Intro\n02:00 - Main", publishedAt, resourceId: { videoId }, thumbnails: { high: { url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` } } },
+      snippet: { title, description: "00:00 - Intro\n02:00 - Main", publishedAt, resourceId: { videoId }, thumbnails: { high: { url: thumbnail(videoId) } } },
     });
     const details = [
       { id: "o4kY44zLgig", contentDetails: { duration: "PT36M40S" }, statistics: { viewCount: "5000" } },
@@ -271,5 +277,13 @@ describe("sync through the YouTube API", () => {
     const stats = await t.run((ctx) => ctx.db.query("channelStats").first());
     expect(stats?.topShorts?.map((s) => s.videoId)).toEqual(["Short000002", "Short000001"]);
     expect(stats?.topShorts?.[0].thumbnailUrl).toBe("https://i.ytimg.com/vi/Short000002/oar2.jpg");
+
+    // A thumbnail changed on YouTube reaches the episode on the next sync.
+    newThumbnail = true;
+    await t.action(internal.youtube.sync, {});
+    const ep1 = await t.run((ctx) =>
+      ctx.db.query("episodes").withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", "o4kY44zLgig")).first(),
+    );
+    expect(ep1?.youtubeThumbnailUrl).toBe("https://i.ytimg.com/vi/o4kY44zLgig/maxresdefault.jpg?v=2");
   });
 });

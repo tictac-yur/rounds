@@ -49,6 +49,7 @@ export function withChannelVideos(content: HomeContent, starter: HomeContent, fe
         thumbLabel: thumbLabelFrom(v.title),
         thumbVariant: 0,
         thumbnailUrl: `https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg`,
+        photoUrl: null,
         photoCaption: null,
         meta: thaiDate(v.publishedAt) ?? "",
         seriesName: seriesNames.find((name) => title.toLowerCase().includes(name.toLowerCase())) ?? null,

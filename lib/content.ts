@@ -23,8 +23,10 @@ function withDefaults(c: HomeContent): HomeContent {
     channel: c.channel ?? null,
     audience: c.audience ?? null,
     shorts: c.shorts ?? [],
-    episodes: c.episodes.map((ep) => ({ ...ep, guestPath: ep.guestPath ?? null, chapters: ep.chapters ?? [] })),
-    latest: c.latest ? { ...c.latest, guestPath: c.latest.guestPath ?? null, chapters: c.latest.chapters ?? [] } : null,
+    episodes: c.episodes.map((ep) => ({ ...ep, guestPath: ep.guestPath ?? null, chapters: ep.chapters ?? [], photoUrl: ep.photoUrl ?? null })),
+    latest: c.latest
+      ? { ...c.latest, guestPath: c.latest.guestPath ?? null, chapters: c.latest.chapters ?? [], photoUrl: c.latest.photoUrl ?? null }
+      : null,
     myths: c.myths.map((m) => ({
       ...m,
       answeredByPath: m.answeredByPath ?? null,
