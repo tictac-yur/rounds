@@ -69,7 +69,7 @@ export function seedHomeContent(): HomeContent {
       nameLang: g.nameLang,
       field: g.field,
       affiliation: g.affiliation ?? null,
-      bio: null,
+      bio: g.bio ?? null,
       profileUrl: null,
       photoUrl: null,
     })),

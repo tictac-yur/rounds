@@ -4,7 +4,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import schema from "./schema";
 import { internal } from "./_generated/api";
 import { parseFeed, thaiDate, videoIdFromUrl } from "./lib/youtube";
-import { seedSettings } from "./seedData";
+import { seedMyths, seedSettings } from "./seedData";
 
 const modules = import.meta.glob("./**/*.ts");
 
@@ -140,10 +140,9 @@ describe("channel content switch", () => {
     expect(guests.map((g) => g.name)).toEqual(["ผศ.นพ.กานต์ วิฑูรชาติ"]);
     expect(episodes[0].guestId).toBe(guests[0]._id);
     const myths = await t.run((ctx) => ctx.db.query("myths").collect());
-    expect(myths.map((m) => [m.verdict, m.episodeId])).toEqual([
-      ["red", episodes[0]._id],
-      ["green", episodes[0]._id],
-    ]);
+    expect(myths.map((m) => [m.verdict, m.episodeId])).toEqual(
+      seedMyths.map((m) => [m.verdict, episodes[m.episodeIndex]._id]),
+    );
     const settings = await t.run((ctx) => ctx.db.query("siteSettings").first());
     expect(settings).toMatchObject({ linktreeUrl: "https://linktr.ee/rounds.med", contactEmail: "roundsmedofficial@gmail.com" });
 
