@@ -159,6 +159,8 @@ export default defineSchema({
     // Version of the one-time switch to the channel's real content
     // (convex/channelContent.ts) applied to this database.
     contentVersion: v.optional(v.number()),
+    // Version of the one-time additions in convex/contentUpdates.ts.
+    contentUpdates: v.optional(v.number()),
   }),
 
   // Singleton: the channel's numbers, refreshed hourly (convex/youtubeStats.ts).

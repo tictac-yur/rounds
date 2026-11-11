@@ -23,6 +23,7 @@ import type * as admin_youtube from "../admin/youtube.js";
 import type * as auth from "../auth.js";
 import type * as channelContent from "../channelContent.js";
 import type * as content from "../content.js";
+import type * as contentUpdates from "../contentUpdates.js";
 import type * as contentTypes from "../contentTypes.js";
 import type * as crons from "../crons.js";
 import type * as http from "../http.js";
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   channelContent: typeof channelContent;
   content: typeof content;
+  contentUpdates: typeof contentUpdates;
   contentTypes: typeof contentTypes;
   crons: typeof crons;
   http: typeof http;
