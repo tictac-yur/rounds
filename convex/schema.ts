@@ -44,13 +44,14 @@ export default defineSchema({
     heroHeadline: v.string(),
     // Thai line under the (English) hero headline.
     heroHeadlineTh: v.optional(v.string()),
-    heroIntro: v.string(),
+    // No longer shown on the site; kept optional for existing data.
+    heroIntro: v.optional(v.string()),
     heroIntroTh: v.string(),
     heroImageId: v.optional(v.id("_storage")),
-    heroImageCaption: v.string(),
+    heroImageCaption: v.optional(v.string()),
     stats: v.array(v.object({ value: v.string(), label: v.string() })),
     audienceIntro: v.string(),
-    platformHandles: v.array(v.string()),
+    platformHandles: v.optional(v.array(v.string())),
     contactEmail: v.string(),
     mediaKitUrl: v.string(),
     youtubeUrl: v.string(),
@@ -65,7 +66,7 @@ export default defineSchema({
     name: v.string(),
     kicker: v.string(),
     description: v.string(),
-    accentColor: v.string(),
+    accentColor: v.optional(v.string()),
     order: v.number(),
   }).index("by_order", ["order"]),
 
@@ -142,7 +143,7 @@ export default defineSchema({
   }).index("by_order", ["order"]),
 
   sponsorPackages: defineTable({
-    letter: v.string(),
+    letter: v.optional(v.string()),
     title: v.string(),
     description: v.string(),
     order: v.number(),
@@ -173,6 +174,8 @@ export default defineSchema({
     audience: v.optional(audienceData),
     audienceUpdatedAt: v.optional(v.number()),
     audienceError: v.optional(v.string()),
+    // The channel's most-watched Shorts, newest sync first (convex/youtube.ts).
+    topShorts: v.optional(v.array(v.object({ videoId: v.string(), title: v.string(), thumbnailUrl: v.string() }))),
   }),
 
   // Singleton, never returned to clients: the channel owner's permission to
@@ -193,6 +196,9 @@ export default defineSchema({
   hosts: defineTable({
     name: v.string(),
     role: v.string(),
+    // URL of their page, e.g. "titi" for /hosts/titi.
+    slug: v.optional(v.string()),
+    bio: v.optional(v.string()),
     photoId: v.optional(v.id("_storage")),
     order: v.number(),
   }).index("by_order", ["order"]),

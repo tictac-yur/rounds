@@ -54,6 +54,7 @@ function stubYouTube(feed = FEED) {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
 describe("youtube helpers", () => {
@@ -215,5 +216,60 @@ describe("chapters", () => {
     expect(parseChapters("12:00 noon\n13:00 lunch")).toEqual([]);
     expect(timestamp(3723)).toBe("1:02:03");
     expect(timestamp(37)).toBe("0:37");
+  });
+});
+
+describe("sync through the YouTube API", () => {
+  test("imports full videos and keeps the most-watched Shorts", async () => {
+    vi.stubEnv("YOUTUBE_API_KEY", "key");
+    const item = (videoId: string, title: string, publishedAt: string) => ({
+      snippet: { title, description: "00:00 - Intro\n02:00 - Main", publishedAt, resourceId: { videoId }, thumbnails: { high: { url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` } } },
+    });
+    const details = [
+      { id: "o4kY44zLgig", contentDetails: { duration: "PT36M40S" }, statistics: { viewCount: "5000" } },
+      { id: "NeWVide0_01", contentDetails: { duration: "PT41M2S" }, statistics: { viewCount: "10" } },
+      { id: "Short000001", contentDetails: { duration: "PT45S" }, statistics: { viewCount: "300" } },
+      { id: "Short000002", contentDetails: { duration: "PT2M10S" }, statistics: { viewCount: "9000" } },
+    ];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string | URL | Request) => {
+        const url = String(input instanceof Request ? input.url : input);
+        const json = (body: unknown) => new Response(JSON.stringify(body), { headers: { "Content-Type": "application/json" } });
+        if (url.includes("/youtube/v3/playlistItems")) {
+          expect(url).toContain(`playlistId=UU${CHANNEL.slice(2)}`);
+          return json({
+            items: [
+              item("NeWVide0_01", "คุยกับจักษุแพทย์ | The Consult EP.2", "2026-11-15T11:00:00Z"),
+              item("Short000001", "ไข่วันละ 2 ฟอง #shorts", "2026-11-05T11:00:00Z"),
+              item("Short000002", "อกหักจนหัวใจพัง #shorts", "2026-11-04T11:00:00Z"),
+              item("o4kY44zLgig", "คุยกับหมอหัวใจ | The Consult EP.1", "2026-11-01T11:00:00Z"),
+            ],
+          });
+        }
+        if (url.includes("/youtube/v3/videos")) return json({ items: details });
+        return new Response(null, { status: 404 });
+      }),
+    );
+    const t = convexTest(schema, modules);
+    await t.run(async (ctx) => {
+      await ctx.db.insert("youtubeSync", { channelId: CHANNEL, channelUrl: seedSettings.youtubeUrl, lastAddedCount: 0, contentVersion: 1 });
+      await ctx.db.insert("siteSettings", seedSettings);
+    });
+
+    await t.action(internal.youtube.sync, {});
+
+    const state = await t.run((ctx) => ctx.db.query("youtubeSync").first());
+    expect(state?.lastError).toBeUndefined();
+    const episodes = await t.run((ctx) => ctx.db.query("episodes").collect());
+    // Both full videos become episodes; the two Shorts don't.
+    expect(episodes.map((e) => e.youtubeVideoId).sort()).toEqual(["NeWVide0_01", "o4kY44zLgig"]);
+    expect(episodes.find((e) => e.youtubeVideoId === "NeWVide0_01")?.chapters).toEqual([
+      { seconds: 0, title: "Intro" },
+      { seconds: 120, title: "Main" },
+    ]);
+    const stats = await t.run((ctx) => ctx.db.query("channelStats").first());
+    expect(stats?.topShorts?.map((s) => s.videoId)).toEqual(["Short000002", "Short000001"]);
+    expect(stats?.topShorts?.[0].thumbnailUrl).toBe("https://i.ytimg.com/vi/Short000002/oar2.jpg");
   });
 });

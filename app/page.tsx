@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { StatementSection } from "@/components/landing/StatementSection";
 import { LatestEpisodeSection } from "@/components/landing/LatestEpisodeSection";
 import { EpisodesSection } from "@/components/landing/EpisodesSection";
+import { ShortsSection } from "@/components/landing/ShortsSection";
 import { FlagsQuiz } from "@/components/landing/FlagsQuiz";
 import { SeriesSection } from "@/components/landing/SeriesSection";
 import { HostsSection } from "@/components/landing/HostsSection";
@@ -28,6 +29,7 @@ export default async function Home() {
         <StatementSection />
         {content.latest && <LatestEpisodeSection episode={content.latest} />}
         <EpisodesSection episodes={content.episodes} />
+        <ShortsSection shorts={content.shorts} />
         {myths.length > 0 && <FlagsQuiz myths={myths} />}
         <DoctorsSection content={content} />
         <HostsSection hosts={content.hosts} intro={content.episodes.find((ep) => ep.status === "published" && !ep.guestName) ?? null} />

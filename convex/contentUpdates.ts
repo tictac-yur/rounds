@@ -1,47 +1,71 @@
 import { v } from "convex/values";
-import { internalMutation } from "./_generated/server";
-import { ep1TranscriptFlags, seedEpisodes, seedGuests } from "./seedData";
+import { internalMutation, MutationCtx } from "./_generated/server";
+import { ep1TranscriptFlags, seedEpisodes, seedGuests, seedHosts } from "./seedData";
 
 // One-time additions to a live database, run at the start of the YouTube sync
 // (like convex/channelContent.ts). Each only fills what's missing, so nothing
 // edited in the admin is overwritten. Add a step and bump UPDATES_VERSION.
-export const UPDATES_VERSION = 1;
+export const UPDATES_VERSION = 2;
 
 export const apply = internalMutation({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
     const state = await ctx.db.query("youtubeSync").first();
-    if (state === null || (state.contentUpdates ?? 0) >= UPDATES_VERSION) return null;
+    const done = state?.contentUpdates ?? 0;
+    if (state === null || done >= UPDATES_VERSION) return null;
 
-    // 1. อ.กานต์: English name and bio from the EP.1 transcript, if still blank.
-    const seedGuest = seedGuests[0];
-    const guests = await ctx.db.query("guests").withIndex("by_order").take(200);
-    const guest = guests.find((g) => g.name.trim() === seedGuest.name);
-    if (guest) {
-      await ctx.db.patch("guests", guest._id, {
-        ...(guest.nameAlt ? {} : { nameAlt: seedGuest.nameAlt }),
-        ...(guest.bio ? {} : { bio: seedGuest.bio }),
-      });
-    }
+    if (done < 1) await addKanContent(ctx);
+    if (done < 2) await addHostSlugs(ctx);
 
-    // 2. His Red/Green flags from the transcript, any not already there.
-    const ep1 = seedEpisodes[0];
-    const episode = await ctx.db
-      .query("episodes")
-      .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", ep1.youtubeVideoId))
-      .first();
-    if (episode) {
-      const myths = await ctx.db.query("myths").withIndex("by_order").take(500);
-      const claims = new Set(myths.map((m) => m.claim.trim()));
-      let order = Math.max(-1, ...myths.map((m) => m.order)) + 1;
-      for (const { claim, answer, verdict } of ep1TranscriptFlags) {
-        if (claims.has(claim)) continue;
-        await ctx.db.insert("myths", { claim, answer, verdict, episodeId: episode._id, published: true, order: order++ });
-      }
-    }
-
-    await ctx.db.patch("youtubeSync", state._id, { contentUpdates: UPDATES_VERSION });
+    await ctx.db.patch("youtubeSync", state._id, {
+      contentUpdates: UPDATES_VERSION,
+    });
     return null;
   },
 });
+
+// Version 1. อ.กานต์: English name and bio from the EP.1 transcript, if
+// still blank, and his Red/Green flags from the transcript not already there.
+async function addKanContent(ctx: MutationCtx) {
+  const seedGuest = seedGuests[0];
+  const guests = await ctx.db.query("guests").withIndex("by_order").take(200);
+  const guest = guests.find((g) => g.name.trim() === seedGuest.name);
+  if (guest) {
+    await ctx.db.patch("guests", guest._id, {
+      ...(guest.nameAlt ? {} : { nameAlt: seedGuest.nameAlt }),
+      ...(guest.bio ? {} : { bio: seedGuest.bio }),
+    });
+  }
+
+  const ep1 = seedEpisodes[0];
+  const episode = await ctx.db
+    .query("episodes")
+    .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", ep1.youtubeVideoId))
+    .first();
+  if (episode) {
+    const myths = await ctx.db.query("myths").withIndex("by_order").take(500);
+    const claims = new Set(myths.map((m) => m.claim.trim()));
+    let order = Math.max(-1, ...myths.map((m) => m.order)) + 1;
+    for (const { claim, answer, verdict } of ep1TranscriptFlags) {
+      if (claims.has(claim)) continue;
+      await ctx.db.insert("myths", {
+        claim,
+        answer,
+        verdict,
+        episodeId: episode._id,
+        published: true,
+        order: order++,
+      });
+    }
+  }
+}
+
+// Version 2. Page addresses for the hosts (/hosts/titi, /hosts/pup), if not set.
+async function addHostSlugs(ctx: MutationCtx) {
+  const hosts = await ctx.db.query("hosts").withIndex("by_order").take(50);
+  for (const seedHost of seedHosts) {
+    const host = hosts.find((h) => h.name.trim() === seedHost.name);
+    if (host && !host.slug) await ctx.db.patch("hosts", host._id, { slug: seedHost.slug });
+  }
+}

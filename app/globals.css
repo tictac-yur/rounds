@@ -1458,19 +1458,11 @@ a:hover .badge-watch {
   background: var(--navy);
   aspect-ratio: 16 / 9;
 }
-.hosts-photo[data-split="true"] {
-  grid-template-columns: 1fr 1fr;
-  aspect-ratio: 8 / 5;
-  background: transparent;
-}
 .hosts-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-}
-.hosts-photo[data-split="true"] img {
-  border-radius: var(--r-xl);
 }
 .hosts-text {
   display: flex;
@@ -1491,6 +1483,30 @@ a:hover .badge-watch {
 }
 .host-list li:last-child {
   border-bottom: 1px solid var(--line);
+}
+.host-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: inherit;
+  text-decoration: none;
+}
+.host-list a > span:first-child {
+  display: flex;
+  flex-direction: column;
+}
+.host-list a .btn-arrow {
+  transition: transform 0.2s ease;
+}
+.host-list a:hover .btn-arrow,
+.host-list a:focus-visible .btn-arrow {
+  transform: translateX(4px);
+}
+.host-list a:hover .host-name {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
 }
 .host-name {
   font-size: 26px;
@@ -1823,11 +1839,23 @@ a:hover .badge-watch {
 .doctor-hero-photo[data-thumbnail="true"] {
   aspect-ratio: 16 / 9;
 }
+/* A host's own page: their cropped 3:4 portrait. */
+.doctor-hero-photo[data-portrait="true"] {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  max-width: 440px;
+  justify-self: end;
+}
 .doctor-hero-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+/* No photo yet: just the small logo in the middle. */
+.doctor-hero-photo .doctor-photo-empty img {
+  width: auto;
+  height: 28px;
 }
 .verdict-list {
   list-style: none;
@@ -1866,6 +1894,11 @@ a:hover .badge-watch {
   .doctor-hero-photo {
     aspect-ratio: 16 / 10;
     order: -1;
+  }
+  .doctor-hero-photo[data-portrait="true"] {
+    aspect-ratio: 3 / 4;
+    max-width: 320px;
+    justify-self: start;
   }
 }
 @media (max-width: 640px) {
@@ -1929,4 +1962,69 @@ a:hover .badge-watch {
   font-size: 13px;
   color: var(--ink-muted);
   min-width: 44px;
+}
+
+/* ---------- Popular Shorts ---------- */
+.shorts-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.short-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: inherit;
+  text-decoration: none;
+}
+.short-thumb {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--navy);
+}
+.short-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 400ms var(--ease-out);
+}
+.short-card:hover .short-thumb img {
+  transform: scale(1.03);
+}
+.short-thumb .badge-watch {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+}
+.short-title {
+  font-family: var(--font-thai);
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Phones and tablets: swipe sideways, like YouTube's Shorts shelf. */
+@media (max-width: 900px) {
+  .shorts-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .shorts-row li {
+    flex: 0 0 42%;
+    scroll-snap-align: start;
+  }
 }

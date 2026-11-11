@@ -1,25 +1,20 @@
+import Link from "next/link";
 import type { EpisodeView, HomeContent } from "@/convex/contentTypes";
 import { watchUrl } from "@/lib/episodes";
 import { ArrowIcon } from "./Icons";
 
-// The hosts with a real photo of them: their own portraits once uploaded,
-// until then the thumbnail of the episode that introduces them.
+// The intro episode's photo of both hosts, with each host linking to their
+// own page (and portrait).
 export function HostsSection({ hosts, intro }: { hosts: HomeContent["hosts"]; intro: EpisodeView | null }) {
-  const portraits = hosts.filter((h) => h.photoUrl);
   const introUrl = intro ? watchUrl(intro) : null;
   return (
     <section id="hosts" className="wrap section" aria-labelledby="hosts-title">
       <div className="hosts-layout">
-        <div className="hosts-photo" data-split={portraits.length === hosts.length && hosts.length > 1}>
-          {portraits.length === hosts.length && hosts.length > 0
-            ? hosts.map((h) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={h.key} src={h.photoUrl!} alt={h.name} loading="lazy" />
-              ))
-            : intro?.thumbnailUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={intro.thumbnailUrl} alt={hosts.map((h) => h.name).join(" และ ")} loading="lazy" />
-              )}
+        <div className="hosts-photo">
+          {intro?.thumbnailUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={intro.thumbnailUrl} alt={hosts.map((h) => h.name).join(" และ ")} loading="lazy" />
+          )}
         </div>
 
         <div className="hosts-text">
@@ -30,8 +25,15 @@ export function HostsSection({ hosts, intro }: { hosts: HomeContent["hosts"]; in
           <ul className="host-list">
             {hosts.map((h) => (
               <li key={h.key}>
-                <span className="host-name">{h.name}</span>
-                <span className="small muted">{h.role}</span>
+                <Link href={`/hosts/${h.path}`}>
+                  <span>
+                    <span className="host-name">{h.name}</span>
+                    <span className="small muted">{h.role}</span>
+                  </span>
+                  <span className="btn-arrow" aria-hidden="true">
+                    <ArrowIcon />
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>

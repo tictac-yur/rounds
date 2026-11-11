@@ -1,10 +1,24 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "../_generated/server";
+import { mutation, MutationCtx, query } from "../_generated/server";
+import { Id } from "../_generated/dataModel";
 import schema from "../schema";
 import { requireAdmin } from "../lib/access";
 import { releaseFile } from "../lib/files";
 
 const fields = schema.tables.hosts.validator.fields;
+
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+async function assertSlugAvailable(ctx: MutationCtx, slug: string | undefined, self?: Id<"hosts">) {
+  if (slug === undefined) return;
+  if (!SLUG_PATTERN.test(slug)) {
+    throw new ConvexError("Page address must be lowercase English letters, numbers and dashes.");
+  }
+  const hosts = await ctx.db.query("hosts").withIndex("by_order").take(200);
+  if (hosts.some((h) => h.slug === slug && h._id !== self)) {
+    throw new ConvexError(`Another host already uses the address "${slug}".`);
+  }
+}
 
 export const list = query({
   args: {},
@@ -25,6 +39,7 @@ export const create = mutation({
   returns: v.id("hosts"),
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
+    await assertSlugAvailable(ctx, args.slug);
     return await ctx.db.insert("hosts", args);
   },
 });
@@ -36,6 +51,7 @@ export const update = mutation({
     await requireAdmin(ctx);
     const existing = await ctx.db.get("hosts", id);
     if (existing === null) throw new ConvexError("Not found");
+    await assertSlugAvailable(ctx, fields.slug, id);
     await releaseFile(ctx, existing.photoId, fields.photoId);
     await ctx.db.replace("hosts", id, fields);
     return null;

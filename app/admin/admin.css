@@ -953,7 +953,8 @@
 .admin-image-empty {
   width: 200px;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  object-fit: contain;
+  background: #0b1118;
   border-radius: 12px;
   background: var(--surface-sunk);
 }
@@ -984,4 +985,95 @@
   border-top: 1px solid var(--line);
   margin-top: 4px;
   padding-top: 20px;
+}
+
+/* ---------- Dashboard: photo checklist ---------- */
+.admin-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px 40px;
+  margin-top: 16px;
+}
+.admin-photos h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.admin-photos ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.admin-photos li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.admin-photos li[data-done="true"] {
+  color: var(--ink-muted);
+}
+.admin-photos li > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.admin-photos-add {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------- Image cropper ---------- */
+.admin-cropper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+.admin-cropper-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0b1118;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.admin-cropper-frame:active {
+  cursor: grabbing;
+}
+.admin-cropper-frame img {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+}
+.admin-cropper-guides {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.admin-cropper-guides line,
+.admin-cropper-guides ellipse {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+  vector-effect: non-scaling-stroke;
+}
+.admin-cropper-guides .faint {
+  stroke: rgba(255, 255, 255, 0.45);
+}
+.admin-cropper-zoom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.admin-cropper-zoom input {
+  flex: 1;
 }

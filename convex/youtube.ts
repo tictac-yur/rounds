@@ -7,8 +7,10 @@ import {
   channelIdFromPage,
   channelIdFromUrl,
   cleanTitle,
+  fetchUploads,
   parseChapters,
   parseFeed,
+  shortThumbnail,
   slugFor,
   summaryFrom,
   thaiDate,
@@ -59,9 +61,30 @@ export const sync = internalAction({
         if (!channelId) throw new Error(`Couldn't find a YouTube channel at ${channelUrl}.`);
       }
 
-      const feed = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
-      if (!feed.ok) throw new Error(`YouTube feed returned HTTP ${feed.status}.`);
-      const videos = parseFeed(await feed.text()).filter((video) => !video.isShort);
+      // The YouTube Data API when YOUTUBE_API_KEY is set; YouTube's public
+      // feed (which has stopped answering for many channels) otherwise.
+      const key = process.env.YOUTUBE_API_KEY;
+      let uploads;
+      if (key) {
+        uploads = await fetchUploads(channelId, key);
+      } else {
+        const feed = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
+        if (!feed.ok) {
+          throw new Error(`YouTube feed returned HTTP ${feed.status}. Add YOUTUBE_API_KEY in Convex to read the channel through the YouTube API.`);
+        }
+        uploads = parseFeed(await feed.text());
+      }
+      const videos = uploads.filter((video) => !video.isShort);
+
+      // The most-watched Shorts, for the home page (only known through the API).
+      if (key) {
+        const topShorts = uploads
+          .filter((video) => video.isShort)
+          .sort((a, b) => (b.views ?? 0) - (a.views ?? 0))
+          .slice(0, 5)
+          .map((video) => ({ videoId: video.videoId, title: cleanTitle(video.title), thumbnailUrl: shortThumbnail(video.videoId) }));
+        await ctx.runMutation(internal.youtube.saveTopShorts, { shorts: topShorts });
+      }
 
       const known: string[] = await ctx.runQuery(internal.youtube.knownVideoIds, {});
       const fresh = videos.filter((video) => !known.includes(video.videoId));
@@ -71,7 +94,7 @@ export const sync = internalAction({
           title: video.title,
           description: video.description,
           publishedAt: video.publishedAt,
-          thumbnailUrl: await bestThumbnail(video.videoId),
+          thumbnailUrl: video.thumbnailUrl ?? (await bestThumbnail(video.videoId)),
         })),
       );
 
@@ -176,6 +199,19 @@ export const importVideos = internalMutation({
     }
 
     await writeState(ctx, { channelId, channelUrl, lastCheckedAt: Date.now(), lastAddedCount: added, lastError: undefined });
+    return null;
+  },
+});
+
+const topShort = v.object({ videoId: v.string(), title: v.string(), thumbnailUrl: v.string() });
+
+export const saveTopShorts = internalMutation({
+  args: { shorts: v.array(topShort) },
+  returns: v.null(),
+  handler: async (ctx, { shorts }) => {
+    const stats = await ctx.db.query("channelStats").first();
+    if (stats) await ctx.db.patch("channelStats", stats._id, { topShorts: shorts });
+    else await ctx.db.insert("channelStats", { topShorts: shorts });
     return null;
   },
 });

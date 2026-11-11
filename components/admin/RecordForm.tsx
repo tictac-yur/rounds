@@ -5,22 +5,27 @@ import { ConvexError } from "convex/values";
 import { FormEvent, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Field, FieldValues, toArgs } from "./fields";
+import { ImageCropper, type CropSpec } from "./ImageCropper";
 
 function ImageInput({
   name,
   value,
   previewUrl,
+  crop,
   onChange,
 }: {
   name: string;
   value: unknown;
   previewUrl: string | null;
+  crop?: CropSpec;
   onChange: (storageId: string | undefined, preview: string | null) => void;
 }) {
   const generateUploadUrl = useMutation(api.admin.files.generateUploadUrl);
   const [uploading, setUploading] = useState(false);
+  // A chosen photo waiting to be cropped.
+  const [cropping, setCropping] = useState<string | null>(null);
 
-  async function upload(file: File) {
+  async function upload(file: Blob) {
     setUploading(true);
     try {
       const url = await generateUploadUrl();
@@ -34,6 +39,20 @@ function ImageInput({
     } finally {
       setUploading(false);
     }
+  }
+
+  if (cropping && crop) {
+    return (
+      <ImageCropper
+        src={cropping}
+        spec={crop}
+        onCancel={() => setCropping(null)}
+        onDone={(blob) => {
+          setCropping(null);
+          void upload(blob);
+        }}
+      />
+    );
   }
 
   return (
@@ -52,7 +71,10 @@ function ImageInput({
           disabled={uploading}
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void upload(file);
+            e.target.value = "";
+            if (!file) return;
+            if (crop) setCropping(URL.createObjectURL(file));
+            else void upload(file);
           }}
         />
         {uploading && <span className="admin-muted">Uploading…</span>}
@@ -155,6 +177,7 @@ export function RecordForm({
                 name={id}
                 value={value}
                 previewUrl={previews[field.name] ?? null}
+                crop={field.crop}
                 onChange={(storageId, preview) => {
                   set(field.name, storageId);
                   setPreviews((current) => ({ ...current, [field.name]: preview }));

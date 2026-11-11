@@ -8,6 +8,9 @@ export type FeedVideo = {
   description: string;
   publishedAt: string; // ISO date
   isShort: boolean;
+  // From the YouTube Data API only.
+  views?: number;
+  thumbnailUrl?: string;
 };
 
 const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
@@ -139,4 +142,60 @@ export function timestamp(seconds: number): string {
   const m = Math.floor((seconds % 3600) / 60);
   const s = String(seconds % 60).padStart(2, "0");
   return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${s}` : `${m}:${s}`;
+}
+
+// "PT1H2M3S" → 3723.
+export function isoDurationSeconds(duration: string): number {
+  const m = duration.match(/^P(?:\d+D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!m) return 0;
+  return Number(m[1] ?? 0) * 3600 + Number(m[2] ?? 0) * 60 + Number(m[3] ?? 0);
+}
+
+// Shorts are up to 3 minutes; full episodes are much longer.
+export const SHORT_MAX_SECONDS = 180;
+
+// The channel's latest 50 uploads from the YouTube Data API (the public feed
+// stopped working): title, description, date, length and views.
+export async function fetchUploads(channelId: string, key: string): Promise<FeedVideo[]> {
+  const get = async (path: string, params: Record<string, string>) => {
+    const res = await fetch(`https://www.googleapis.com/youtube/v3/${path}?${new URLSearchParams({ ...params, key })}`);
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(`YouTube API: ${body?.error?.message ?? `HTTP ${res.status}`}`);
+    return body;
+  };
+  // Every channel's uploads playlist is its id with "UC" swapped for "UU".
+  const list = await get("playlistItems", {
+    part: "snippet",
+    maxResults: "50",
+    playlistId: `UU${channelId.slice(2)}`,
+  });
+  type Item = { snippet: { title: string; description: string; publishedAt: string; resourceId: { videoId: string }; thumbnails?: Record<string, { url: string }> } };
+  const items: Item[] = (list.items ?? []).filter((i: Item) => VIDEO_ID.test(i.snippet?.resourceId?.videoId ?? ""));
+  if (items.length === 0) return [];
+  const details = await get("videos", {
+    part: "contentDetails,statistics",
+    id: items.map((i) => i.snippet.resourceId.videoId).join(","),
+  });
+  const byId = new Map<string, { contentDetails?: { duration?: string }; statistics?: { viewCount?: string } }>(
+    (details.items ?? []).map((d: { id: string }) => [d.id, d]),
+  );
+  return items.map(({ snippet }) => {
+    const videoId = snippet.resourceId.videoId;
+    const d = byId.get(videoId);
+    const t = snippet.thumbnails ?? {};
+    return {
+      videoId,
+      title: snippet.title,
+      description: snippet.description,
+      publishedAt: snippet.publishedAt,
+      isShort: isoDurationSeconds(d?.contentDetails?.duration ?? "") <= SHORT_MAX_SECONDS,
+      views: Number(d?.statistics?.viewCount ?? 0),
+      thumbnailUrl: (t.maxres ?? t.standard ?? t.high ?? t.medium)?.url,
+    };
+  });
+}
+
+// The vertical (9:16) thumbnail YouTube makes for a Short.
+export function shortThumbnail(videoId: string): string {
+  return `https://i.ytimg.com/vi/${videoId}/oar2.jpg`;
 }

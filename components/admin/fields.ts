@@ -1,3 +1,5 @@
+import type { CropSpec } from "./ImageCropper";
+
 export type FieldValues = Record<string, unknown>;
 
 type BaseField = { name: string; label: string; help?: string; optional?: boolean };
@@ -8,7 +10,7 @@ export type Field = BaseField &
     | { type: "number" }
     | { type: "checkbox" }
     | { type: "select"; options: { value: string; label: string }[] }
-    | { type: "image" }
+    | { type: "image"; crop?: CropSpec }
     | { type: "lines" }
     | { type: "pairs"; placeholder: string }
   );

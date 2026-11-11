@@ -44,6 +44,7 @@ export function seedHomeContent(): HomeContent {
     settings: { ...seedSettings, heroImageUrl: null },
     channel: null,
     audience: null,
+    shorts: [],
     episodes,
     latest: pickLatest(episodes),
     myths: seedMyths.map((m, i) => {
@@ -76,6 +77,6 @@ export function seedHomeContent(): HomeContent {
       profileUrl: null,
       photoUrl: null,
     })),
-    hosts: seedHosts.map((h, i) => ({ key: String(i), ...h, photoUrl: null })),
+    hosts: seedHosts.map((h, i) => ({ key: String(i), path: h.slug, ...h, bio: null, photoUrl: null })),
   };
 }

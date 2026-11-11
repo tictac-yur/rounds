@@ -5,7 +5,6 @@ import { api } from "@/convex/_generated/api";
 import type { HomeContent } from "@/convex/contentTypes";
 import { seedHomeContent } from "./seedContent";
 import { withChannelVideos } from "./channelVideos";
-import { fetchChannelVideos } from "./youtubeFeed";
 
 // Vercel keeps cached data from one deployment to the next. Keying the cache
 // by the deployed commit means a new version of the site never reads content
@@ -23,6 +22,7 @@ function withDefaults(c: HomeContent): HomeContent {
     ...c,
     channel: c.channel ?? null,
     audience: c.audience ?? null,
+    shorts: c.shorts ?? [],
     episodes: c.episodes.map((ep) => ({ ...ep, guestPath: ep.guestPath ?? null, chapters: ep.chapters ?? [] })),
     latest: c.latest ? { ...c.latest, guestPath: c.latest.guestPath ?? null, chapters: c.latest.chapters ?? [] } : null,
     myths: c.myths.map((m) => ({
@@ -40,6 +40,7 @@ function withDefaults(c: HomeContent): HomeContent {
       profileUrl: g.profileUrl ?? null,
       photoUrl: g.photoUrl ?? null,
     })),
+    hosts: c.hosts.map((h) => ({ ...h, path: h.path ?? h.key, bio: h.bio ?? null })),
   };
 }
 
@@ -49,9 +50,9 @@ async function cachedHomeContent(version: string): Promise<HomeContent> {
   // Edits made in the admin portal show up on the site within a minute.
   cacheLife("minutes");
   const content = await loadContent();
-  // The channel's videos always show, even before the hourly sync has run.
-  const videos = await fetchChannelVideos(content.settings.youtubeUrl);
-  return withChannelVideos(content, seedHomeContent(), videos);
+  // YouTube's public feed no longer answers, so new videos arrive only
+  // through the hourly sync; this still swaps stale placeholders for EP.0/EP.1.
+  return withChannelVideos(content, seedHomeContent(), []);
 }
 
 async function loadContent(): Promise<HomeContent> {
