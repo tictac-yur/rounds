@@ -1,5 +1,6 @@
 import type { HomeContent } from "@/convex/contentTypes";
-import { doctorEpisodes, doctorPhoto, doctors } from "@/lib/doctors";
+import { doctorEpisodes, doctorFlags, doctorPhoto, doctors } from "@/lib/doctors";
+import { episodeTitle } from "@/lib/episodes";
 import { cleanJoin } from "@/lib/placeholders";
 import { ArrowIcon } from "./Icons";
 import { Mark } from "./Logo";
@@ -22,6 +23,8 @@ export function DoctorsSection({ content }: { content: HomeContent }) {
         {list.map((g) => {
           const photo = doctorPhoto(content, g);
           const episodes = doctorEpisodes(content, g);
+          // The wide single-doctor layout has room for what they talked about.
+          const quote = list.length === 1 ? doctorFlags(content, g)[0] : undefined;
           return (
             <a key={g.key} href={`/doctors/${g.path}`} className="doctor-card">
               <div className="doctor-photo">
@@ -40,6 +43,20 @@ export function DoctorsSection({ content }: { content: HomeContent }) {
                   {g.name}
                 </h3>
                 {g.affiliation && <p className="small muted">{g.affiliation}</p>}
+                {list.length === 1 && g.bio && <p className="body doctor-bio-short">{g.bio}</p>}
+                {list.length === 1 && episodes.length > 0 && (
+                  <ul className="doctor-eps">
+                    {episodes.map((ep) => (
+                      <li key={ep.key}>{episodeTitle(ep)}</li>
+                    ))}
+                  </ul>
+                )}
+                {quote && (
+                  <blockquote className="doctor-quote">
+                    <span className="small muted">“{quote.claim}”</span>
+                    {quote.answer}
+                  </blockquote>
+                )}
                 <span className="text-link doctor-more">
                   ดูโปรไฟล์ <ArrowIcon />
                 </span>

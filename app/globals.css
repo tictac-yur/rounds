@@ -1393,9 +1393,42 @@ a:hover .badge-watch {
 }
 .doctor-grid[data-count="1"] .doctor-card {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  align-items: end;
-  gap: var(--space-12);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-8) var(--space-12);
+}
+.doctor-grid[data-count="1"] .doctor-text {
+  gap: var(--space-2);
+}
+.doctor-bio-short {
+  font-family: var(--font-thai);
+  max-width: 520px;
+}
+.doctor-eps {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  font-family: var(--font-thai);
+}
+.doctor-eps li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--line);
+  font-weight: 500;
+}
+.doctor-eps li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.doctor-quote {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: var(--font-thai);
+  font-size: 16px;
+  line-height: 1.6;
 }
 .doctor-grid[data-count="1"] .doctor-photo {
   aspect-ratio: 16 / 9;
