@@ -109,6 +109,8 @@ export default async function DoctorPage({ params }: Props) {
               ))}
             </div>
             {episodes
+              // Cached content saved before chapters existed has none: treat as empty.
+              .map((ep) => ({ ...ep, chapters: ep.chapters ?? [] }))
               .filter((ep) => ep.chapters.length > 0 && ep.youtubeUrl)
               .map((ep) => (
                 <details key={ep.key} className="chapters">
