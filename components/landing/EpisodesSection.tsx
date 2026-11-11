@@ -9,7 +9,7 @@ import { SectionHeader } from "./SectionHeader";
 
 const ALL = "ทั้งหมด";
 
-function EpisodeCard({ ep }: { ep: EpisodeView }) {
+export function EpisodeCard({ ep }: { ep: EpisodeView }) {
   const guest = guestName(ep);
   // Published episodes link to where they play; coming-soon ones aren't links.
   const href = ep.status === "published" ? watchUrl(ep) : null;

@@ -46,6 +46,7 @@ export const home = query({
     const guestDocs = await ctx.db.query("guests").withIndex("by_order").take(LIST_LIMIT);
     const seriesById = new Map(seriesDocs.map((s) => [s._id, s]));
     const guestsById = new Map(guestDocs.map((g) => [g._id, g]));
+    const guestPath = (g: Doc<"guests">) => g.slug ?? g._id;
 
     const visibleEpisodes = [
       ...(await ctx.db
@@ -77,6 +78,7 @@ export const home = query({
         meta: episodeMeta(e),
         seriesName: series?.name ?? null,
         guestName: guest?.name ?? null,
+        guestPath: guest ? guestPath(guest) : null,
         guestLang: guest?.nameLang ?? "en",
         guestAffiliation: guest?.affiliation ?? null,
         youtubeUrl: e.youtubeUrl ?? null,
@@ -92,9 +94,9 @@ export const home = query({
       .withIndex("by_published_and_order", (q) => q.eq("published", true))
       .take(LIST_LIMIT);
 
-    const answeredBy = (episodeId: Id<"episodes"> | undefined) => {
+    const guestOf = (episodeId: Id<"episodes"> | undefined) => {
       const guestId = episodeId && episodesById.get(episodeId)?.guestId;
-      return (guestId && guestsById.get(guestId)?.name) || null;
+      return guestId ? guestsById.get(guestId) : undefined;
     };
 
     const hostDocs = await ctx.db.query("hosts").withIndex("by_order").take(LIST_LIMIT);
@@ -108,8 +110,11 @@ export const home = query({
         claim: m.claim,
         answer: m.answer,
         verdict: m.verdict ?? "red",
-        answeredBy: answeredBy(m.episodeId),
+        answeredBy: guestOf(m.episodeId)?.name ?? null,
+        answeredByPath: ((g) => (g ? guestPath(g) : null))(guestOf(m.episodeId)),
         episodeSpecialty: (m.episodeId && episodesById.get(m.episodeId)?.specialty) || null,
+        episodeTitle: (m.episodeId && episodesById.get(m.episodeId)?.title) || null,
+        episodeUrl: (m.episodeId && episodesById.get(m.episodeId)?.youtubeUrl) || null,
       })),
       audienceSegments: (
         await ctx.db.query("audienceSegments").withIndex("by_order").take(LIST_LIMIT)
@@ -124,7 +129,20 @@ export const home = query({
       sponsorPackages: (
         await ctx.db.query("sponsorPackages").withIndex("by_order").take(LIST_LIMIT)
       ).map((p) => ({ key: p._id, letter: p.letter, title: p.title, description: p.description })),
-      guests: guestDocs.map((g) => ({ key: g._id, name: g.name, nameLang: g.nameLang, field: g.field })),
+      guests: await Promise.all(
+        guestDocs.map(async (g) => ({
+          key: g._id,
+          path: guestPath(g),
+          name: g.name,
+          nameAlt: g.nameAlt ?? null,
+          nameLang: g.nameLang,
+          field: g.field,
+          affiliation: g.affiliation ?? null,
+          bio: g.bio ?? null,
+          profileUrl: g.profileUrl ?? null,
+          photoUrl: await fileUrl(ctx, g.photoId),
+        })),
+      ),
       hosts: await Promise.all(
         hostDocs.map(async (h) => ({
           key: h._id,

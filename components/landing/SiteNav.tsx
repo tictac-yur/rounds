@@ -7,11 +7,13 @@ import { ArrowIcon } from "./Icons";
 const LINKS = [
   { id: "episodes", label: "Episodes", th: "ทุกตอน" },
   { id: "flags", label: "Red / Green flag", th: "ทายก่อนฟัง" },
+  { id: "doctors", label: "Doctors", th: "อาจารย์แพทย์" },
   { id: "hosts", label: "Hosts", th: "พิธีกร" },
   { id: "partner", label: "Partner", th: "สำหรับแบรนด์" },
 ];
 
-export function SiteNav() {
+// On the home page links jump to sections; elsewhere (base="/") they lead back to them.
+export function SiteNav({ base = "" }: { base?: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
@@ -54,17 +56,17 @@ export function SiteNav() {
   return (
     <header className="nav" data-scrolled={scrolled || open}>
       <nav aria-label="เมนูหลัก" className="wrap nav-inner">
-        <a href="#top" className="nav-brand" aria-label="Rounds หน้าแรก" onClick={() => setOpen(false)}>
+        <a href={base || "#top"} className="nav-brand" aria-label="Rounds หน้าแรก" onClick={() => setOpen(false)}>
           <Lockup height={22} />
         </a>
         <div className="nav-links">
           {LINKS.map((link) => (
-            <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? "true" : undefined}>
+            <a key={link.id} href={`${base}#${link.id}`} aria-current={active === link.id ? "true" : undefined}>
               {link.label}
             </a>
           ))}
         </div>
-        <a href="#latest" className="btn btn-light btn-sm nav-cta">
+        <a href={`${base}#latest`} className="btn btn-light btn-sm nav-cta">
           ดูตอนล่าสุด
         </a>
         <button
@@ -83,12 +85,12 @@ export function SiteNav() {
       </nav>
       <div id="nav-sheet" className="nav-sheet" hidden={!open}>
         {LINKS.map((link) => (
-          <a key={link.id} href={`#${link.id}`} className="nav-sheet-link" onClick={() => setOpen(false)}>
+          <a key={link.id} href={`${base}#${link.id}`} className="nav-sheet-link" onClick={() => setOpen(false)}>
             {link.label}
             <span>{link.th}</span>
           </a>
         ))}
-        <a href="#latest" className="btn btn-light" onClick={() => setOpen(false)}>
+        <a href={`${base}#latest`} className="btn btn-light" onClick={() => setOpen(false)}>
           ดูตอนล่าสุด <ArrowIcon />
         </a>
       </div>

@@ -1,10 +1,27 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "../_generated/server";
+import { mutation, MutationCtx, query } from "../_generated/server";
+import { Id } from "../_generated/dataModel";
 import schema from "../schema";
 import { requireAdmin } from "../lib/access";
 import { releaseFile } from "../lib/files";
 
 const fields = schema.tables.guests.validator.fields;
+
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+async function assertSlugAvailable(ctx: MutationCtx, slug: string | undefined, self?: Id<"guests">) {
+  if (slug === undefined) return;
+  if (!SLUG_PATTERN.test(slug)) {
+    throw new ConvexError("Profile address must be lowercase English letters, numbers and dashes.");
+  }
+  const clash = await ctx.db
+    .query("guests")
+    .withIndex("by_slug", (q) => q.eq("slug", slug))
+    .first();
+  if (clash !== null && clash._id !== self) {
+    throw new ConvexError(`Another guest already uses the address "${slug}".`);
+  }
+}
 
 export const list = query({
   args: {},
@@ -25,6 +42,7 @@ export const create = mutation({
   returns: v.id("guests"),
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
+    await assertSlugAvailable(ctx, args.slug);
     return await ctx.db.insert("guests", args);
   },
 });
@@ -36,6 +54,7 @@ export const update = mutation({
     await requireAdmin(ctx);
     const existing = await ctx.db.get("guests", id);
     if (existing === null) throw new ConvexError("Not found");
+    await assertSlugAvailable(ctx, fields.slug, id);
     await releaseFile(ctx, existing.photoId, fields.photoId);
     await ctx.db.replace("guests", id, fields);
     return null;

@@ -60,14 +60,22 @@ export default defineSchema({
     order: v.number(),
   }).index("by_order", ["order"]),
 
+  // Guest doctors. A guest with a slug gets a profile page at /doctors/<slug>.
   guests: defineTable({
     name: v.string(),
     nameLang: textLang,
+    // The name in the other language, e.g. the Thai name of an English-named guest.
+    nameAlt: v.optional(v.string()),
+    slug: v.optional(v.string()),
     field: v.string(),
     affiliation: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    profileUrl: v.optional(v.string()),
     photoId: v.optional(v.id("_storage")),
     order: v.number(),
-  }).index("by_order", ["order"]),
+  })
+    .index("by_order", ["order"])
+    .index("by_slug", ["slug"]),
 
   episodes: defineTable({
     slug: v.string(),

@@ -4,33 +4,22 @@ import { ArrowIcon, PlatformIcon } from "./Icons";
 
 export function PartnerSection({
   settings,
-  guests,
   packages,
   segments,
 }: {
   settings: HomeContent["settings"];
-  guests: HomeContent["guests"];
   packages: HomeContent["sponsorPackages"];
   segments: HomeContent["audienceSegments"];
 }) {
   const email = filled(settings.contactEmail);
   const instagram = filled(settings.instagramUrl);
   const mediaKit = filled(settings.mediaKitUrl);
-  const realGuests = guests.filter((g) => !isPlaceholder(g.name));
 
   return (
     <section id="partner" className="dark" aria-labelledby="partner-title">
       <div className="wrap section">
         <div className="partner-top">
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-            <span className="eyebrow">
-              <span className="eyebrow-dots" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              06 · For brands
-            </span>
             <h2 className="partner-h" lang="en" id="partner-title">
               Reach the next generation of Thai doctors.
             </h2>
@@ -66,61 +55,31 @@ export function PartnerSection({
           </div>
         </div>
 
-        <div className="partner-grid">
-          <div className="panel panel-audience">
+        <div className="partner-rows">
+          <div>
             <h3 className="title">ใครดู Rounds</h3>
-            <p className="small muted" style={{ fontFamily: "var(--font-thai)", maxWidth: 720 }}>
-              {settings.audienceIntro}
-            </p>
-            <div className="segments">
+            <p className="small muted">{settings.audienceIntro}</p>
+            <ul className="row-list">
               {segments.map((seg) => (
-                <div key={seg.key} className="segment">
+                <li key={seg.key}>
                   {/* Percentages show once real numbers are entered in the admin. */}
-                  {!isPlaceholder(seg.stat) && <div className="segment-stat">{seg.stat}</div>}
-                  <h4 className="title" style={{ fontSize: 18, fontFamily: "var(--font-thai)" }}>
-                    {seg.title}
-                  </h4>
-                  <p className="small muted" style={{ fontFamily: "var(--font-thai)" }}>
-                    {seg.description}
-                  </p>
-                </div>
+                  {!isPlaceholder(seg.stat) && <span className="row-stat">{seg.stat}</span>}
+                  <span className="row-title">{seg.title}</span>
+                  <span className="small muted">{seg.description}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {packages.length > 0 && (
-            <div className="panel panel-packages">
+            <div>
               <h3 className="title">แพ็กเกจ</h3>
-              <div>
+              <p className="small muted">ทุกแพ็กเกจอยู่นอกเนื้อหาทางการแพทย์</p>
+              <ul className="row-list">
                 {packages.map((pkg) => (
-                  <div key={pkg.key} className="pkg">
-                    <span className="pkg-letter" aria-hidden="true">
-                      {pkg.letter}
-                    </span>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
-                      <h4 className="title" style={{ fontSize: 18, fontFamily: "var(--font-thai)" }}>
-                        {pkg.title}
-                      </h4>
-                      <p className="small muted" style={{ fontFamily: "var(--font-thai)" }}>
-                        {pkg.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {realGuests.length > 0 && (
-            <div className="panel panel-guests">
-              <h3 className="title">แขกรับเชิญซีซันนี้</h3>
-              <ul className="guest-list">
-                {realGuests.map((g) => (
-                  <li key={g.key}>
-                    <span lang={g.nameLang} style={{ fontWeight: 500 }}>
-                      {g.name}
-                    </span>
-                    <span className="small muted">{g.field}</span>
+                  <li key={pkg.key}>
+                    <span className="row-title">{pkg.title}</span>
+                    <span className="small muted">{pkg.description}</span>
                   </li>
                 ))}
               </ul>

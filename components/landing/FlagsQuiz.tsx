@@ -7,50 +7,88 @@ import { ArrowIcon, FlagIcon } from "./Icons";
 type Verdict = "red" | "green";
 type Myth = HomeContent["myths"][number];
 
-// The palette has no red or green, so the two verdicts differ by fill
-// (solid vs outline), by their flag icon and by their words.
 const VERDICTS: Record<Verdict, { label: string; meaning: string }> = {
   red: { label: "Red flag", meaning: "อย่าเชื่อ" },
   green: { label: "Green flag", meaning: "เรื่องจริง" },
 };
 
-function VerdictBadge({ verdict }: { verdict: Verdict }) {
-  const v = VERDICTS[verdict];
-  return (
-    <span className="verdict-badge" data-verdict={verdict}>
-      <FlagIcon solid={verdict === "red"} />
-      {v.label}
-      <span>{v.meaning}</span>
-    </span>
-  );
-}
-
-function QuizCard({ myth, n, guess, onGuess }: { myth: Myth; n: number; guess: Verdict | undefined; onGuess: (v: Verdict) => void }) {
+// One belief at a time: guess, the card lights up in the doctor's verdict,
+// then the answer, who gave it, and where to hear the rest.
+function FlagCard({
+  myth,
+  n,
+  total,
+  guess,
+  onGuess,
+  onNext,
+}: {
+  myth: Myth;
+  n: number;
+  total: number;
+  guess: Verdict | undefined;
+  onGuess: (v: Verdict) => void;
+  onNext: (() => void) | null;
+}) {
   const right = guess === myth.verdict;
+  const learnMore = myth.episodeUrl ?? (myth.answeredByPath ? `/doctors/${myth.answeredByPath}` : null);
   return (
-    <article className="quiz-card" data-answered={!!guess}>
-      <span className="eyebrow eyebrow-th">ความเชื่อที่ {n}</span>
-      <p className="quiz-claim">“{myth.claim}”</p>
+    <article className="flag-card" data-verdict={guess ? myth.verdict : undefined} aria-labelledby={`flag-${myth.key}`}>
+      <div className="flag-card-top">
+        <span className="small">
+          ความเชื่อที่ {n} / {total}
+        </span>
+        {guess && <span className="flag-mark">{right ? "ทายถูก ✓" : "ไม่ใช่นะ ✕"}</span>}
+      </div>
+
+      <p className="flag-claim" id={`flag-${myth.key}`}>
+        “{myth.claim}”
+      </p>
+
       {guess ? (
-        <div className="quiz-result" role="status">
-          <div className="quiz-verdict">
-            <VerdictBadge verdict={myth.verdict} />
-            <span className="quiz-mark">{right ? "✓ ทายถูก" : "✕ ไม่ใช่นะ"}</span>
-          </div>
-          <p className="body" style={{ color: "#d6dee7", fontFamily: "var(--font-thai)" }}>
-            {myth.answer}
+        <div className="flag-answer" role="status">
+          <p className="flag-verdict">
+            <FlagIcon solid size={28} />
+            <span lang="en">{VERDICTS[myth.verdict].label}</span>
+            <span className="flag-verdict-th">{VERDICTS[myth.verdict].meaning}</span>
           </p>
-          {myth.answeredBy && <span className="small muted">ตอบโดย {myth.answeredBy}</span>}
+          <p className="body-lg">{myth.answer}</p>
+          <div className="flag-foot">
+            {myth.answeredBy &&
+              (myth.answeredByPath ? (
+                <a href={`/doctors/${myth.answeredByPath}`} className="text-link">
+                  ตอบโดย {myth.answeredBy}
+                </a>
+              ) : (
+                <span className="small">ตอบโดย {myth.answeredBy}</span>
+              ))}
+            <span className="flag-actions">
+              {learnMore && (
+                <a
+                  href={learnMore}
+                  className="btn btn-light btn-sm"
+                  {...(myth.episodeUrl ? { target: "_blank", rel: "noopener" } : {})}
+                >
+                  Learn more
+                  <span className="btn-arrow">
+                    <ArrowIcon />
+                  </span>
+                </a>
+              )}
+              {onNext && (
+                <button type="button" className="btn btn-outline btn-sm" onClick={onNext}>
+                  ข้อต่อไป
+                </button>
+              )}
+            </span>
+          </div>
         </div>
       ) : (
-        <div className="quiz-choices" role="group" aria-label={`ความเชื่อที่ ${n}: Red flag หรือ Green flag`}>
+        <div className="flag-choices" role="group" aria-label="Red flag หรือ Green flag">
           {(["red", "green"] as const).map((v) => (
-            <button key={v} type="button" className="quiz-choice" data-verdict={v} onClick={() => onGuess(v)}>
-              <span>
-                <FlagIcon solid={v === "red"} />
-                {VERDICTS[v].label}
-              </span>
-              <span>{VERDICTS[v].meaning}</span>
+            <button key={v} type="button" className="flag-choice" data-verdict={v} onClick={() => onGuess(v)}>
+              <FlagIcon solid={v === "red"} size={22} />
+              <span lang="en">{VERDICTS[v].label}</span>
+              <small>{VERDICTS[v].meaning}</small>
             </button>
           ))}
         </div>
@@ -59,75 +97,70 @@ function QuizCard({ myth, n, guess, onGuess }: { myth: Myth; n: number; guess: V
   );
 }
 
-// Red flag / Green flag: guess first, then read the guest doctor's verdict.
 export function FlagsQuiz({ myths }: { myths: Myth[] }) {
   const [guesses, setGuesses] = useState<Record<string, Verdict>>({});
+  const [index, setIndex] = useState(0);
+  const myth = myths[Math.min(index, myths.length - 1)];
   const answered = myths.filter((m) => guesses[m.key]);
   const correct = answered.filter((m) => guesses[m.key] === m.verdict).length;
   const done = answered.length === myths.length;
-  const sourceSpecialty = myths.find((m) => m.episodeSpecialty)?.episodeSpecialty;
+  const next = myths.findIndex((m, i) => i > index && !guesses[m.key]);
 
   return (
     <section id="flags" className="navy" aria-labelledby="flags-title">
-      <div className="wrap section">
-        <div className="quiz-head">
-          <div>
-            <span className="eyebrow">
-              <span className="eyebrow-dots" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              03 · Quiz
-            </span>
-            <h2 className="h2" lang="en" id="flags-title">
-              Red flag or Green flag?
-            </h2>
-            <p className="h2-th muted">เชื่อแบบนี้ได้ไหม ลองทายก่อน แล้วดูว่าคุณหมอตอบว่าอะไร</p>
-          </div>
-          <div className="score" aria-live="polite">
-            <span>
-              ทายถูก <b>{correct}</b>
-              <span className="muted"> / {myths.length}</span>
-            </span>
-            {answered.length > 0 ? (
-              <button type="button" className="btn btn-outline btn-sm" onClick={() => setGuesses({})}>
-                เล่นใหม่
-              </button>
+      <div className="wrap section flags-layout">
+        <div className="flags-intro">
+          <h2 className="h2" lang="en" id="flags-title">
+            Red flag or Green flag?
+          </h2>
+          <p className="h2-th muted">ความเชื่อเรื่องสุขภาพที่ได้ยินกันบ่อย ลองทายก่อน แล้วดูว่าคุณหมอตอบว่าอะไร</p>
+
+          <ol className="flag-pips" aria-label="ความเชื่อทั้งหมด">
+            {myths.map((m, i) => (
+              <li key={m.key}>
+                <button
+                  type="button"
+                  aria-label={`ความเชื่อที่ ${i + 1}${guesses[m.key] ? ` · ${VERDICTS[m.verdict].label}` : ""}`}
+                  aria-current={i === index ? "step" : undefined}
+                  data-verdict={guesses[m.key] ? m.verdict : undefined}
+                  onClick={() => setIndex(i)}
+                />
+              </li>
+            ))}
+          </ol>
+
+          <p className="flags-score" aria-live="polite">
+            {done ? (
+              <>
+                ทายถูก <b>{correct}</b> จาก {myths.length}
+                <button
+                  type="button"
+                  className="btn btn-outline btn-sm"
+                  onClick={() => {
+                    setGuesses({});
+                    setIndex(0);
+                  }}
+                >
+                  เล่นใหม่
+                </button>
+              </>
             ) : (
-              <span className="small muted" style={{ paddingRight: "var(--space-4)" }}>
-                แตะเพื่อทาย
+              <span className="muted">
+                ทายแล้ว {answered.length} จาก {myths.length} ข้อ
               </span>
             )}
-          </div>
+          </p>
         </div>
 
-        <div className="quiz-grid">
-          {myths.map((myth, i) => (
-            <QuizCard
-              key={myth.key}
-              myth={myth}
-              n={i + 1}
-              guess={guesses[myth.key]}
-              onGuess={(v) => setGuesses((g) => ({ ...g, [myth.key]: v }))}
-            />
-          ))}
-        </div>
-
-        {(done || sourceSpecialty) && (
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "var(--space-4)", marginTop: "var(--space-8)" }}>
-            {done && (
-              <p className="title" style={{ fontFamily: "var(--font-thai)" }}>
-                {correct === myths.length ? "ทายถูกหมดเลย เก่งมาก" : `ทายถูก ${correct} จาก ${myths.length} ข้อ`}
-              </p>
-            )}
-            {sourceSpecialty && (
-              <a href="#episodes" className="text-link">
-                ฟังคำอธิบายเต็มๆ ในตอน{sourceSpecialty} <ArrowIcon />
-              </a>
-            )}
-          </div>
-        )}
+        <FlagCard
+          key={myth.key}
+          myth={myth}
+          n={index + 1}
+          total={myths.length}
+          guess={guesses[myth.key]}
+          onGuess={(v) => setGuesses((g) => ({ ...g, [myth.key]: v }))}
+          onNext={next === -1 ? null : () => setIndex(next)}
+        />
       </div>
     </section>
   );

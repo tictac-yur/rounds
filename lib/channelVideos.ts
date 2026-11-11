@@ -53,6 +53,7 @@ export function withChannelVideos(content: HomeContent, starter: HomeContent, fe
         meta: thaiDate(v.publishedAt) ?? "",
         seriesName: seriesNames.find((name) => title.toLowerCase().includes(name.toLowerCase())) ?? null,
         guestName: null,
+        guestPath: null,
         guestLang: "en",
         guestAffiliation: null,
         youtubeUrl: watchUrl(v.videoId),
