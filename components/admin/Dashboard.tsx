@@ -107,10 +107,10 @@ function YouTubeSync() {
       <div>
         <h2>YouTube sync</h2>
         <p className="admin-muted">
-          Every hour the site checks the channel set in Site settings. Each new full-length video
-          (not Shorts) is <strong>published automatically</strong> with its title, summary, date and
-          thumbnail, and becomes the latest episode on the home page. Add the guest and specialty in
-          Episodes whenever you like.
+          Every hour the site reads the channel set in Site settings through the YouTube API. Each
+          new full-length video is <strong>published automatically</strong> with its title, summary,
+          date, thumbnail and chapters, and becomes the latest episode. The 5 most-watched Shorts show
+          on the home page. Add the guest and specialty in Episodes whenever you like.
         </p>
         <span className="admin-status-line" data-error={Boolean(status?.lastError)} role="status">
           <span className="admin-status-dot" aria-hidden="true" />

@@ -8,13 +8,10 @@ export const settingsView = v.object({
   heroKicker: v.string(),
   heroHeadline: v.string(),
   heroHeadlineTh: v.union(v.string(), v.null()),
-  heroIntro: v.string(),
   heroIntroTh: v.string(),
   heroImageUrl: v.union(v.string(), v.null()),
-  heroImageCaption: v.string(),
   stats: v.array(v.object({ value: v.string(), label: v.string() })),
   audienceIntro: v.string(),
-  platformHandles: v.array(v.string()),
   contactEmail: v.string(),
   mediaKitUrl: v.string(),
   youtubeUrl: v.string(),
@@ -62,6 +59,8 @@ export const homeContent = v.object({
     v.null(),
   ),
   audience: v.union(audienceData, v.null()),
+  // The channel's most-watched Shorts (no view counts on the public site).
+  shorts: v.array(v.object({ videoId: v.string(), title: v.string(), thumbnailUrl: v.string() })),
   episodes: v.array(episodeView),
   latest: v.union(episodeView, v.null()),
   myths: v.array(
@@ -87,11 +86,10 @@ export const homeContent = v.object({
       name: v.string(),
       kicker: v.string(),
       description: v.string(),
-      accentColor: v.string(),
     }),
   ),
   sponsorPackages: v.array(
-    v.object({ key: v.string(), letter: v.string(), title: v.string(), description: v.string() }),
+    v.object({ key: v.string(), title: v.string(), description: v.string() }),
   ),
   guests: v.array(
     v.object({

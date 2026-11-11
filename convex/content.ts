@@ -25,13 +25,10 @@ export const home = query({
       heroKicker: settingsFields.heroKicker,
       heroHeadline: settingsFields.heroHeadline,
       heroHeadlineTh: settingsFields.heroHeadlineTh ?? null,
-      heroIntro: settingsFields.heroIntro,
       heroIntroTh: settingsFields.heroIntroTh,
       heroImageUrl: await fileUrl(ctx, heroImageId),
-      heroImageCaption: settingsFields.heroImageCaption,
       stats: settingsFields.stats,
       audienceIntro: settingsFields.audienceIntro,
-      platformHandles: settingsFields.platformHandles,
       contactEmail: settingsFields.contactEmail,
       mediaKitUrl: settingsFields.mediaKitUrl,
       youtubeUrl: settingsFields.youtubeUrl,
@@ -110,6 +107,7 @@ export const home = query({
         ? { subscribers: stats.subscribers ?? null, views: stats.views ?? null, videos: stats.videos ?? null }
         : null,
       audience: stats?.audience ?? null,
+      shorts: stats?.topShorts ?? [],
       episodes,
       latest: pickLatest(episodes),
       myths: mythDocs.map((m) => ({
@@ -131,11 +129,10 @@ export const home = query({
         name: s.name,
         kicker: s.kicker,
         description: s.description,
-        accentColor: s.accentColor,
       })),
       sponsorPackages: (
         await ctx.db.query("sponsorPackages").withIndex("by_order").take(LIST_LIMIT)
-      ).map((p) => ({ key: p._id, letter: p.letter, title: p.title, description: p.description })),
+      ).map((p) => ({ key: p._id, title: p.title, description: p.description })),
       guests: await Promise.all(
         guestDocs.map(async (g) => ({
           key: g._id,

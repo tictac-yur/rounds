@@ -44,6 +44,7 @@ export function seedHomeContent(): HomeContent {
     settings: { ...seedSettings, heroImageUrl: null },
     channel: null,
     audience: null,
+    shorts: [],
     episodes,
     latest: pickLatest(episodes),
     myths: seedMyths.map((m, i) => {
