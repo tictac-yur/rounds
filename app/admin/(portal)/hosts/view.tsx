@@ -15,7 +15,13 @@ export default function HostsPage() {
       fields={[
         { name: "name", label: "Name", type: "text" },
         { name: "role", label: "Role", type: "text" },
-        { name: "photoId", label: "Photo", type: "image", optional: true },
+        {
+          name: "photoId",
+          label: "Portrait",
+          type: "image",
+          optional: true,
+          help: "A photo of just this host. Once every host has one, “Meet the hosts” shows them side by side with names; until then it uses the intro episode's photo. Portrait (tall) photos fit best.",
+        },
       ]}
       summary={(row) => (
         <>

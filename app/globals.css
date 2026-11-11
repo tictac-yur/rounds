@@ -1460,7 +1460,7 @@ a:hover .badge-watch {
 }
 .hosts-photo[data-split="true"] {
   grid-template-columns: 1fr 1fr;
-  aspect-ratio: 8 / 5;
+  aspect-ratio: 4 / 3;
   background: transparent;
 }
 .hosts-photo img {
@@ -1469,8 +1469,24 @@ a:hover .badge-watch {
   object-fit: cover;
   display: block;
 }
-.hosts-photo[data-split="true"] img {
+.host-portrait {
+  position: relative;
+  margin: 0;
+  min-height: 0;
   border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--navy);
+}
+.host-portrait figcaption {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(10, 16, 24, 0.72);
+  color: #fff;
+  font-family: var(--font-thai);
+  font-weight: 600;
 }
 .hosts-text {
   display: flex;

@@ -985,3 +985,40 @@
   margin-top: 4px;
   padding-top: 20px;
 }
+
+/* ---------- Dashboard: photo checklist ---------- */
+.admin-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px 40px;
+  margin-top: 16px;
+}
+.admin-photos h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.admin-photos ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.admin-photos li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+.admin-photos li[data-done="true"] {
+  color: var(--ink-muted);
+}
+.admin-photos li > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.admin-photos-add {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}

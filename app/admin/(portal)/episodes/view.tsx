@@ -61,7 +61,7 @@ export default function EpisodesPage() {
           label: "Episode photo",
           type: "image",
           optional: true,
-          help: "Photo of Titi, Pup and the doctor. Shown on the episode card and the latest-episode panel; square or landscape photos fit best.",
+          help: "Photo of Titi, Pup and the guest. Replaces the YouTube thumbnail on the episode card, the latest-episode panel and the doctor's profile. Landscape photos fit best.",
         },
         {
           name: "photoCaption",

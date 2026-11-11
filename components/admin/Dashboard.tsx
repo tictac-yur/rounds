@@ -246,6 +246,57 @@ function YouTubeNumbers() {
   );
 }
 
+// Which photos are still missing: a portrait of each host, and one photo of
+// the hosts with the guest for every published episode.
+function Photos() {
+  const summary = useQuery(api.admin.dashboard.summary);
+  if (!summary || summary.photos.length === 0) return null;
+  const groups = [
+    {
+      kind: "host",
+      title: "Host portraits",
+      help: "One photo of each host on their own, for “Meet the hosts”.",
+      href: "/admin/hosts",
+    },
+    {
+      kind: "episode",
+      title: "Episode photos",
+      help: "One photo of Titi, Pup and the guest per episode. It replaces the YouTube thumbnail on the site.",
+      href: "/admin/episodes",
+    },
+  ] as const;
+  return (
+    <section className="admin-card">
+      <h2>Photos</h2>
+      <div className="admin-photos">
+        {groups.map((g) => {
+          const items = summary.photos.filter((p) => p.kind === g.kind);
+          if (items.length === 0) return null;
+          return (
+            <div key={g.kind}>
+              <h3>{g.title}</h3>
+              <p className="admin-muted">{g.help}</p>
+              <ul>
+                {items.map((item, i) => (
+                  <li key={i} data-done={item.done}>
+                    <span aria-hidden="true">{item.done ? "✓" : "○"}</span>
+                    <span>{item.name}</span>
+                    {!item.done && (
+                      <Link href={g.href} className="admin-photos-add">
+                        Add photo
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function StarterContent() {
   const status = useQuery(api.admin.seed.status);
   const load = useMutation(api.admin.seed.loadStarterContent);
@@ -289,6 +340,7 @@ export function Dashboard() {
       <StarterContent />
       <YouTubeSync />
       <YouTubeNumbers />
+      <Photos />
       <div className="admin-grid">
         {SECTIONS.map((section) => (
           <Link key={section.href} href={section.href} className="admin-card admin-tile">

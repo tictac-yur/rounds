@@ -13,8 +13,11 @@ export function HostsSection({ hosts, intro }: { hosts: HomeContent["hosts"]; in
         <div className="hosts-photo" data-split={portraits.length === hosts.length && hosts.length > 1}>
           {portraits.length === hosts.length && hosts.length > 0
             ? hosts.map((h) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={h.key} src={h.photoUrl!} alt={h.name} loading="lazy" />
+                <figure key={h.key} className="host-portrait">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={h.photoUrl!} alt={h.name} loading="lazy" />
+                  <figcaption>{h.name}</figcaption>
+                </figure>
               ))
             : intro?.thumbnailUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
