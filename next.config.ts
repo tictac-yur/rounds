@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     agentFeedback: true,
+    // Vercel restores the build cache between deploys, and one deploy shipped a
+    // stale stylesheet from it (new pages, old CSS). Compile fresh every time.
+    turbopackFileSystemCacheForBuild: false,
   },
   cacheComponents: true,
   async headers() {
