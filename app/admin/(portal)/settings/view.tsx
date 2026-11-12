@@ -14,7 +14,7 @@ const FIELDS: Field[] = [
   { name: "stats", label: "Hero stats", type: "pairs", placeholder: "120K | Followers, all platforms", help: "One per line: value | label" },
   { name: "audienceIntro", label: "Audience intro", type: "textarea" },
   { name: "contactEmail", label: "Contact email", type: "text" },
-  { name: "mediaKitUrl", label: "Media kit link", type: "url" },
+  { name: "mediaKitUrl", label: "Media kit link", type: "url", help: "Leave as is to use the built-in media kit (/media-kit), which updates itself. Only set this to use your own file instead." },
   { name: "youtubeUrl", label: "YouTube channel", type: "url" },
   { name: "spotifyUrl", label: "Spotify show", type: "url" },
   { name: "appleUrl", label: "Apple Podcasts show", type: "url" },

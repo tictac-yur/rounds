@@ -1,5 +1,6 @@
 import type { HomeContent } from "@/convex/contentTypes";
 import { filled, isPlaceholder } from "@/lib/placeholders";
+import { mediaKitHref } from "@/lib/site";
 import { Lockup } from "./Logo";
 
 function footerColumns(settings: HomeContent["settings"]) {
@@ -26,7 +27,7 @@ function footerColumns(settings: HomeContent["settings"]) {
       links: [
         { label: "สปอนเซอร์", href: "/partners" },
         { label: "มาเป็นแขกรับเชิญ", href: email ? `mailto:${email}` : "" },
-        { label: "Media kit", href: settings.mediaKitUrl },
+        { label: "Media kit", href: mediaKitHref(settings.mediaKitUrl) },
       ],
     },
   ]

@@ -5,6 +5,7 @@ import { Footer } from "@/components/landing/Footer";
 import { ArrowIcon } from "@/components/landing/Icons";
 import { getHomeContent } from "@/lib/content";
 import { filled, isPlaceholder } from "@/lib/placeholders";
+import { mediaKitHref } from "@/lib/site";
 import { compactNumber, countryLabel, genderLabel, percent } from "@/lib/youtubeNumbers";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function PartnersPage() {
   const content = await getHomeContent();
   const { settings, channel, audience } = content;
   const email = filled(settings.contactEmail);
-  const mediaKit = filled(settings.mediaKitUrl);
+  const mediaKit = mediaKitHref(settings.mediaKitUrl);
   const numbers = [
     { value: channel?.subscribers, label: "ผู้ติดตาม" },
     { value: channel?.views, label: "ยอดวิวทั้งหมด" },
@@ -58,11 +59,9 @@ export default async function PartnersPage() {
                   </span>
                 </a>
               )}
-              {mediaKit && (
-                <a href={mediaKit} className="btn btn-outline">
-                  ดาวน์โหลด Media kit
-                </a>
-              )}
+              <a href={mediaKit} className="btn btn-outline">
+                ดู Media kit
+              </a>
             </div>
 
             {numbers.length > 0 && (
@@ -142,7 +141,7 @@ export default async function PartnersPage() {
                   href={`mailto:${email}?subject=${encodeURIComponent("ขอราคาแพ็กเกจสปอนเซอร์ Rounds")}`}
                   className="btn"
                 >
-                  ขอราคาและ media kit
+                  ขอใบเสนอราคา
                   <span className="btn-arrow">
                     <ArrowIcon />
                   </span>
