@@ -1775,6 +1775,56 @@ a:hover .badge-watch {
   margin: 0;
 }
 
+/* ---------- Privacy page ---------- */
+.legal-hero {
+  padding-top: calc(var(--nav-h) + var(--space-12));
+  padding-bottom: var(--space-12);
+}
+.legal-hero .wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-thai);
+}
+.legal {
+  max-width: 760px;
+  font-family: var(--font-thai);
+  line-height: 1.8;
+}
+.legal h2 {
+  margin: var(--space-8) 0 var(--space-2);
+  font-size: 22px;
+  font-weight: 600;
+}
+.legal p,
+.legal ul {
+  margin: 0 0 var(--space-3);
+}
+.legal ul {
+  padding-left: var(--space-6);
+}
+.legal li {
+  margin-bottom: var(--space-2);
+}
+.legal-en {
+  margin: var(--space-8) 0;
+  padding: var(--space-4) var(--space-6);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.legal-en summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.legal-en[open] summary {
+  margin-bottom: var(--space-3);
+}
+.footer-legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ---------- Phone refinements ---------- */
 @media (max-width: 960px) {
   .hero-pulse {
