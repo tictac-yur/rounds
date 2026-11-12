@@ -189,6 +189,9 @@ function DoneCard({
 
   return (
     <article className="flag-card flag-done" aria-labelledby="flag-rank">
+      {/* The reward: the Rounds sticker from the design system. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="flag-sticker" src="/brand/rounds-sticker.svg" alt="" width={178} height={122} />
       <span className="small flag-eyebrow">ผลของคุณ</span>
       <div>
         <p className="flag-rank" id="flag-rank" lang="en">

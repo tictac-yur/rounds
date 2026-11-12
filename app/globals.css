@@ -1212,6 +1212,36 @@ a:hover .badge-watch {
 .flag-done .flag-actions {
   margin-top: auto;
 }
+.flag-sticker {
+  position: absolute;
+  top: var(--space-8);
+  right: var(--space-8);
+  width: 132px;
+  height: auto;
+  transform: rotate(-8deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .flag-sticker {
+    animation: sticker-on 520ms var(--ease-out) both 120ms;
+  }
+}
+@keyframes sticker-on {
+  from {
+    opacity: 0;
+    transform: rotate(-20deg) scale(1.4);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+@media (max-width: 640px) {
+  .flag-sticker {
+    top: var(--space-6);
+    right: var(--space-6);
+    width: 96px;
+  }
+}
 .flag-rank {
   margin: 0;
   font-size: clamp(48px, 6vw, 80px);
@@ -1894,6 +1924,8 @@ a:hover .badge-watch {
 }
 
 /* ---------- Media kit: A4 sheets, on screen and in print ---------- */
+/* Print artwork follows the Rounds design system: square shapes, flat fills,
+   the brand palette only. */
 .kit {
   min-height: 100vh;
   padding: 0 0 var(--space-16);
@@ -1973,13 +2005,16 @@ a:hover .badge-watch {
 .kit-guests {
   margin: 0;
 }
+/* The design system's mono label: IBM Plex Mono 500, 11px, uppercase, 0.26em. */
 .kit-eyebrow {
   margin: 0;
   font-family: var(--font-mono);
+  font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.14em;
+  line-height: 16px;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--steel);
+  color: var(--ink-muted);
 }
 .kit-cover .kit-eyebrow {
   color: var(--on-navy-muted);
@@ -2066,7 +2101,6 @@ a:hover .badge-watch {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 6px;
 }
 .kit-packages {
   list-style: none;
@@ -2082,7 +2116,6 @@ a:hover .badge-watch {
   gap: 1mm;
   padding: 5mm;
   border: 1px solid var(--line);
-  border-radius: 12px;
   font-size: 12px;
 }
 .kit-packages > li > b {
@@ -2103,8 +2136,7 @@ a:hover .badge-watch {
 .kit-contact {
   margin-top: auto;
   padding: 7mm;
-  border-radius: 14px;
-  background: var(--black);
+  background: var(--navy);
   color: var(--white);
   display: flex;
   flex-direction: column;

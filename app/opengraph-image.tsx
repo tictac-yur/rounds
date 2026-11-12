@@ -57,10 +57,10 @@ export default async function OpengraphImage() {
             <span>ชีวิตนักศึกษาแพทย์แบบเรียลไทม์</span>
             <span style={{ color: "#a8bacd" }}>กับอาจารย์แพทย์ตัวจริง</span>
           </div>
-          <div style={{ display: "flex", gap: 16, marginTop: 8, fontSize: 30 }}>
-            <span style={{ padding: "8px 22px", borderRadius: 999, background: "#c4352b" }}>Red flag</span>
-            <span style={{ padding: "8px 22px", borderRadius: 999, background: "#1f7a4d" }}>Green flag</span>
-          </div>
+          {/* The design system's mono label: uppercase, wide tracking, on-navy-muted. */}
+          <span style={{ marginTop: 8, fontSize: 22, letterSpacing: "0.26em", textTransform: "uppercase", color: "#a8bacd" }}>
+            Red flag or Green flag?
+          </span>
         </div>
       </div>
     ),
