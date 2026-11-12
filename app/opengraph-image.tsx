@@ -9,11 +9,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OpengraphImage() {
-  const file = (path: string) => readFile(join(process.cwd(), path));
+  // Literal paths, so the build bundles just these three files.
   const [thai, latin, lockup] = await Promise.all([
-    file("assets/fonts/NotoSansThai-600.ttf"),
-    file("assets/fonts/SpaceGrotesk-600.ttf"),
-    file("public/brand/rounds-lockup-reverse.svg"),
+    readFile(join(process.cwd(), "assets/fonts/NotoSansThai-600.ttf")),
+    readFile(join(process.cwd(), "assets/fonts/SpaceGrotesk-600.ttf")),
+    readFile(join(process.cwd(), "public/brand/rounds-lockup-reverse.svg")),
   ]);
   const lockupSrc = `data:image/svg+xml;base64,${lockup.toString("base64")}`;
 

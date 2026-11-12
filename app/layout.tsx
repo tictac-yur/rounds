@@ -20,7 +20,13 @@ const notoSansThai = Noto_Sans_Thai({
   weight: ["400", "500", "600", "700"],
 });
 
+// Where links to the share image point. Vercel sets the production address.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Rounds — ชีวิตนักศึกษาแพทย์แบบเรียลไทม์",
   description:
     "ตีตี้และปั๊บ นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ บันทึกชีวิตช่วงเรียนแพทย์แบบเรียลไทม์ และชวนอาจารย์แพทย์เฉพาะทางมาตอบ Red flag / Green flag เรื่องสุขภาพ",
