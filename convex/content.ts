@@ -154,6 +154,8 @@ export const home = query({
           key: h._id,
           path: h.slug ?? h._id,
           name: h.name,
+          fullName: h.fullName ?? null,
+          fullNameAlt: h.fullNameAlt ?? null,
           role: h.role,
           bio: h.bio ?? null,
           photoUrl: await fileUrl(ctx, h.photoId),

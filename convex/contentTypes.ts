@@ -114,6 +114,8 @@ export const homeContent = v.object({
       key: v.string(),
       path: v.string(),
       name: v.string(),
+      fullName: v.union(v.string(), v.null()),
+      fullNameAlt: v.union(v.string(), v.null()),
       role: v.string(),
       bio: v.union(v.string(), v.null()),
       photoUrl: v.union(v.string(), v.null()),

@@ -47,7 +47,7 @@ export default async function PrivacyPage() {
 
           <h2>ใครดูแลข้อมูล</h2>
           <p>
-            เว็บไซต์ Rounds (ตีตี้และปั๊บ) จัดทำและดูแลโดย จักริน เศรณีอริยาภรณ์ และ นราวิศว์ อินทศักดิ์อุบล
+            เว็บไซต์ Rounds (ตีตี้และปั๊บ) จัดทำและดูแลโดย นายจักริน เศรณีอริยาภรณ์ และนายนราวิศว์ อินทศักดิ์อุบล
             ซึ่งเป็นผู้ควบคุมข้อมูลส่วนบุคคลตามนโยบายนี้ ติดต่อเราได้ที่ {contact}
           </p>
 
@@ -132,7 +132,7 @@ export default async function PrivacyPage() {
             </p>
             <h2>Who runs it</h2>
             <p>
-              Rounds (Titi and Pup) is created and run by Jakkrin Seraneeariyaporn and Narawit Inthasakubon, who are the
+              Rounds (Titi and Pup) is created and run by Mr. Jakkrin Seraneeariyaporn and Mr. Narawit Inthasakubon, who are the
               data controllers under this policy. Contact: {contact}
             </p>
             <h2>What happens automatically</h2>

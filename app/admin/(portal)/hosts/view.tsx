@@ -14,6 +14,8 @@ export default function HostsPage() {
       defaults={{}}
       fields={[
         { name: "name", label: "Name", type: "text" },
+        { name: "fullName", label: "Full name", type: "text", optional: true, help: "Real name on their page, e.g. นายจักริน เศรณีอริยาภรณ์." },
+        { name: "fullNameAlt", label: "Full name in English", type: "text", optional: true, help: "e.g. Mr. Jakkrin Seraneeariyaporn" },
         { name: "role", label: "Role", type: "text" },
         {
           name: "slug",

@@ -42,7 +42,13 @@ function withDefaults(c: HomeContent): HomeContent {
       profileUrl: g.profileUrl ?? null,
       photoUrl: g.photoUrl ?? null,
     })),
-    hosts: c.hosts.map((h) => ({ ...h, path: h.path ?? h.key, bio: h.bio ?? null })),
+    hosts: c.hosts.map((h) => ({
+      ...h,
+      path: h.path ?? h.key,
+      fullName: h.fullName ?? null,
+      fullNameAlt: h.fullNameAlt ?? null,
+      bio: h.bio ?? null,
+    })),
   };
 }
 

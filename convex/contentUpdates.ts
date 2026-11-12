@@ -5,7 +5,7 @@ import { ep1TranscriptFlags, seedEpisodes, seedGuests, seedHosts } from "./seedD
 // One-time additions to a live database, run at the start of the YouTube sync
 // (like convex/channelContent.ts). Each only fills what's missing, so nothing
 // edited in the admin is overwritten. Add a step and bump UPDATES_VERSION.
-export const UPDATES_VERSION = 2;
+export const UPDATES_VERSION = 3;
 
 export const apply = internalMutation({
   args: {},
@@ -17,6 +17,7 @@ export const apply = internalMutation({
 
     if (done < 1) await addKanContent(ctx);
     if (done < 2) await addHostSlugs(ctx);
+    if (done < 3) await addHostNames(ctx);
 
     await ctx.db.patch("youtubeSync", state._id, {
       contentUpdates: UPDATES_VERSION,
@@ -67,5 +68,16 @@ async function addHostSlugs(ctx: MutationCtx) {
   for (const seedHost of seedHosts) {
     const host = hosts.find((h) => h.name.trim() === seedHost.name);
     if (host && !host.slug) await ctx.db.patch("hosts", host._id, { slug: seedHost.slug });
+  }
+}
+
+// Version 3. The hosts' real names, if not set.
+async function addHostNames(ctx: MutationCtx) {
+  const hosts = await ctx.db.query("hosts").withIndex("by_order").take(50);
+  for (const seedHost of seedHosts) {
+    const host = hosts.find((h) => h.name.trim() === seedHost.name);
+    if (host && !host.fullName) {
+      await ctx.db.patch("hosts", host._id, { fullName: seedHost.fullName, fullNameAlt: seedHost.fullNameAlt });
+    }
   }
 }
