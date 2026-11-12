@@ -21,7 +21,6 @@ export default async function MediaKitPage() {
   const content = await getHomeContent();
   const { settings, channel, audience } = content;
   const email = filled(settings.contactEmail);
-  const year = new Date().getFullYear();
   const site = siteUrl.replace(/^https?:\/\//, "");
 
   const numbers = [
@@ -54,7 +53,7 @@ export default async function MediaKitPage() {
         <Lockup height={36} />
         <div className="kit-cover-title">
           <p className="kit-eyebrow" lang="en">
-            Media kit {year}
+            Media kit
           </p>
           <h1>ชีวิตนักศึกษาแพทย์แบบเรียลไทม์ กับอาจารย์แพทย์ตัวจริง</h1>
           <p className="kit-lead">
