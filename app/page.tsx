@@ -5,7 +5,6 @@ import { LatestEpisodeSection } from "@/components/landing/LatestEpisodeSection"
 import { EpisodesSection } from "@/components/landing/EpisodesSection";
 import { ShortsSection } from "@/components/landing/ShortsSection";
 import { FlagsQuiz } from "@/components/landing/FlagsQuiz";
-import { SeriesSection } from "@/components/landing/SeriesSection";
 import { HostsSection } from "@/components/landing/HostsSection";
 import { DoctorsSection } from "@/components/landing/DoctorsSection";
 import { PartnerSection } from "@/components/landing/PartnerSection";
@@ -33,7 +32,6 @@ export default async function Home() {
         {myths.length > 0 && <FlagsQuiz myths={myths} />}
         <DoctorsSection content={content} />
         <HostsSection hosts={content.hosts} intro={content.episodes.find((ep) => ep.status === "published" && !ep.guestName) ?? null} />
-        <SeriesSection series={content.series} />
         {/* For sponsors: kept together at the end. */}
         <PartnerSection settings={settings} />
       </main>

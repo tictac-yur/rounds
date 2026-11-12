@@ -1057,7 +1057,7 @@ a:hover .badge-watch {
 }
 
 /* ---------- Red flag / Green flag ---------- */
-/* The two verdict colours appear only here, when a card lights up. */
+/* The two verdict colours appear only on the verdict tag and the choice buttons. */
 :root {
   --flag-red: #c4352b;
   --flag-red-deep: #8f2219;
@@ -1082,42 +1082,31 @@ a:hover .badge-watch {
   gap: var(--space-2);
   margin: var(--space-4) 0 0;
   padding: 0;
+  align-items: center;
 }
-.flag-pips button {
-  width: 44px;
-  height: 44px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-}
-.flag-pips button::after {
-  content: "";
+.flag-pips li {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.45);
+  box-sizing: border-box;
   transition:
-    transform 180ms var(--ease-out),
     background-color 240ms ease,
-    border-color 240ms ease;
+    border-color 240ms ease,
+    box-shadow 240ms ease;
 }
-.flag-pips button:hover::after {
-  transform: scale(1.2);
-}
-.flag-pips button[aria-current="step"]::after {
+.flag-pips li[aria-current="step"] {
   border-color: var(--white);
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
 }
-.flag-pips button[data-verdict="red"]::after {
-  background: var(--flag-red);
-  border-color: var(--flag-red);
+/* Right or wrong, never red or green: those colours mean the verdict. */
+.flag-pips li[data-result="right"] {
+  background: var(--white);
+  border-color: var(--white);
 }
-.flag-pips button[data-verdict="green"]::after {
-  background: var(--flag-green);
-  border-color: var(--flag-green);
+.flag-pips li[data-result="wrong"] {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: transparent;
 }
 .flags-score {
   margin: 0;
@@ -1147,22 +1136,17 @@ a:hover .badge-watch {
   overflow: hidden;
   transition: background-color 420ms ease;
 }
-/* Lit: the card fills with the doctor's verdict, from the flag outward. */
-.flag-card[data-verdict="red"] {
-  background: var(--flag-red);
-}
-.flag-card[data-verdict="green"] {
-  background: var(--flag-green);
-}
-.flag-card[data-verdict]::before {
+/* Answered right: a quick flash of light. The card itself stays navy, so a
+   right "Red flag" guess never looks like a mistake. */
+.flag-card[data-result="right"]::before {
   content: "";
   position: absolute;
   inset: -40%;
-  background: radial-gradient(circle at 20% 70%, rgba(255, 255, 255, 0.28), transparent 45%);
+  background: radial-gradient(circle at 20% 70%, rgba(255, 255, 255, 0.22), transparent 45%);
   pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .flag-card[data-verdict]::before {
+  .flag-card[data-result="right"]::before {
     animation: flag-flash 900ms var(--ease-out) both;
   }
   .flag-answer {
@@ -1190,6 +1174,68 @@ a:hover .badge-watch {
   font-family: var(--font-thai);
   font-weight: 600;
   color: var(--white);
+}
+.flag-seconds {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--white);
+}
+.flag-timer {
+  height: 6px;
+  margin-top: calc(var(--space-6) * -0.5);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+.flag-timer span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--white);
+  transform: scaleX(var(--left, 1));
+  transform-origin: left;
+  transition: transform 100ms linear;
+}
+.flag-eyebrow {
+  font-family: var(--font-thai);
+  color: var(--on-navy-muted);
+}
+.flag-rules {
+  margin: 0;
+  padding-left: var(--space-6);
+  font-family: var(--font-thai);
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.88);
+}
+.flag-start .flag-actions,
+.flag-done .flag-actions {
+  margin-top: auto;
+}
+.flag-rank {
+  margin: 0;
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.flag-rank-th {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-thai);
+  font-size: 22px;
+  color: var(--on-navy-muted);
+}
+.flag-tally {
+  margin: 0;
+  font-family: var(--font-thai);
+  font-size: 18px;
+}
+.flag-tally b {
+  font-family: var(--font-sans);
+  font-size: 28px;
+}
+.flag-done .body-lg {
+  font-family: var(--font-thai);
 }
 .flag-claim {
   position: relative;
@@ -1270,25 +1316,53 @@ a:hover .badge-watch {
 .flag-answer .body-lg {
   font-family: var(--font-thai);
 }
-.flag-verdict {
-  margin: 0;
+.flag-result-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
-  font-size: 32px;
-  line-height: 1.1;
+}
+.flag-result {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: var(--font-thai);
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.85);
+}
+.flag-result[data-right="true"] {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--navy-deep);
+}
+.flag-result b {
+  font-family: var(--font-sans);
+}
+/* The doctor's verdict: the only place red and green appear on a card. */
+.flag-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--white);
+}
+.flag-verdict[data-verdict="red"] {
+  background: var(--flag-red);
+}
+.flag-verdict[data-verdict="green"] {
+  background: var(--flag-green);
 }
 .flag-verdict-th {
   font-family: var(--font-thai);
-  font-size: 18px;
   font-weight: 500;
-  letter-spacing: 0;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
 }
 .flag-foot {
   display: flex;
@@ -1517,64 +1591,6 @@ a:hover .badge-watch {
   .hosts-layout {
     grid-template-columns: 1fr;
   }
-}
-
-/* ---------- Series: podcast-cover tiles ---------- */
-.series-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--space-8);
-}
-.series-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.series-item .body {
-  font-family: var(--font-thai);
-}
-.series-cover {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  margin-bottom: var(--space-3);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background: var(--black);
-  color: var(--white);
-}
-.series-cover svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.series-cover-label {
-  position: absolute;
-  left: var(--space-6);
-  bottom: calc(var(--space-6) + 56px);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--on-navy-muted);
-}
-.series-cover-label i {
-  width: 40px;
-  height: 1px;
-  background: var(--on-navy-muted);
-}
-.series-cover-title {
-  position: absolute;
-  left: var(--space-6);
-  right: var(--space-6);
-  bottom: var(--space-6);
-  font-size: clamp(28px, 2.6vw, 36px);
-  line-height: 1.1;
-  font-weight: 600;
-  letter-spacing: -0.02em;
 }
 
 /* ---------- Partner ---------- */
@@ -1823,6 +1839,19 @@ a:hover .badge-watch {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* Read by screen readers, not shown. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---------- Phone refinements ---------- */

@@ -11,7 +11,7 @@ import { PlatformIcon } from "@/components/landing/Icons";
 const SECTIONS = [
   { href: "/admin/episodes", title: "Episodes", body: "Titles, guests, photos, links, and which episode is the latest." },
   { href: "/admin/myths", title: "Red / Green flags", body: "The beliefs in the home-page quiz and the doctor's verdict." },
-  { href: "/admin/series", title: "Series", body: "The Consult, the vlog, A Day With a Doctor." },
+  { href: "/admin/series", title: "Series", body: "Show names that label episodes, e.g. The Consult." },
   { href: "/admin/guests", title: "Guests", body: "Specialists who appear on the show." },
   { href: "/admin/hosts", title: "Hosts", body: "Titi and Pup: bios and photos." },
   { href: "/admin/audience", title: "Audience", body: "Who watches, for the sponsor section." },
