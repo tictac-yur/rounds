@@ -13,7 +13,7 @@ export default function GuestsPage() {
       imageField="photoId"
       defaults={{ nameLang: "en" }}
       fields={[
-        { name: "name", label: "Name", type: "text", help: "With their title, e.g. ผศ.นพ.กานต์ วิฑูรชาติ" },
+        { name: "name", label: "Name", type: "text", help: "With their title, e.g. ผศ.นพ.กานต์ วิฑูรชาติ. Get the doctor's OK (even a LINE message) before publishing their name, bio and photo." },
         { name: "nameAlt", label: "Name in the other language", type: "text", optional: true, help: "e.g. Asst. Prof. Dr. Kan Withoonchart" },
         {
           name: "nameLang",

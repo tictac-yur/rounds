@@ -217,11 +217,15 @@ export const seedHosts = [
   {
     name: "ตีตี้",
     slug: "titi",
+    fullName: "นายจักริน เศรณีอริยาภรณ์",
+    fullNameAlt: "Mr. Jakkrin Seraneeariyaporn",
     role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
   },
   {
     name: "ปั๊บ",
     slug: "pup",
+    fullName: "นายนราวิศว์ อินทศักดิ์อุบล",
+    fullNameAlt: "Mr. Narawit Inthasakubon",
     role: "ผู้ร่วมก่อตั้งและพิธีกร · นักศึกษาแพทย์ปี 1 ธรรมศาสตร์ (CICM)",
   },
 ];

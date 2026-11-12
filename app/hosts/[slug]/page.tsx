@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { host } = found;
   const description = host.bio ?? host.role;
   return {
-    title: `${host.name} — Rounds`,
+    title: `${host.name}${host.fullName ? ` (${host.fullName})` : ""} — Rounds`,
     description,
     openGraph: { title: host.name, description, locale: "th_TH", siteName: "Rounds" },
   };
@@ -56,6 +56,12 @@ export default async function HostPage({ params }: Props) {
               <h1 className="doctor-h1" id="host-name">
                 {host.name}
               </h1>
+              {host.fullName && <p className="body-lg">{host.fullName}</p>}
+              {host.fullNameAlt && (
+                <p className="body-lg muted" lang="en">
+                  {host.fullNameAlt}
+                </p>
+              )}
               {host.bio && <p className="body-lg doctor-bio">{host.bio}</p>}
               <div className="doctor-actions">
                 {latest && (

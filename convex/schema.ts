@@ -198,6 +198,9 @@ export default defineSchema({
     role: v.string(),
     // URL of their page, e.g. "titi" for /hosts/titi.
     slug: v.optional(v.string()),
+    // Real name, shown on their page, e.g. นายจักริน เศรณีอริยาภรณ์.
+    fullName: v.optional(v.string()),
+    fullNameAlt: v.optional(v.string()),
     bio: v.optional(v.string()),
     photoId: v.optional(v.id("_storage")),
     order: v.number(),

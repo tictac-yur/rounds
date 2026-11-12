@@ -83,7 +83,7 @@ export function Footer({ settings }: { settings: HomeContent["settings"] }) {
             Rounds is made by medical students, not licensed physicians. Nothing here is medical advice. Talk to your
             own doctor about your health.
           </p>
-          <p>ขอบคุณคณะแพทยศาสตร์ มหาวิทยาลัยธรรมศาสตร์ · เนื้อหาเป็นอิสระ · © 2026 Rounds™ · ไอคอนแพลตฟอร์มจาก Simple Icons</p>
+          <p>ขอบคุณคณะแพทยศาสตร์ มหาวิทยาลัยธรรมศาสตร์ · เนื้อหาเป็นอิสระ · © 2026 Rounds™ · ไอคอนแพลตฟอร์มจาก Simple Icons · <a href="/privacy">นโยบายความเป็นส่วนตัว</a></p>
         </div>
       </div>
       {/* The logo's three discs, set big and sinking off the bottom of the page. */}
