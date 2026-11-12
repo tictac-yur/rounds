@@ -92,7 +92,7 @@ export const homeContent = v.object({
     }),
   ),
   sponsorPackages: v.array(
-    v.object({ key: v.string(), title: v.string(), description: v.string() }),
+    v.object({ key: v.string(), title: v.string(), description: v.string(), includes: v.array(v.string()) }),
   ),
   guests: v.array(
     v.object({

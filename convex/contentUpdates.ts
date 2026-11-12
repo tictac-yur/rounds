@@ -1,11 +1,18 @@
 import { v } from "convex/values";
 import { internalMutation, MutationCtx } from "./_generated/server";
-import { ep1TranscriptFlags, seedEpisodes, seedGuests, seedHosts } from "./seedData";
+import {
+  ep1TranscriptFlags,
+  previousSponsorPackages,
+  seedEpisodes,
+  seedGuests,
+  seedHosts,
+  seedSponsorPackages,
+} from "./seedData";
 
 // One-time additions to a live database, run at the start of the YouTube sync
 // (like convex/channelContent.ts). Each only fills what's missing, so nothing
 // edited in the admin is overwritten. Add a step and bump UPDATES_VERSION.
-export const UPDATES_VERSION = 3;
+export const UPDATES_VERSION = 4;
 
 export const apply = internalMutation({
   args: {},
@@ -18,6 +25,7 @@ export const apply = internalMutation({
     if (done < 1) await addKanContent(ctx);
     if (done < 2) await addHostSlugs(ctx);
     if (done < 3) await addHostNames(ctx);
+    if (done < 4) await replaceStarterPackages(ctx);
 
     await ctx.db.patch("youtubeSync", state._id, {
       contentUpdates: UPDATES_VERSION,
@@ -79,5 +87,21 @@ async function addHostNames(ctx: MutationCtx) {
     if (host && !host.fullName) {
       await ctx.db.patch("hosts", host._id, { fullName: seedHost.fullName, fullNameAlt: seedHost.fullNameAlt });
     }
+  }
+}
+
+// Version 4. The three detailed sponsor packages, but only in place of the
+// original two starter ones, untouched. Anything edited in the admin stays.
+async function replaceStarterPackages(ctx: MutationCtx) {
+  const packages = await ctx.db.query("sponsorPackages").withIndex("by_order").take(50);
+  const untouched =
+    packages.length === previousSponsorPackages.length &&
+    packages.every(
+      (p, i) => p.title === previousSponsorPackages[i].title && p.description === previousSponsorPackages[i].description,
+    );
+  if (!untouched) return;
+  for (const p of packages) await ctx.db.delete("sponsorPackages", p._id);
+  for (const [order, pkg] of seedSponsorPackages.entries()) {
+    await ctx.db.insert("sponsorPackages", { ...pkg, order });
   }
 }

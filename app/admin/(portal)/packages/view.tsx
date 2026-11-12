@@ -8,13 +8,14 @@ export default function PackagesPage() {
     <ResourceManager
       label="For brands"
       title="Sponsor packages"
-      description="Listed in the “Partner with Rounds” section."
+      description="The package cards on the brands page (/partners). Prices aren't shown; brands ask by email."
       singular="package"
       functions={api.admin.sponsorPackages}
       defaults={{}}
       fields={[
         { name: "title", label: "Title", type: "text" },
-        { name: "description", label: "Description", type: "textarea" },
+        { name: "description", label: "Description", type: "textarea", help: "One line under the title." },
+        { name: "includes", label: "What's included", type: "lines", optional: true, help: "One item per line, shown as a list." },
       ]}
       summary={(row) => (
         <>

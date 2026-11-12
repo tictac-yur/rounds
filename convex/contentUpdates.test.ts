@@ -3,7 +3,7 @@ import { convexTest } from "convex-test";
 import { describe, expect, test } from "vitest";
 import schema from "./schema";
 import { internal } from "./_generated/api";
-import { ep1TranscriptFlags, seedGuests } from "./seedData";
+import { ep1TranscriptFlags, previousSponsorPackages, seedGuests, seedSponsorPackages } from "./seedData";
 
 const modules = import.meta.glob("./**/*.ts");
 
@@ -96,5 +96,24 @@ describe("one-time content updates", () => {
     expect(hosts.map((h) => h.fullName)).toEqual(["นายจักริน เศรณีอริยาภรณ์", "นายนราวิศว์ อินทศักดิ์อุบล"]);
     // A flag deleted after version 1 isn't brought back.
     expect(myths).toHaveLength(2);
+  });
+
+  test("replaces the untouched starter packages, and leaves edited ones alone", async () => {
+    const untouched = await liveDatabase();
+    const edited = await liveDatabase();
+    for (const [t, firstTitle] of [
+      [untouched, previousSponsorPackages[0].title],
+      [edited, "Our own package"],
+    ] as const) {
+      await t.run(async (ctx) => {
+        await ctx.db.insert("sponsorPackages", { ...previousSponsorPackages[0], title: firstTitle, order: 0 });
+        await ctx.db.insert("sponsorPackages", { ...previousSponsorPackages[1], order: 1 });
+      });
+      await t.mutation(internal.contentUpdates.apply, {});
+    }
+    const titles = (t: typeof untouched) =>
+      t.run(async (ctx) => (await ctx.db.query("sponsorPackages").withIndex("by_order").collect()).map((p) => p.title));
+    expect(await titles(untouched)).toEqual(seedSponsorPackages.map((p) => p.title));
+    expect(await titles(edited)).toEqual(["Our own package", previousSponsorPackages[1].title]);
   });
 });

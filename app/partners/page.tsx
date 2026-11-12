@@ -5,6 +5,7 @@ import { Footer } from "@/components/landing/Footer";
 import { ArrowIcon } from "@/components/landing/Icons";
 import { getHomeContent } from "@/lib/content";
 import { filled, isPlaceholder } from "@/lib/placeholders";
+import { mediaKitHref } from "@/lib/site";
 import { compactNumber, countryLabel, genderLabel, percent } from "@/lib/youtubeNumbers";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function PartnersPage() {
   const content = await getHomeContent();
   const { settings, channel, audience } = content;
   const email = filled(settings.contactEmail);
-  const mediaKit = filled(settings.mediaKitUrl);
+  const mediaKit = mediaKitHref(settings.mediaKitUrl);
   const numbers = [
     { value: channel?.subscribers, label: "ผู้ติดตาม" },
     { value: channel?.views, label: "ยอดวิวทั้งหมด" },
@@ -58,11 +59,9 @@ export default async function PartnersPage() {
                   </span>
                 </a>
               )}
-              {mediaKit && (
-                <a href={mediaKit} className="btn btn-outline">
-                  ดาวน์โหลด Media kit
-                </a>
-              )}
+              <a href={mediaKit} className="btn btn-outline">
+                ดู Media kit
+              </a>
             </div>
 
             {numbers.length > 0 && (
@@ -108,21 +107,49 @@ export default async function PartnersPage() {
             </ul>
           </div>
 
-          {content.sponsorPackages.length > 0 && (
-            <div>
-              <h2 className="title">แพ็กเกจ</h2>
-              <p className="small muted">ทุกแพ็กเกจอยู่นอกเนื้อหาทางการแพทย์ การเลือกแขกรับเชิญและเนื้อหาเป็นของเราเสมอ</p>
-              <ul className="row-list">
-                {content.sponsorPackages.map((pkg) => (
-                  <li key={pkg.key}>
-                    <span className="row-title">{pkg.title}</span>
-                    <span className="small muted">{pkg.description}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </section>
+
+        {content.sponsorPackages.length > 0 && (
+          <section className="wrap section packages" aria-labelledby="packages-title" style={{ paddingTop: 0 }}>
+            <h2 className="h2" lang="en" id="packages-title">
+              Packages
+            </h2>
+            <p className="h2-th muted">ทุกแพ็กเกจอยู่นอกเนื้อหาทางการแพทย์ การเลือกแขกรับเชิญและเนื้อหาเป็นของเราเสมอ</p>
+            <ul className="package-grid">
+              {content.sponsorPackages.map((pkg) => (
+                <li key={pkg.key} className="package-card">
+                  <h3 className="row-title">{pkg.title}</h3>
+                  <p className="small muted">{pkg.description}</p>
+                  {pkg.includes.length > 0 && (
+                    <ul className="package-includes">
+                      {pkg.includes.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <div className="package-terms">
+              <p>
+                <b>สิ่งที่เราไม่รับ</b> ยา อาหารเสริม ผลิตภัณฑ์หรือบริการทางการแพทย์และความงาม
+                และสินค้าที่อ้างสรรพคุณด้านสุขภาพ เพื่อให้ความรู้ในรายการเป็นกลางเสมอ
+              </p>
+              <p>ทุกชิ้นงานที่ได้รับการสนับสนุน เราบอกผู้ชมอย่างชัดเจน</p>
+              {email && (
+                <a
+                  href={`mailto:${email}?subject=${encodeURIComponent("ขอราคาแพ็กเกจสปอนเซอร์ Rounds")}`}
+                  className="btn"
+                >
+                  ขอใบเสนอราคา
+                  <span className="btn-arrow">
+                    <ArrowIcon />
+                  </span>
+                </a>
+              )}
+            </div>
+          </section>
+        )}
       </main>
       <Footer settings={settings} />
     </>

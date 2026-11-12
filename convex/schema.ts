@@ -146,6 +146,8 @@ export default defineSchema({
     letter: v.optional(v.string()),
     title: v.string(),
     description: v.string(),
+    // What the brand gets, one line each.
+    includes: v.optional(v.array(v.string())),
     order: v.number(),
   }).index("by_order", ["order"]),
 
