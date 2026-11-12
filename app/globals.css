@@ -1678,6 +1678,58 @@ a:hover .badge-watch {
   font-weight: 600;
   letter-spacing: -0.03em;
 }
+/* Sponsor packages on /partners. */
+.packages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-family: var(--font-thai);
+}
+.package-grid {
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+.package-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-8);
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+}
+.package-card h3 {
+  margin: 0;
+}
+.package-includes {
+  list-style: disc;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4) 0 0 var(--space-6);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  line-height: 1.6;
+}
+.package-terms {
+  margin-top: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: 720px;
+  line-height: 1.7;
+}
+.package-terms p {
+  margin: 0;
+}
+.package-terms .btn {
+  margin-top: var(--space-3);
+}
 .partners-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

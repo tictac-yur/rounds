@@ -134,7 +134,7 @@ export const home = query({
       })),
       sponsorPackages: (
         await ctx.db.query("sponsorPackages").withIndex("by_order").take(LIST_LIMIT)
-      ).map((p) => ({ key: p._id, title: p.title, description: p.description })),
+      ).map((p) => ({ key: p._id, title: p.title, description: p.description, includes: p.includes ?? [] })),
       guests: await Promise.all(
         guestDocs.map(async (g) => ({
           key: g._id,

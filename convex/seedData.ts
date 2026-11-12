@@ -200,16 +200,41 @@ export const seedAudienceSegments = [
   },
 ];
 
+// The original two packages, kept to recognise them on a live database.
+export const previousSponsorPackages = [
+  { title: "สปอนเซอร์ประจำตอน", description: "พิธีกรพูดถึงแบรนด์ใน The Consult พร้อมลิงก์ในคำอธิบายทุกแพลตฟอร์ม" },
+  { title: "แพ็กเกจคลิปสั้น", description: "เครดิตในคลิปสั้นที่ตัดจากแต่ละตอน สำหรับ TikTok, Reels และ Shorts" },
+];
+
 export const seedSponsorPackages = [
   {
-    letter: "A",
-    title: "สปอนเซอร์ประจำตอน",
-    description: "พิธีกรพูดถึงแบรนด์ใน The Consult พร้อมลิงก์ในคำอธิบายทุกแพลตฟอร์ม",
+    title: "Episode Partner · สปอนเซอร์ประจำตอน",
+    description: "แบรนด์ของคุณอยู่คู่กับ The Consult หนึ่งตอน",
+    includes: [
+      "พิธีกรแนะนำแบรนด์ 30–60 วินาทีช่วงต้นตอน แยกชัดจากเนื้อหาทางการแพทย์",
+      "ลิงก์หรือโค้ดส่วนลดในคำอธิบาย YouTube, Spotify และ Apple Podcasts",
+      "คอมเมนต์ปักหมุดบน YouTube",
+      "กล่าวถึงในโพสต์ประกาศตอนบน Instagram",
+    ],
   },
   {
-    letter: "B",
-    title: "แพ็กเกจคลิปสั้น",
-    description: "เครดิตในคลิปสั้นที่ตัดจากแต่ละตอน สำหรับ TikTok, Reels และ Shorts",
+    title: "Shorts Pack · แพ็กเกจคลิปสั้น",
+    description: "เครดิตแบรนด์ในคลิปสั้น ช่องทางที่คนเห็นเราเยอะที่สุด",
+    includes: [
+      "เครดิตแบรนด์ในคลิปสั้น 3 คลิปที่ตัดจากตอนเดียวกัน",
+      "ลงทั้ง TikTok, Instagram Reels และ YouTube Shorts",
+      "ลิงก์ในคำอธิบายและ bio ช่วงสัปดาห์ที่ปล่อย",
+    ],
+  },
+  {
+    title: "Season Partner · สปอนเซอร์ทั้งซีซัน",
+    description: "อยู่กับเราทุกตอนในหนึ่งซีซัน สำหรับแบรนด์ที่อยากให้ว่าที่แพทย์จำได้",
+    includes: [
+      "Episode Partner ครบทุกตอนในซีซัน",
+      "Shorts Pack ทุกตอน",
+      "ชื่อแบรนด์ในช่วงเปิดรายการทุกตอน",
+      "สรุปยอดวิวและกลุ่มผู้ชมหลังจบซีซัน",
+    ],
   },
 ];
 
