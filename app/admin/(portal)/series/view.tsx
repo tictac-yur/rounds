@@ -7,7 +7,7 @@ export default function SeriesPage() {
   return (
     <ResourceManager
       title="Series"
-      description="The shows listed in “One channel, three series”."
+      description="Labels episodes by show (e.g. The Consult). The series section is off the home page for now; the descriptions here are kept for when it comes back."
       singular="series"
       functions={api.admin.series}
       defaults={{}}
