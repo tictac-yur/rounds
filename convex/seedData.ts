@@ -67,7 +67,23 @@ export const seedGuests = [
     // From what he says in The Consult EP.1.
     bio: "อายุรแพทย์โรคหัวใจ โรงพยาบาลธรรมศาสตร์ เชี่ยวชาญการตรวจภาพหัวใจขั้นสูง (advanced cardiac imaging) ด้วย CT และ MRI และเป็นอาจารย์แพทย์ที่สอนนักศึกษาแพทย์ อาจารย์เลือกสายหัวใจเพราะชอบงานที่ต้องตัดสินใจภายใต้ความกดดัน และได้เห็นคนไข้ที่หัวใจหยุดเต้นกลับมาใช้ชีวิตได้อีกครั้ง",
   },
+  {
+    // Spelling checked against his hospital profile; bio from The Consult EP.2.
+    name: "ศ.นพ.สมบัติ มุ่งทวีพงษา",
+    nameLang: "th" as const,
+    nameAlt: "Prof. Dr. Sombat Muengtaweepongsa",
+    slug: "sombat-muengtaweepongsa",
+    field: "ประสาทวิทยา · โรคหลอดเลือดสมอง",
+    bio: "อายุรแพทย์ระบบประสาทและสมอง ผู้เชี่ยวชาญโรคหลอดเลือดสมอง (stroke) จบ fellowship ด้าน cerebrovascular and critical care neurology จาก Saint Louis University สหรัฐอเมริกา อาจารย์เลือกสายนิวโรเพราะชอบแก้ปัญหาด้วย critical thinking มากกว่าการท่องจำ และเห็นว่าการรักษาสโตรกในยุคนั้นยังเป็นความท้าทายที่รอการพัฒนาอีกมาก",
+  },
 ];
+
+// Episodes the YouTube sync imports on its own, and the guest each one is
+// with (by name). Linked when the episode arrives or, if it is already there,
+// by the one-time content update.
+export const guestsByVideoId: Record<string, { guest: string; specialty: string }> = {
+  DU7cJK9NexU: { guest: "ศ.นพ.สมบัติ มุ่งทวีพงษา", specialty: "สมองและระบบประสาท" },
+};
 
 // The episodes on the channel (youtube.com/@roundsmed). Newer uploads arrive
 // as drafts through the hourly YouTube sync (convex/youtube.ts).
