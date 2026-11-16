@@ -4,7 +4,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import schema from "./schema";
 import { internal } from "./_generated/api";
 import { parseFeed, thaiDate, videoIdFromUrl } from "./lib/youtube";
-import { seedMyths, seedSettings } from "./seedData";
+import { seedGuests, seedMyths, seedSettings } from "./seedData";
 
 const modules = import.meta.glob("./**/*.ts");
 
@@ -138,8 +138,8 @@ describe("channel content switch", () => {
     ]);
     expect(episodes[1].slug).toBe("what-is-rounds");
     const guests = await t.run((ctx) => ctx.db.query("guests").collect());
-    expect(guests.map((g) => g.name)).toEqual(["ผศ.นพ.กานต์ วิฑูรชาติ"]);
-    expect(episodes[0].guestId).toBe(guests[0]._id);
+    expect(guests.map((g) => g.name).sort()).toEqual(seedGuests.map((g) => g.name).sort());
+    expect(episodes[0].guestId).toBe(guests.find((g) => g.name === seedGuests[0].name)?._id);
     const myths = await t.run((ctx) => ctx.db.query("myths").collect());
     expect(myths.map((m) => [m.verdict, m.episodeId])).toEqual(
       seedMyths.map((m) => [m.verdict, episodes[m.episodeIndex]._id]),
@@ -237,6 +237,7 @@ describe("sync through the YouTube API", () => {
     const details = [
       { id: "o4kY44zLgig", contentDetails: { duration: "PT36M40S" }, statistics: { viewCount: "5000" } },
       { id: "NeWVide0_01", contentDetails: { duration: "PT41M2S" }, statistics: { viewCount: "10" } },
+      { id: "DU7cJK9NexU", contentDetails: { duration: "PT38M40S" }, statistics: { viewCount: "20" } },
       { id: "Short000001", contentDetails: { duration: "PT45S" }, statistics: { viewCount: "300" } },
       { id: "Short000002", contentDetails: { duration: "PT2M10S" }, statistics: { viewCount: "9000" } },
     ];
@@ -250,6 +251,7 @@ describe("sync through the YouTube API", () => {
           return json({
             items: [
               item("NeWVide0_01", "คุยกับจักษุแพทย์ | The Consult EP.2", "2026-11-15T11:00:00Z"),
+              item("DU7cJK9NexU", "คุยกับหมอสมอง | The Consult EP.2", "2026-11-16T11:00:00Z"),
               item("Short000001", "ไข่วันละ 2 ฟอง #shorts", "2026-11-05T11:00:00Z"),
               item("Short000002", "อกหักจนหัวใจพัง #shorts", "2026-11-04T11:00:00Z"),
               item("o4kY44zLgig", "คุยกับหมอหัวใจ | The Consult EP.1", "2026-11-01T11:00:00Z"),
@@ -272,7 +274,13 @@ describe("sync through the YouTube API", () => {
     expect(state?.lastError).toBeUndefined();
     const episodes = await t.run((ctx) => ctx.db.query("episodes").collect());
     // Both full videos become episodes; the two Shorts don't.
-    expect(episodes.map((e) => e.youtubeVideoId).sort()).toEqual(["NeWVide0_01", "o4kY44zLgig"]);
+    expect(episodes.map((e) => e.youtubeVideoId).sort()).toEqual(["DU7cJK9NexU", "NeWVide0_01", "o4kY44zLgig"]);
+    // A video whose guest is known arrives linked to that guest.
+    const sombat = await t.run((ctx) => ctx.db.query("guests").collect()).then((g) => g.find((x) => x.slug === "sombat-muengtaweepongsa"));
+    const ep2 = episodes.find((e) => e.youtubeVideoId === "DU7cJK9NexU");
+    expect(sombat).toBeDefined();
+    expect(ep2?.guestId).toBe(sombat?._id);
+    expect(ep2?.specialty).toBe("สมองและระบบประสาท");
     expect(episodes.find((e) => e.youtubeVideoId === "NeWVide0_01")?.chapters).toEqual([
       { seconds: 0, title: "Intro" },
       { seconds: 120, title: "Main" },

@@ -116,4 +116,38 @@ describe("one-time content updates", () => {
     expect(await titles(untouched)).toEqual(seedSponsorPackages.map((p) => p.title));
     expect(await titles(edited)).toEqual(["Our own package", previousSponsorPackages[1].title]);
   });
+
+  test("adds อ.สมบัติ and links EP.2 when the sync has already imported it", async () => {
+    const t = await liveDatabase();
+    await t.run(async (ctx) => {
+      const state = await ctx.db.query("youtubeSync").first();
+      await ctx.db.patch("youtubeSync", state!._id, { contentUpdates: 4 });
+      await ctx.db.insert("episodes", {
+        slug: "yt-du7cjk9nexu",
+        title: "คุยกับหมอสมอง",
+        status: "published",
+        featured: true,
+        specialty: "",
+        summary: "",
+        thumbLabel: "",
+        thumbVariant: 0,
+        youtubeVideoId: "DU7cJK9NexU",
+        order: -1,
+      });
+    });
+    await t.mutation(internal.contentUpdates.apply, {});
+    await t.mutation(internal.contentUpdates.apply, {});
+    const { guests, ep2 } = await t.run(async (ctx) => ({
+      guests: await ctx.db.query("guests").collect(),
+      ep2: await ctx.db
+        .query("episodes")
+        .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", "DU7cJK9NexU"))
+        .first(),
+    }));
+    const sombat = guests.filter((g) => g.name === seedGuests[1].name);
+    expect(sombat).toHaveLength(1);
+    expect(sombat[0]).toMatchObject({ nameAlt: "Prof. Dr. Sombat Muengtaweepongsa", slug: "sombat-muengtaweepongsa" });
+    expect(ep2?.guestId).toBe(sombat[0]._id);
+    expect(ep2?.specialty).toBe("สมองและระบบประสาท");
+  });
 });

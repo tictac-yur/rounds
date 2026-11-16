@@ -7,12 +7,14 @@ import {
   seedGuests,
   seedHosts,
   seedSponsorPackages,
+  guestsByVideoId,
 } from "./seedData";
+import { linkKnownGuest } from "./lib/guestLinks";
 
 // One-time additions to a live database, run at the start of the YouTube sync
 // (like convex/channelContent.ts). Each only fills what's missing, so nothing
 // edited in the admin is overwritten. Add a step and bump UPDATES_VERSION.
-export const UPDATES_VERSION = 4;
+export const UPDATES_VERSION = 5;
 
 export const apply = internalMutation({
   args: {},
@@ -26,6 +28,7 @@ export const apply = internalMutation({
     if (done < 2) await addHostSlugs(ctx);
     if (done < 3) await addHostNames(ctx);
     if (done < 4) await replaceStarterPackages(ctx);
+    if (done < 5) await addSombat(ctx);
 
     await ctx.db.patch("youtubeSync", state._id, {
       contentUpdates: UPDATES_VERSION,
@@ -103,5 +106,23 @@ async function replaceStarterPackages(ctx: MutationCtx) {
   for (const p of packages) await ctx.db.delete("sponsorPackages", p._id);
   for (const [order, pkg] of seedSponsorPackages.entries()) {
     await ctx.db.insert("sponsorPackages", { ...pkg, order });
+  }
+}
+
+// Version 5. ศ.นพ.สมบัติ (The Consult EP.2), if not there yet, and EP.2 linked
+// to him if the sync has already imported it (otherwise the import links it).
+async function addSombat(ctx: MutationCtx) {
+  const seed = seedGuests[1];
+  const guests = await ctx.db.query("guests").withIndex("by_order").take(200);
+  if (!guests.some((g) => g.name.trim() === seed.name)) {
+    const order = Math.max(-1, ...guests.map((g) => g.order)) + 1;
+    await ctx.db.insert("guests", { ...seed, order });
+  }
+  for (const videoId of Object.keys(guestsByVideoId)) {
+    const episode = await ctx.db
+      .query("episodes")
+      .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", videoId))
+      .first();
+    if (episode) await linkKnownGuest(ctx, episode);
   }
 }

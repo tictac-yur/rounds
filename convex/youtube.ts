@@ -18,6 +18,7 @@ import {
   videoIdFromUrl,
   watchUrl,
 } from "./lib/youtube";
+import { linkKnownGuest } from "./lib/guestLinks";
 
 // Hourly sync (convex/crons.ts): reads the channel's public uploads feed and
 // publishes every new full-length video as an episode; the newest one becomes
@@ -189,6 +190,8 @@ export const importVideos = internalMutation({
       order -= 1;
       added += 1;
       newest = id;
+      const inserted = await ctx.db.get("episodes", id);
+      if (inserted) await linkKnownGuest(ctx, inserted);
     }
 
     // The newest upload becomes the latest episode on the home page.
