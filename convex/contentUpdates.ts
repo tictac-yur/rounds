@@ -7,14 +7,14 @@ import {
   seedGuests,
   seedHosts,
   seedSponsorPackages,
-  guestsByVideoId,
+  episodeKitsByVideoId,
 } from "./seedData";
-import { linkKnownGuest } from "./lib/guestLinks";
+import { applyEpisodeKit } from "./lib/episodeKit";
 
 // One-time additions to a live database, run at the start of the YouTube sync
 // (like convex/channelContent.ts). Each only fills what's missing, so nothing
 // edited in the admin is overwritten. Add a step and bump UPDATES_VERSION.
-export const UPDATES_VERSION = 5;
+export const UPDATES_VERSION = 6;
 
 export const apply = internalMutation({
   args: {},
@@ -29,6 +29,7 @@ export const apply = internalMutation({
     if (done < 3) await addHostNames(ctx);
     if (done < 4) await replaceStarterPackages(ctx);
     if (done < 5) await addSombat(ctx);
+    if (done < 6) await applyKnownKits(ctx);
 
     await ctx.db.patch("youtubeSync", state._id, {
       contentUpdates: UPDATES_VERSION,
@@ -109,8 +110,7 @@ async function replaceStarterPackages(ctx: MutationCtx) {
   }
 }
 
-// Version 5. ศ.นพ.สมบัติ (The Consult EP.2), if not there yet, and EP.2 linked
-// to him if the sync has already imported it (otherwise the import links it).
+// Version 5. ศ.นพ.สมบัติ (The Consult EP.2), if not there yet.
 async function addSombat(ctx: MutationCtx) {
   const seed = seedGuests[1];
   const guests = await ctx.db.query("guests").withIndex("by_order").take(200);
@@ -118,11 +118,16 @@ async function addSombat(ctx: MutationCtx) {
     const order = Math.max(-1, ...guests.map((g) => g.order)) + 1;
     await ctx.db.insert("guests", { ...seed, order });
   }
-  for (const videoId of Object.keys(guestsByVideoId)) {
+}
+
+// Version 6. Episodes already imported get their kit: guest, specialty and
+// Red/Green flags (EP.2). Episodes not imported yet get it on import.
+async function applyKnownKits(ctx: MutationCtx) {
+  for (const [videoId, kit] of Object.entries(episodeKitsByVideoId)) {
     const episode = await ctx.db
       .query("episodes")
       .withIndex("by_youtubeVideoId", (q) => q.eq("youtubeVideoId", videoId))
       .first();
-    if (episode) await linkKnownGuest(ctx, episode);
+    if (episode) await applyEpisodeKit(ctx, episode, kit);
   }
 }

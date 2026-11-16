@@ -6,6 +6,7 @@ for the admin portal.
 
 - Public site: `/`
 - Admin portal: `/admin` (content management for every section of the site)
+- New episode, step by step: [`docs/NEW_EPISODE.md`](docs/NEW_EPISODE.md)
 - Site structure: [`docs/SITE_PLAN.md`](docs/SITE_PLAN.md)
 - Plan to finish and polish the site: [`docs/LAUNCH_PLAN.md`](docs/LAUNCH_PLAN.md)
 - Design system: [Rounds design system](https://claude.ai/artifact/2ZTEdNhmkLWw4oTarazXXZ).

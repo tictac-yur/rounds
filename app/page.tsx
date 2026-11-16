@@ -11,6 +11,7 @@ import { PartnerSection } from "@/components/landing/PartnerSection";
 import { Footer } from "@/components/landing/Footer";
 import { getHomeContent } from "@/lib/content";
 import { isPlaceholder } from "@/lib/placeholders";
+import { introEpisode } from "@/lib/episodes";
 
 export default async function Home() {
   const content = await getHomeContent();
@@ -31,7 +32,7 @@ export default async function Home() {
         <ShortsSection shorts={content.shorts} />
         {myths.length > 0 && <FlagsQuiz myths={myths} />}
         <DoctorsSection content={content} />
-        <HostsSection hosts={content.hosts} intro={content.episodes.find((ep) => ep.status === "published" && !ep.guestName) ?? null} />
+        <HostsSection hosts={content.hosts} intro={introEpisode(content.episodes)} />
         {/* For sponsors: kept together at the end. */}
         <PartnerSection settings={settings} />
       </main>

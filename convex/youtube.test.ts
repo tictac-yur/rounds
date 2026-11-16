@@ -281,6 +281,8 @@ describe("sync through the YouTube API", () => {
     expect(sombat).toBeDefined();
     expect(ep2?.guestId).toBe(sombat?._id);
     expect(ep2?.specialty).toBe("สมองและระบบประสาท");
+    const ep2Flags = await t.run(async (ctx) => (await ctx.db.query("myths").collect()).filter((m) => m.episodeId === ep2?._id));
+    expect(ep2Flags).toHaveLength(5);
     expect(episodes.find((e) => e.youtubeVideoId === "NeWVide0_01")?.chapters).toEqual([
       { seconds: 0, title: "Intro" },
       { seconds: 120, title: "Main" },

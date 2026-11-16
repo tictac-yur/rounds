@@ -10,6 +10,7 @@
 
 import type * as admin_audienceSegments from "../admin/audienceSegments.js";
 import type * as admin_dashboard from "../admin/dashboard.js";
+import type * as admin_episodeKit from "../admin/episodeKit.js";
 import type * as admin_episodes from "../admin/episodes.js";
 import type * as admin_files from "../admin/files.js";
 import type * as admin_guests from "../admin/guests.js";
@@ -28,6 +29,7 @@ import type * as contentTypes from "../contentTypes.js";
 import type * as crons from "../crons.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
+import type * as lib_episodeKit from "../lib/episodeKit.js";
 import type * as lib_files from "../lib/files.js";
 import type * as lib_placeholder from "../lib/placeholder.js";
 import type * as lib_starter from "../lib/starter.js";
@@ -47,6 +49,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   "admin/audienceSegments": typeof admin_audienceSegments;
   "admin/dashboard": typeof admin_dashboard;
+  "admin/episodeKit": typeof admin_episodeKit;
   "admin/episodes": typeof admin_episodes;
   "admin/files": typeof admin_files;
   "admin/guests": typeof admin_guests;
@@ -65,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   http: typeof http;
   "lib/access": typeof lib_access;
+  "lib/episodeKit": typeof lib_episodeKit;
   "lib/files": typeof lib_files;
   "lib/placeholder": typeof lib_placeholder;
   "lib/starter": typeof lib_starter;
