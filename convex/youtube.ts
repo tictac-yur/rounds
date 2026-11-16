@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { internalAction, internalMutation, internalQuery, MutationCtx } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
-import { seedSettings } from "./seedData";
+import { episodeKitsByVideoId, seedSettings } from "./seedData";
 import {
   channelIdFromPage,
   channelIdFromUrl,
@@ -18,7 +18,7 @@ import {
   videoIdFromUrl,
   watchUrl,
 } from "./lib/youtube";
-import { linkKnownGuest } from "./lib/guestLinks";
+import { applyEpisodeKit } from "./lib/episodeKit";
 
 // Hourly sync (convex/crons.ts): reads the channel's public uploads feed and
 // publishes every new full-length video as an episode; the newest one becomes
@@ -190,8 +190,10 @@ export const importVideos = internalMutation({
       order -= 1;
       added += 1;
       newest = id;
-      const inserted = await ctx.db.get("episodes", id);
-      if (inserted) await linkKnownGuest(ctx, inserted);
+      // A video whose kit is known arrives with its guest and flags.
+      const kit = episodeKitsByVideoId[video.videoId];
+      const inserted = kit ? await ctx.db.get("episodes", id) : null;
+      if (kit && inserted) await applyEpisodeKit(ctx, inserted, kit);
     }
 
     // The newest upload becomes the latest episode on the home page.

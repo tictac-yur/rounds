@@ -3,13 +3,14 @@
 import { useMutation, useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { api } from "@/convex/_generated/api";
 import { Discs } from "@/components/admin/AdminShell";
 import { PlatformIcon } from "@/components/landing/Icons";
 
 const SECTIONS = [
   { href: "/admin/episodes", title: "Episodes", body: "Titles, guests, photos, links, and which episode is the latest." },
+  { href: "/admin/kit", title: "Episode kit", body: "Add a new episode's doctor, bio and Red / Green flags in one paste." },
   { href: "/admin/myths", title: "Red / Green flags", body: "The beliefs in the home-page quiz and the doctor's verdict." },
   { href: "/admin/series", title: "Series", body: "Show names that label episodes, e.g. The Consult." },
   { href: "/admin/guests", title: "Guests", body: "Specialists who appear on the show." },
@@ -258,12 +259,6 @@ function Photos() {
       help: "One photo of each host on their own, for their page (/hosts/…).",
       href: "/admin/hosts",
     },
-    {
-      kind: "episode",
-      title: "Photos with the doctor (optional)",
-      help: "Titi, Pup and the guest together, for the doctor's profile page. Without one, it uses the YouTube thumbnail.",
-      href: "/admin/episodes",
-    },
   ] as const;
   return (
     <section className="admin-card">
@@ -293,6 +288,51 @@ function Photos() {
           );
         })}
       </div>
+    </section>
+  );
+}
+
+function Check({ done, children }: { done: boolean; children: ReactNode }) {
+  return (
+    <span className="admin-check" data-done={done}>
+      {done ? "✓" : "○"} {children}
+    </span>
+  );
+}
+
+// Per episode: what's done and what's missing, with the kit one tap away.
+function EpisodeChecklist() {
+  const rows = useQuery(api.admin.episodeKit.checklist);
+  if (!rows || rows.length === 0) return null;
+  return (
+    <section className="admin-card">
+      <h2>Episode checklist</h2>
+      <p className="admin-muted">
+        Title, thumbnail and summary come from YouTube by themselves, and chapters do too when the description has
+        timestamps. The doctor, bio and Red / Green flags come from an episode kit.
+      </p>
+      <ul className="admin-checklist">
+        {rows.map((r) => {
+          const needsKit = r.guest !== null ? !r.guestBio || r.flags === 0 : r.flags === 0;
+          return (
+            <li key={r.id}>
+              <span className="admin-checklist-title">{r.title}</span>
+              <span className="admin-checklist-items">
+                <Check done={r.guest !== null}>{r.guest ?? "Doctor"}</Check>
+                {r.guest !== null && <Check done={r.guestBio}>Bio</Check>}
+                <Check done={r.flags > 0}>{r.flags > 0 ? `${r.flags} flags` : "Flags"}</Check>
+                <Check done={r.chapters > 0}>{r.chapters > 0 ? `${r.chapters} chapters` : "Chapters"}</Check>
+                <Check done={r.photo}>Photo</Check>
+              </span>
+              {needsKit && (
+                <Link href={`/admin/kit?episode=${r.id}`} className="admin-photos-add">
+                  Add kit
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }
@@ -340,6 +380,7 @@ export function Dashboard() {
       <StarterContent />
       <YouTubeSync />
       <YouTubeNumbers />
+      <EpisodeChecklist />
       <Photos />
       <div className="admin-grid">
         {SECTIONS.map((section) => (

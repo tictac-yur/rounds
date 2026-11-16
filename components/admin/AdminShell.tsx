@@ -14,6 +14,7 @@ const NAV = [
     group: "Content",
     items: [
       { href: "/admin/episodes", label: "Episodes" },
+      { href: "/admin/kit", label: "Episode kit" },
       { href: "/admin/myths", label: "Red / Green flags" },
       { href: "/admin/series", label: "Series" },
       { href: "/admin/guests", label: "Guests" },

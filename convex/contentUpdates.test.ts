@@ -3,7 +3,7 @@ import { convexTest } from "convex-test";
 import { describe, expect, test } from "vitest";
 import schema from "./schema";
 import { internal } from "./_generated/api";
-import { ep1TranscriptFlags, previousSponsorPackages, seedGuests, seedSponsorPackages } from "./seedData";
+import { episodeKitsByVideoId, ep1TranscriptFlags, previousSponsorPackages, seedGuests, seedSponsorPackages } from "./seedData";
 
 const modules = import.meta.glob("./**/*.ts");
 
@@ -149,5 +149,10 @@ describe("one-time content updates", () => {
     expect(sombat[0]).toMatchObject({ nameAlt: "Prof. Dr. Sombat Muengtaweepongsa", slug: "sombat-muengtaweepongsa" });
     expect(ep2?.guestId).toBe(sombat[0]._id);
     expect(ep2?.specialty).toBe("สมองและระบบประสาท");
+    // EP.2 gets its five flags (version 6), once, even though apply ran twice.
+    const ep2Flags = await t.run(async (ctx) => (await ctx.db.query("myths").collect()).filter((m) => m.episodeId === ep2?._id));
+    expect(ep2Flags.map((m) => m.claim)).toEqual(episodeKitsByVideoId.DU7cJK9NexU.flags.map((f) => f.claim));
+    expect(ep2Flags.map((m) => m.verdict)).toEqual(["red", "red", "red", "red", "green"]);
+    expect(ep2Flags.every((m) => m.published)).toBe(true);
   });
 });

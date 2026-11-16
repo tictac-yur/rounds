@@ -1,3 +1,4 @@
+import type { EpisodeKit } from "./lib/episodeKit";
 // Starter content for the site (Thai first). It is loaded into the database
 // from the admin dashboard, and is used as a fallback by the public site when
 // no Convex deployment is configured.
@@ -57,7 +58,18 @@ export const seedSeries = [
   },
 ];
 
-export const seedGuests = [
+// Spelling checked against his hospital profile; bio from The Consult EP.2.
+const sombat: EpisodeKit["guest"] = {
+  name: "ศ.นพ.สมบัติ มุ่งทวีพงษา",
+  nameLang: "th",
+  nameAlt: "Prof. Dr. Sombat Muengtaweepongsa",
+  slug: "sombat-muengtaweepongsa",
+  field: "ประสาทวิทยา · โรคหลอดเลือดสมอง",
+  bio: "อายุรแพทย์ระบบประสาทและสมอง ผู้เชี่ยวชาญโรคหลอดเลือดสมอง (stroke) จบ fellowship ด้าน cerebrovascular and critical care neurology จาก Saint Louis University สหรัฐอเมริกา อาจารย์เลือกสายนิวโรเพราะชอบแก้ปัญหาด้วย critical thinking มากกว่าการท่องจำ และเห็นว่าการรักษาสโตรกในยุคนั้นยังเป็นความท้าทายที่รอการพัฒนาอีกมาก",
+};
+
+// Same shape as an episode kit's guest.
+export const seedGuests: EpisodeKit["guest"][] = [
   {
     name: "ผศ.นพ.กานต์ วิฑูรชาติ",
     nameLang: "th" as const,
@@ -67,22 +79,51 @@ export const seedGuests = [
     // From what he says in The Consult EP.1.
     bio: "อายุรแพทย์โรคหัวใจ โรงพยาบาลธรรมศาสตร์ เชี่ยวชาญการตรวจภาพหัวใจขั้นสูง (advanced cardiac imaging) ด้วย CT และ MRI และเป็นอาจารย์แพทย์ที่สอนนักศึกษาแพทย์ อาจารย์เลือกสายหัวใจเพราะชอบงานที่ต้องตัดสินใจภายใต้ความกดดัน และได้เห็นคนไข้ที่หัวใจหยุดเต้นกลับมาใช้ชีวิตได้อีกครั้ง",
   },
-  {
-    // Spelling checked against his hospital profile; bio from The Consult EP.2.
-    name: "ศ.นพ.สมบัติ มุ่งทวีพงษา",
-    nameLang: "th" as const,
-    nameAlt: "Prof. Dr. Sombat Muengtaweepongsa",
-    slug: "sombat-muengtaweepongsa",
-    field: "ประสาทวิทยา · โรคหลอดเลือดสมอง",
-    bio: "อายุรแพทย์ระบบประสาทและสมอง ผู้เชี่ยวชาญโรคหลอดเลือดสมอง (stroke) จบ fellowship ด้าน cerebrovascular and critical care neurology จาก Saint Louis University สหรัฐอเมริกา อาจารย์เลือกสายนิวโรเพราะชอบแก้ปัญหาด้วย critical thinking มากกว่าการท่องจำ และเห็นว่าการรักษาสโตรกในยุคนั้นยังเป็นความท้าทายที่รอการพัฒนาอีกมาก",
-  },
+  sombat,
 ];
 
-// Episodes the YouTube sync imports on its own, and the guest each one is
-// with (by name). Linked when the episode arrives or, if it is already there,
-// by the one-time content update.
-export const guestsByVideoId: Record<string, { guest: string; specialty: string }> = {
-  DU7cJK9NexU: { guest: "ศ.นพ.สมบัติ มุ่งทวีพงษา", specialty: "สมองและระบบประสาท" },
+// Episodes the YouTube sync imports on its own, with what they need beyond
+// YouTube: guest, specialty and Red/Green flags. Applied when the episode
+// arrives or, if it is already there, by the one-time content update. New
+// episodes use Admin → Episode kit instead of adding to this list.
+export const episodeKitsByVideoId: Record<string, EpisodeKit> = {
+  // The Consult EP.2. Flags from the myth-or-fact round at the end (36:27–38:05).
+  DU7cJK9NexU: {
+    guest: sombat,
+    specialty: "สมองและระบบประสาท",
+    flags: [
+      {
+        claim: "สโตรกเป็นโรคของคนแก่เท่านั้น คนหนุ่มสาวเป็นไม่ได้",
+        verdict: "red",
+        answer:
+          "ไม่จริง คนหนุ่มสาวที่สะสมความเสี่ยงอย่างความดันสูง เบาหวาน น้ำหนักเกิน หรือสูบบุหรี่ก็เป็นได้ ปัจจุบันเจอสโตรกในคนอายุ 40–50 ปีมากขึ้นเรื่อยๆ",
+      },
+      {
+        claim: "อาการสโตรกเป็นแป๊บเดียว เดี๋ยวก็หายไปเอง",
+        verdict: "red",
+        answer:
+          "อาการที่หายเองได้เรียกว่า TIA ซึ่งเป็นส่วนน้อย และอาจกลับมาเป็นอีกภายในไม่กี่ชั่วโมงหรือไม่กี่วันโดยไม่หาย มีอาการตาม FAST เมื่อไหร่ ให้รีบไปโรงพยาบาลหรือโทร 1669 แม้อาการจะหายแล้ว",
+      },
+      {
+        claim: "อาหารเสริมบางตัวป้องกันเส้นเลือดสมองตีบได้",
+        verdict: "red",
+        answer:
+          "ไม่มีอาหารเสริมตัวไหนป้องกันได้ด้วยตัวเอง การป้องกันสโตรกขึ้นกับการคุมความเสี่ยงทั้งหมด เช่น ความดัน น้ำตาล ไขมัน บุหรี่ และการออกกำลังกาย",
+      },
+      {
+        claim: "ฉีดวัคซีนโควิดเพิ่มความเสี่ยงการเป็นสโตรก",
+        verdict: "red",
+        answer:
+          "งานวิจัยขนาดใหญ่และ meta-analysis ที่รวมคนเป็นล้านคน ไม่พบว่าวัคซีนโควิดเพิ่มการเกิดโรคหลอดเลือดสมอง",
+      },
+      {
+        claim: "คุณภาพการนอนสำคัญกว่าจำนวนชั่วโมง",
+        verdict: "green",
+        answer:
+          "จริง การนอนที่มีคุณภาพทำให้ได้ช่วง REM sleep เพียงพอ ซึ่งดีกว่านอนหลายชั่วโมงแต่หลับไม่ลึก",
+      },
+    ],
+  },
 };
 
 // The episodes on the channel (youtube.com/@roundsmed). Newer uploads arrive

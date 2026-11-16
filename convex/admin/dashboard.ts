@@ -34,7 +34,6 @@ export const summary = query({
       latestTitle: latest?.title ?? null,
       photos: [
         ...hosts.map((h) => ({ kind: "host" as const, name: h.name, done: Boolean(h.photoId) })),
-        ...published.map((e) => ({ kind: "episode" as const, name: e.title, done: Boolean(e.thumbnailId) })),
       ],
     };
   },
